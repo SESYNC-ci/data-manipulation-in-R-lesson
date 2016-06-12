@@ -1,9 +1,10 @@
 ---
-title: "Spring 2016 CI - Data manipulation with tidyr and dplyr"
+title: "Data manipulation with tidyr and dplyr"
 author: "Philippe Marchand"
 output: 
-  md_document:
-    variant: markdown_github
+  html_document:
+    toc: true
+    toc_depth: 1
 ---
 
 # Data manipulation with tidyr and dplyr
