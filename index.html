@@ -7,7 +7,7 @@
 <meta charset="utf-8">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
-
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <meta name="author" content="Philippe Marchand" />
 
@@ -39,7 +39,25 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 
 
 
+
+</head>
+
+<body>
+
 <style type="text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
 h1 {
   font-size: 34px;
 }
@@ -60,30 +78,6 @@ h5 {
 }
 h6 {
   font-size: 12px;
-}
-.table th:not([align]) {
-  text-align: left;
-}
-</style>
-
-
-</head>
-
-<body>
-
-<style type="text/css">
-.main-container {
-  max-width: 940px;
-  margin-left: auto;
-  margin-right: auto;
-}
-code {
-  color: inherit;
-  background-color: rgba(0, 0, 0, 0.04);
-}
-img {
-  max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -114,20 +108,27 @@ $(document).ready(function () {
 <div class="fluid-row" id="header">
 
 
-
-<h1 class="title toc-ignore">Data manipulation with tidyr and dplyr</h1>
+<h1 class="title">Data manipulation with tidyr and dplyr</h1>
 <h4 class="author"><em>Philippe Marchand</em></h4>
 
 </div>
 
 <div id="TOC">
 <ul>
-<li><a href="#data-manipulation-with-tidyr-and-dplyr">Data manipulation with tidyr and dplyr</a></li>
+<li><a href="#sample-data">Sample data</a></li>
+<li><a href="#tidy-data-concept">Tidy data concept</a></li>
+<li><a href="#reshaping-multiple-columns-into-categoryvalue-pairs">Reshaping multiple columns into category/value pairs</a></li>
+<li><a href="#key-functions-in-dplyr">Key functions in dplyr</a></li>
+<li><a href="#subsetting-and-sorting">Subsetting and sorting</a></li>
+<li><a href="#grouping-and-aggregation">Grouping and aggregation</a></li>
+<li><a href="#transformation-of-variables">Transformation of variables</a></li>
+<li><a href="#joining-data-frames">Joining data frames</a></li>
+<li><a href="#chaining-operations-with-pipes">Chaining operations with pipes (%&gt;%)</a></li>
+<li><a href="#additional-information">Additional information</a></li>
+<li><a href="#exercise-solutions">Exercise solutions</a></li>
 </ul>
 </div>
 
-<div id="data-manipulation-with-tidyr-and-dplyr" class="section level1">
-<h1>Data manipulation with tidyr and dplyr</h1>
 <p>Data frames generally occupy a central place in R analysis workflows. While the base R functions provide most necessary tools to subset, reformat and transform data frames, the specialized packages we will use in this lesson – <strong>tidyr</strong> and <strong>dplyr</strong> – offer a more succinct and often computationally faster way to perform the common data frame processing steps. Beyond saving typing time, the simpler syntax also makes scripts more readable and easier to debug.</p>
 <p>We will first discuss what is a <em>tidy</em> dataset and how to convert data to this standard form with tidyr. Next, we will explore the data processing functions in dplyr, which work particularly well with the tidy data format. The key functions from that package all have close counterparts in SQL (Structured Query Language), which provides the added bonus of facilitating the transition from R to relational databases.</p>
 <div id="sample-data" class="section level2">
@@ -411,7 +412,6 @@ filter(counts_1990w_join, count == max(count))</code></pre>
 <pre class="r"><code>counts_1990w_join &lt;- group_by(counts_1990w_join, taxa)
 mutate(counts_1990w_join, prop_of_taxa = count / sum(count))</code></pre>
 <p><a href="#exercise-4">Return</a></p>
-</div>
 </div>
 </div>
 

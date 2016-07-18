@@ -4,10 +4,8 @@ author: "Philippe Marchand"
 output: 
   html_document:
     toc: true
-    toc_depth: 1
+    toc_depth: 2
 ---
-
-# Data manipulation with tidyr and dplyr
 
 Data frames generally occupy a central place in R analysis workflows. While the base R functions provide most necessary tools to subset, reformat and transform data frames, the specialized packages we will use in this lesson -- **tidyr** and **dplyr** -- offer a more succinct and often computationally faster way to perform the common data frame processing steps. Beyond saving typing time, the simpler syntax also makes scripts more readable and easier to debug.
 
