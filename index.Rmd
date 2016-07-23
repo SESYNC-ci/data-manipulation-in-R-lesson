@@ -1,11 +1,28 @@
 ---
 title: "Data manipulation with tidyr and dplyr"
 author: "Philippe Marchand"
-output: 
-  html_document:
-    toc: true
-    toc_depth: 2
+output: md_document
 ---
+
+# Data manipulation with tidyr and dplyr
+
+Instructor: Philippe Marchand
+
+## Table of contents
+
+-   [Sample data](#sample-data)
+-   [Tidy data concept](#tidy-data-concept)
+-   [Reshaping multiple columns into category/value
+    pairs](#reshaping-multiple-columns-into-categoryvalue-pairs)
+-   [Key functions in dplyr](#key-functions-in-dplyr)
+-   [Subsetting and sorting](#subsetting-and-sorting)
+-   [Grouping and aggregation](#grouping-and-aggregation)
+-   [Transformation of variables](#transformation-of-variables)
+-   [Joining data frames](#joining-data-frames)
+-   [Chaining operations with
+    pipes (%&gt;%)](#chaining-operations-with-pipes)
+-   [Additional information](#additional-information)
+-   [Exercise solutions](#exercise-solutions)
 
 Data frames generally occupy a central place in R analysis workflows. While the base R functions provide most necessary tools to subset, reformat and transform data frames, the specialized packages we will use in this lesson -- **tidyr** and **dplyr** -- offer a more succinct and often computationally faster way to perform the common data frame processing steps. Beyond saving typing time, the simpler syntax also makes scripts more readable and easier to debug.
 

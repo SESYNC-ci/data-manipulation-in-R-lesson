@@ -1,0 +1,8 @@
+baseurl: '/data-manipulation-in-R-lesson'
+exclude: [index.Rmd]
+defaults:
+  -
+    scope:
+      path: ''
+    values:
+      layout: 'default'
