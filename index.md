@@ -34,11 +34,11 @@ We will first discuss what is a *tidy* dataset and how to convert data to this s
 
 We will use the [Portal teaching database](http://github.com/weecology/portal-teachingdb), a simplified dataset derived from a long-term study of animal populations in the Chihuahuan Desert. The teaching dataset includes three tables: two contain summary information on the study plots and observed species, respectively, while the third and largest one (surveys) lists all individual observations, with columns linking to the appropriate species and plot IDs. 
 
-{% highlight r %}
+```r
 plots <- read.csv("/nfs/public-data/ci-spring2016/Data/plots.csv")
 species <- read.csv("/nfs/public-data/ci-spring2016/Data/species.csv")
 surveys <- read.csv("/nfs/public-data/ci-spring2016/Data/surveys.csv", na.strings = "")
-{% endhighlight %}
+```
 
 
 ## Tidy data concept
@@ -51,7 +51,7 @@ R developer Hadley Wickham (author of the tidyr, dplyr and ggplot packages, amon
 
 These guidelines may be familiar to some of you, as they closely map to best practices in database design. The three tables in our sample data are already in a tidy format. Let's consider a different example where the counts of three species are recorded for each day in a week:
 
-{% highlight r %}
+```r
 counts_df <- data.frame(
   day = c("Monday", "Tuesday", "Wednesday"),
   wolf = c(2, 1, 3),
@@ -59,16 +59,14 @@ counts_df <- data.frame(
   fox = c(4, 4, 4)
 )
 counts_df
-{% endhighlight %}
+```
 
-
-
-{% highlight text %}
+```
         day wolf hare fox
 1    Monday    2   20   4
 2   Tuesday    1   25   4
 3 Wednesday    3   30   4
-{% endhighlight %}
+```
 
 **Question**: How to structure this data in a tidy format as defined above?
 
@@ -83,15 +81,13 @@ While the tidy format is optimal for many common data frame operations in R (agg
 
 Let's load the **tidyr** package and use its `gather` function to reshape *counts_df* into a tidy format:
 
-{% highlight r %}
+```r
 library(tidyr)
 counts_gather <- gather(counts_df, key = "species", value = "count", wolf:fox)
 counts_gather
-{% endhighlight %}
+```
 
-
-
-{% highlight text %}
+```
         day species count
 1    Monday    wolf     2
 2   Tuesday    wolf     1
@@ -102,7 +98,7 @@ counts_gather
 7    Monday     fox     4
 8   Tuesday     fox     4
 9 Wednesday     fox     4
-{% endhighlight %}
+```
 
 Here, `gather` takes all columns between `wolf` and `fox` and reshapes them into two columns, the names of which are specified as the key and value. For each row, the key column in the new dataset indicates the column that contained that value in the original dataset.
 
@@ -110,19 +106,17 @@ Some notes on the syntax: From a workflow perspective, a big advantage of tidyr 
 
 If your analysis requires a "wide" data format rather than the tall format produced by `gather`, you can use the opposite operation, named `spread`. Run the code below and verify that it restores the original form of *counts_df*:
 
-{% highlight r %}
+```r
 counts_spread <- spread(counts_gather, key = species, value = count)
 counts_spread
-{% endhighlight %}
+```
 
-
-
-{% highlight text %}
+```
         day fox hare wolf
 1    Monday   4   20    2
 2   Tuesday   4   25    1
 3 Wednesday   4   30    3
-{% endhighlight %}
+```
 Why are `species` and `count` not quoted here? (They refer to existing column names.)
 
 ### Exercise 1
@@ -153,22 +147,20 @@ The table below presents the most commonly used functions in **dplyr**, which we
 
 After loading dplyr, we begin our analysis by extracting the survey observations for the first three months of 1990 with `filter`:
 
-{% highlight r %}
+```r
 library(dplyr)
 surveys1990_winter <- filter(surveys, year == 1990, month %in% 1:3)
-{% endhighlight %}
+```
 Note that a logical "and" is implied when conditions are separated by commas. (This is perhaps the main way in which `filter` differs from the base R `subset` function.) Therefore, the example above is equivalent to `filter(surveys, year == 1990 & month %in% 1:3)`. A logical "or" must be specified explicitly with the `|` operator.
 
 To subset the columns (rather than the rows) of a data frame, we would call `select` with the name of the variables to retain, e.g. `select(df, name, address)` returns a new data frame containing the *name* and *address* columns from *df*. Alternatively, we can *exclude* a column by preceding its name with a minus sign. We use this option here to remove the redundant year column from *surveys_1990_winter*:
 
-{% highlight r %}
+```r
 surveys1990_winter <- select(surveys1990_winter, -year)
 head(surveys1990_winter)
-{% endhighlight %}
+```
 
-
-
-{% highlight text %}
+```
   record_id month day plot_id species_id sex hindfoot_length weight
 1     16879     1   6       1         DM   F              37     35
 2     16880     1   6       1         OL   M              21     28
@@ -176,19 +168,17 @@ head(surveys1990_winter)
 4     16882     1   6      23         RM   F              17      9
 5     16883     1   6      12         RM   M              17     10
 6     16884     1   6      24         RM   M              17      9
-{% endhighlight %}
+```
 
 To complete this section, we sort the 1990 winter surveys data by descending order of species name, then by ascending order of weight. For comparison purposes, I include both the dplyr code (`arrange` function) and the base R code performing the same operation. Note that `arrange` assumes ascending order unless the variable name is enclosed by `desc()`.
 
-{% highlight r %}
+```r
 sorted1 <- arrange(surveys1990_winter, desc(species_id), weight)
 sorted2 <- surveys1990_winter[order(-xtfrm(surveys1990_winter$species_id), surveys1990_winter$weight), ]
 head(sorted1)
-{% endhighlight %}
+```
 
-
-
-{% highlight text %}
+```
   record_id month day plot_id species_id sex hindfoot_length weight
 1     16929     1   7       3         SH   M              31     61
 2     17172     2  25       3         SH   F              29     67
@@ -196,7 +186,7 @@ head(sorted1)
 4     16886     1   6      24         SH   F              30     73
 5     17359     3  30       3         SH   F              31     77
 6     17170     2  25       3         SH   M              30     80
-{% endhighlight %}
+```
 
 ### Exercise 2
 
@@ -209,15 +199,13 @@ Write code that returns the *record_id*, *sex* and *weight* of all surveyed indi
 
 Another common type of operation on tabular data involves the aggregation of records according to specific grouping variables. In particular, let's say we want to count the number of individuals by species observed in the winter of 1990. We first define a grouping of our *surveys1990_winter* data frame with `group_by`, then call `summarize` to aggregate values in each group using a given function (here, the built-in function `n()` to count the rows).
 
-{% highlight r %}
+```r
 surveys1990_winter <- group_by(surveys1990_winter, species_id)
 counts_1990w <- summarize(surveys1990_winter, count = n())
 head(counts_1990w)
-{% endhighlight %}
+```
 
-
-
-{% highlight text %}
+```
 Source: local data frame [6 x 2]
 
   species_id count
@@ -228,7 +216,7 @@ Source: local data frame [6 x 2]
 4         DM   132
 5         DO    65
 6         DS     6
-{% endhighlight %}
+```
 
 A few notes on these functions: 
 
@@ -246,14 +234,12 @@ Write code that returns the average weight and hindfoot length of *Dipodomys mer
 
 The `mutate` function creates new columns by performing the same operation on each row. Here, we use the previously obtained *count* variable to derive the proportion of individuals represented by each species, and assign the result to a new *prop* column.
 
-{% highlight r %}
+```r
 counts_1990w <- mutate(counts_1990w, prop = count / sum(count))
 head(counts_1990w)
-{% endhighlight %}
+```
 
-
-
-{% highlight text %}
+```
 Source: local data frame [6 x 3]
 
   species_id count       prop
@@ -264,7 +250,7 @@ Source: local data frame [6 x 3]
 4         DM   132 0.26883910
 5         DO    65 0.13238289
 6         DS     6 0.01221996
-{% endhighlight %}
+```
 
 Notes:
 
@@ -277,32 +263,24 @@ Notes:
 
 Inspired by relational databases, the join functions combine information in two data frames based on matching the values of variables they share. We use this feature to add information (from the *species* data frame) pertaining to each species listed in the *counts_1990w* data.
 
-{% highlight r %}
+```r
 counts_1990w_join <- inner_join(counts_1990w, species)
-{% endhighlight %}
+```
 
-
-
-{% highlight text %}
+```
 Joining by: "species_id"
-{% endhighlight %}
+```
 
-
-
-{% highlight text %}
+```
 Warning in inner_join_impl(x, y, by$x, by$y): joining factors with
 different levels, coercing to character vector
-{% endhighlight %}
+```
 
-
-
-{% highlight r %}
+```r
 head(counts_1990w_join)
-{% endhighlight %}
+```
 
-
-
-{% highlight text %}
+```
 Source: local data frame [6 x 6]
 
   species_id count       prop            genus     species   taxa
@@ -313,20 +291,20 @@ Source: local data frame [6 x 6]
 4         DM   132 0.26883910        Dipodomys    merriami Rodent
 5         DO    65 0.13238289        Dipodomys       ordii Rodent
 6         DS     6 0.01221996        Dipodomys spectabilis Rodent
-{% endhighlight %}
+```
 The messages output by R point to two useful features of `inner_join`: it automatically joins the tables based on shared column names (here, *species\_id*) and it converts factors to characters when their levels don't match. 
 
 It is sometimes useful to manually specify the columns that should be joined, i.e. when corresponding columns don't share the same name, or columns of the same name shouldn't be matched. This can be done with the `by` argument, e.g. if column `id` in *A* matches column `A_id` in *B*, you would write: 
 
-{% highlight r %}
+```r
 inner_join(tableA, tableB, by = c("id" = "A_id")
-{% endhighlight %}
+```
 
 By inspecting the *counts_1990w_join* data frame, you may notice that the last row of *counts_1990w* (where the *species\_id* was *NA*) was excluded. An `inner_join` only keeps rows for which a match was found in the other table. To keep all rows from the first table, use `left_join` instead.
 
-{% highlight r %}
+```r
 counts_1990w_join <- left_join(counts_1990w, species)
-{% endhighlight %}
+```
 
 ### Exercise 4
 
@@ -342,19 +320,17 @@ We often use `group_by` along with `summarize`, but you can also apply `filter` 
 
 We have seen that dplyr functions all take a data frame as their first argument and return a transformed data frame. This consistent syntax has the added benefit of making these functions compatible the "pipe" operator (`%>%`). This operator actually comes from another R package, **magrittr**, which is loaded with dplyr by default. What `%>%` does is to take the expression on its left-hand side and pass it as the first argument to the function on its right-hand side. Here is a simple example:
 
-{% highlight r %}
+```r
 c(1,3,5,NA) %>% sum(na.rm = TRUE)   # same as sum(c(1,3,5,NA), na.rm = TRUE)
-{% endhighlight %}
+```
 
-
-
-{% highlight text %}
+```
 [1] 9
-{% endhighlight %}
+```
 
 This particular syntax may appear strange in the example above. The pipe operator's main utility is to condense a chain of operations applied to the same piece of data, when you don't need to save the intermediate results. To illustrate this, the code below reproduces all the steps that led to the *counts_1990w_join* data frame.
 
-{% highlight r %}
+```r
 new_counts <- surveys %>%
     filter(year == 1990, month %in% 1:3) %>% 
     select(-year) %>%
@@ -364,13 +340,11 @@ new_counts <- surveys %>%
     inner_join(species)
 
 identical(new_counts, counts_1990w_join)
-{% endhighlight %}
+```
 
-
-
-{% highlight text %}
+```
 [1] TRUE
-{% endhighlight %}
+```
 
 
 ## Additional information
@@ -387,9 +361,9 @@ One of several cheat sheets available on the RStudio website, it provides a brie
 
 If any species/day combination is missing, the corresponding cell after `spread` is filled with `NA`. To interpret missing values as zero counts, use the optional `fill` argument: 
 
-{% highlight r %}
+```r
 counts_spread <- spread(counts_gather, key = species, value = count, fill = 0)
-{% endhighlight %}
+```
 
 [Return](#exercise-1)
 
@@ -398,10 +372,10 @@ counts_spread <- spread(counts_gather, key = species, value = count, fill = 0)
 
 Write code that returns the *record_id*, *sex* and *weight* of all surveyed individuals of *Reithrodontomys montanus* (RO).
 
-{% highlight r %}
+```r
 surveys_RO <- filter(surveys, species_id == "RO")
 select(surveys_RO, record_id, sex, weight)
-{% endhighlight %}
+```
 
 [Return](#exercise-2)
 
@@ -410,12 +384,12 @@ select(surveys_RO, record_id, sex, weight)
 
 Write code that returns the average weight and hindfoot length of *Dipodomys merriami* (DM) individuals observed in each month (irrespective of the year). Make sure to exclude *NA* values.
 
-{% highlight r %}
+```r
 surveys_dm <- filter(surveys, species_id == "DM")
 surveys_dm <- group_by(surveys_dm, month)
 summarize(surveys_dm, avg_wgt = mean(weight, na.rm = TRUE),
           avg_hfl = mean(hindfoot_length, na.rm = TRUE))
-{% endhighlight %}
+```
 
 [Return](#exercise-3)
 
@@ -424,16 +398,16 @@ summarize(surveys_dm, avg_wgt = mean(weight, na.rm = TRUE),
 
 Return only the rows in *counts_1990w_join* that correspond to the most common species in each genus.
 
-{% highlight r %}
+```r
 counts_1990w_join <- group_by(counts_1990w_join, genus)
 filter(counts_1990w_join, count == max(count))
-{% endhighlight %}
+```
 
 Calculate the fraction of total counts by taxa (birds or rodents) represented by each species within that taxon.
 
-{% highlight r %}
+```r
 counts_1990w_join <- group_by(counts_1990w_join, taxa)
 mutate(counts_1990w_join, prop_of_taxa = count / sum(count))
-{% endhighlight %}
+```
 
 [Return](#exercise-4)
