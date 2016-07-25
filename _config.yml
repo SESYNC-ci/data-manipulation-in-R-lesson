@@ -1,6 +1,5 @@
 baseurl: '/data-manipulation-in-R-lesson'
 exclude: [index.Rmd]
-highlighter: rouge
 defaults:
   -
     scope:
