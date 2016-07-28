@@ -25,6 +25,7 @@ knitr::opts_chunk$set(comment = NA)
 -   [Joining data frames](#joining-data-frames)
 -   [Chaining operations with
     pipes (%&gt;%)](#chaining-operations-with-pipes)
+-   [Bonus: Database queries with dplyr](#bonus-database-queries-with-dplyr)
 -   [Additional information](#additional-information)
 -   [Exercise solutions](#exercise-solutions)
 
@@ -227,6 +228,29 @@ new_counts <- surveys %>%
 
 identical(new_counts, counts_1990w_join)
 ```
+
+
+## Bonus: Databases queries with dplyr
+
+Another big advantage of dplyr is that you can query tables from a SQL database using the exact same syntax as for data frames. Here we connect to the *portal* database in PostgreSQL with the `src_postgres` function, then use `tbl` to assign a variable to the *surveys* table (without loading it in memory).
+```{r}
+portal_db <- src_postgres(host = "pgstudio.research.sesync.org",
+                          dbname = "portal", user = "student", 
+                          password = "synthesis")
+surveys_sql <- tbl(portal_db, "surveys")
+surveys_sql
+```
+
+Following those preliminary steps, we can use exactly the same analysis code as before to get the species counts for the 1990 winter months.
+```{r}
+counts_1990w_sql <-  surveys_sql %>% filter(year == 1990, month %in% 1:3) %>%
+                                     select(-year) %>%
+                                     group_by(species_id) %>%
+                                     summarise(count = n())
+counts_1990w_sql
+```
+
+In this case, dplyr translated the R commands to SQL and sent them in a single query to PostgreSQL. Note that the output is still stored on disk rather than in memory. The `collect` function can be used to import a remote table into R, as in `counts_1990w_local <- collect(counts_1990w_sql)`.
 
 
 ## Additional information
