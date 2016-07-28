@@ -36,9 +36,10 @@ We will first discuss what is a *tidy* dataset and how to convert data to this s
 We will use the [Portal teaching database](http://github.com/weecology/portal-teachingdb), a simplified dataset derived from a long-term study of animal populations in the Chihuahuan Desert. The teaching dataset includes three tables: two contain summary information on the study plots and observed species, respectively, while the third and largest one (surveys) lists all individual observations, with columns linking to the appropriate species and plot IDs. 
 
 ```r
-plots <- read.csv("/nfs/public-data/ci-spring2016/Data/plots.csv")
-species <- read.csv("/nfs/public-data/ci-spring2016/Data/species.csv")
-surveys <- read.csv("/nfs/public-data/ci-spring2016/Data/surveys.csv", na.strings = "")
+setwd("%sandbox%")
+plots <- read.csv("data/plots.csv")
+species <- read.csv("data/species.csv")
+surveys <- read.csv("data/surveys.csv", na.strings = "")
 ```
 {:.input}
 
