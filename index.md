@@ -381,7 +381,7 @@ Another big advantage of dplyr is that you can query tables from a SQL database 
 ```r
 portal_db <- src_postgres(host = "pgstudio.research.sesync.org",
                           dbname = "portal", user = "student", 
-                          password = "synthesis")
+                          password = "%password%")
 surveys_sql <- tbl(portal_db, "surveys")
 surveys_sql
 ```
