@@ -40,6 +40,7 @@ plots <- read.csv("/nfs/public-data/ci-spring2016/Data/plots.csv")
 species <- read.csv("/nfs/public-data/ci-spring2016/Data/species.csv")
 surveys <- read.csv("/nfs/public-data/ci-spring2016/Data/surveys.csv", na.strings = "")
 ```
+{:.input}
 
 
 ## Tidy data concept
@@ -61,6 +62,7 @@ counts_df <- data.frame(
 )
 counts_df
 ```
+{:.input}
 
 ```
         day wolf hare fox
@@ -68,6 +70,7 @@ counts_df
 2   Tuesday    1   25   4
 3 Wednesday    3   30   4
 ```
+{:.output}
 
 **Question**: How to structure this data in a tidy format as defined above?
 
@@ -87,6 +90,7 @@ library(tidyr)
 counts_gather <- gather(counts_df, key = "species", value = "count", wolf:fox)
 counts_gather
 ```
+{:.input}
 
 ```
         day species count
@@ -100,6 +104,7 @@ counts_gather
 8   Tuesday     fox     4
 9 Wednesday     fox     4
 ```
+{:.output}
 
 Here, `gather` takes all columns between `wolf` and `fox` and reshapes them into two columns, the names of which are specified as the key and value. For each row, the key column in the new dataset indicates the column that contained that value in the original dataset.
 
@@ -111,6 +116,7 @@ If your analysis requires a "wide" data format rather than the tall format produ
 counts_spread <- spread(counts_gather, key = species, value = count)
 counts_spread
 ```
+{:.input}
 
 ```
         day fox hare wolf
@@ -118,6 +124,7 @@ counts_spread
 2   Tuesday   4   25    1
 3 Wednesday   4   30    3
 ```
+{:.output}
 Why are `species` and `count` not quoted here? (They refer to existing column names.)
 
 ### Exercise 1
@@ -152,6 +159,8 @@ After loading dplyr, we begin our analysis by extracting the survey observations
 library(dplyr)
 surveys1990_winter <- filter(surveys, year == 1990, month %in% 1:3)
 ```
+{:.input}
+
 Note that a logical "and" is implied when conditions are separated by commas. (This is perhaps the main way in which `filter` differs from the base R `subset` function.) Therefore, the example above is equivalent to `filter(surveys, year == 1990 & month %in% 1:3)`. A logical "or" must be specified explicitly with the `|` operator.
 
 To subset the columns (rather than the rows) of a data frame, we would call `select` with the name of the variables to retain, e.g. `select(df, name, address)` returns a new data frame containing the *name* and *address* columns from *df*. Alternatively, we can *exclude* a column by preceding its name with a minus sign. We use this option here to remove the redundant year column from *surveys_1990_winter*:
@@ -160,6 +169,7 @@ To subset the columns (rather than the rows) of a data frame, we would call `sel
 surveys1990_winter <- select(surveys1990_winter, -year)
 head(surveys1990_winter)
 ```
+{:.input}
 
 ```
   record_id month day plot_id species_id sex hindfoot_length weight
@@ -170,6 +180,7 @@ head(surveys1990_winter)
 5     16883     1   6      12         RM   M              17     10
 6     16884     1   6      24         RM   M              17      9
 ```
+{:.output}
 
 To complete this section, we sort the 1990 winter surveys data by descending order of species name, then by ascending order of weight. For comparison purposes, I include both the dplyr code (`arrange` function) and the base R code performing the same operation. Note that `arrange` assumes ascending order unless the variable name is enclosed by `desc()`.
 
@@ -178,6 +189,7 @@ sorted1 <- arrange(surveys1990_winter, desc(species_id), weight)
 sorted2 <- surveys1990_winter[order(-xtfrm(surveys1990_winter$species_id), surveys1990_winter$weight), ]
 head(sorted1)
 ```
+{:.input}
 
 ```
   record_id month day plot_id species_id sex hindfoot_length weight
@@ -188,6 +200,7 @@ head(sorted1)
 5     17359     3  30       3         SH   F              31     77
 6     17170     2  25       3         SH   M              30     80
 ```
+{:.output}
 
 ### Exercise 2
 
@@ -205,6 +218,7 @@ surveys1990_winter <- group_by(surveys1990_winter, species_id)
 counts_1990w <- summarize(surveys1990_winter, count = n())
 head(counts_1990w)
 ```
+{:.input}
 
 ```
 Source: local data frame [6 x 2]
@@ -218,6 +232,7 @@ Source: local data frame [6 x 2]
 5         DO    65
 6         DS     6
 ```
+{:.output}
 
 A few notes on these functions: 
 
@@ -239,6 +254,7 @@ The `mutate` function creates new columns by performing the same operation on ea
 counts_1990w <- mutate(counts_1990w, prop = count / sum(count))
 head(counts_1990w)
 ```
+{:.input}
 
 ```
 Source: local data frame [6 x 3]
@@ -252,6 +268,7 @@ Source: local data frame [6 x 3]
 5         DO    65 0.13238289
 6         DS     6 0.01221996
 ```
+{:.output}
 
 Notes:
 
@@ -267,19 +284,20 @@ Inspired by relational databases, the join functions combine information in two 
 ```r
 counts_1990w_join <- inner_join(counts_1990w, species)
 ```
+{:.input}
 
 ```
 Joining by: "species_id"
-```
 
-```
 Warning in inner_join_impl(x, y, by$x, by$y): joining factors with
 different levels, coercing to character vector
 ```
+{:.output}
 
 ```r
 head(counts_1990w_join)
 ```
+{:.input}
 
 ```
 Source: local data frame [6 x 6]
@@ -293,6 +311,8 @@ Source: local data frame [6 x 6]
 5         DO    65 0.13238289        Dipodomys       ordii Rodent
 6         DS     6 0.01221996        Dipodomys spectabilis Rodent
 ```
+{:.output}
+
 The messages output by R point to two useful features of `inner_join`: it automatically joins the tables based on shared column names (here, *species\_id*) and it converts factors to characters when their levels don't match. 
 
 It is sometimes useful to manually specify the columns that should be joined, i.e. when corresponding columns don't share the same name, or columns of the same name shouldn't be matched. This can be done with the `by` argument, e.g. if column `id` in *A* matches column `A_id` in *B*, you would write: 
@@ -300,12 +320,14 @@ It is sometimes useful to manually specify the columns that should be joined, i.
 ```r
 inner_join(tableA, tableB, by = c("id" = "A_id")
 ```
+{:.input}
 
 By inspecting the *counts_1990w_join* data frame, you may notice that the last row of *counts_1990w* (where the *species\_id* was *NA*) was excluded. An `inner_join` only keeps rows for which a match was found in the other table. To keep all rows from the first table, use `left_join` instead.
 
 ```r
 counts_1990w_join <- left_join(counts_1990w, species)
 ```
+{:.input}
 
 ### Exercise 4
 
@@ -324,10 +346,12 @@ We have seen that dplyr functions all take a data frame as their first argument 
 ```r
 c(1,3,5,NA) %>% sum(na.rm = TRUE)   # same as sum(c(1,3,5,NA), na.rm = TRUE)
 ```
+{:.input}
 
 ```
 [1] 9
 ```
+{:.output}
 
 This particular syntax may appear strange in the example above. The pipe operator's main utility is to condense a chain of operations applied to the same piece of data, when you don't need to save the intermediate results. To illustrate this, the code below reproduces all the steps that led to the *counts_1990w_join* data frame.
 
@@ -342,10 +366,12 @@ new_counts <- surveys %>%
 
 identical(new_counts, counts_1990w_join)
 ```
+{:.input}
 
 ```
 [1] TRUE
 ```
+{:.output}
 
 
 ## Bonus: Databases queries with dplyr
@@ -359,6 +385,7 @@ portal_db <- src_postgres(host = "pgstudio.research.sesync.org",
 surveys_sql <- tbl(portal_db, "surveys")
 surveys_sql
 ```
+{:.input}
 
 ```
 Source: postgres 9.5.3 [student@pgstudio.research.sesync.org:5432/portal]
@@ -379,6 +406,7 @@ From: surveys [35,549 x 10]
 ..       ...   ...   ...   ...     ...        ...   ...             ...
 Variables not shown: weight (int), person_id (int)
 ```
+{:.output}
 
 Following those preliminary steps, we can use exactly the same analysis code as before to get the species counts for the 1990 winter months.
 
@@ -389,6 +417,7 @@ counts_1990w_sql <-  surveys_sql %>% filter(year == 1990, month %in% 1:3) %>%
                                      summarise(count = n())
 counts_1990w_sql
 ```
+{:.input}
 
 ```
 Source: postgres 9.5.3 [student@pgstudio.research.sesync.org:5432/portal]
@@ -408,6 +437,7 @@ From: <derived table> [?? x 2]
 10         PF    19
 ..        ...   ...
 ```
+{:.output}
 
 In this case, dplyr translated the R commands to SQL and sent them in a single query to PostgreSQL. Note that the output is still stored on disk rather than in memory. The `collect` function can be used to import a remote table into R, as in `counts_1990w_local <- collect(counts_1990w_sql)`.
 
@@ -429,6 +459,7 @@ If any species/day combination is missing, the corresponding cell after `spread`
 ```r
 counts_spread <- spread(counts_gather, key = species, value = count, fill = 0)
 ```
+{:.input}
 
 [Return](#exercise-1)
 
@@ -441,6 +472,7 @@ Write code that returns the *record_id*, *sex* and *weight* of all surveyed indi
 surveys_RO <- filter(surveys, species_id == "RO")
 select(surveys_RO, record_id, sex, weight)
 ```
+{:.input}
 
 [Return](#exercise-2)
 
@@ -455,6 +487,7 @@ surveys_dm <- group_by(surveys_dm, month)
 summarize(surveys_dm, avg_wgt = mean(weight, na.rm = TRUE),
           avg_hfl = mean(hindfoot_length, na.rm = TRUE))
 ```
+{:.input}
 
 [Return](#exercise-3)
 
@@ -467,6 +500,7 @@ Return only the rows in *counts_1990w_join* that correspond to the most common s
 counts_1990w_join <- group_by(counts_1990w_join, genus)
 filter(counts_1990w_join, count == max(count))
 ```
+{:.input}
 
 Calculate the fraction of total counts by taxa (birds or rodents) represented by each species within that taxon.
 
@@ -474,5 +508,6 @@ Calculate the fraction of total counts by taxa (birds or rodents) represented by
 counts_1990w_join <- group_by(counts_1990w_join, taxa)
 mutate(counts_1990w_join, prop_of_taxa = count / sum(count))
 ```
+{:.input}
 
 [Return](#exercise-4)
