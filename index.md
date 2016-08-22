@@ -2,6 +2,7 @@
 title: "Data manipulation with tidyr and dplyr"
 author: "Philippe Marchand"
 output: md_document
+style: /master/css/lesson.css
 ---
 
 # Data manipulation with tidyr and dplyr
@@ -36,12 +37,43 @@ We will first discuss what is a *tidy* dataset and how to convert data to this s
 We will use the [Portal teaching database](http://github.com/weecology/portal-teachingdb), a simplified dataset derived from a long-term study of animal populations in the Chihuahuan Desert. The teaching dataset includes three tables: two contain summary information on the study plots and observed species, respectively, while the third and largest one (surveys) lists all individual observations, with columns linking to the appropriate species and plot IDs. 
 
 ```r
-setwd("%sandbox%")
-plots <- read.csv("data/plots.csv")
-species <- read.csv("data/species.csv")
-surveys <- read.csv("data/surveys.csv", na.strings = "")
+plots <- read.csv("/nfs/public-data/ci-spring2016/Data/plots.csv")
 ```
-{:.input}
+
+```
+Warning in file(file, "rt"): cannot open file '/nfs/public-data/ci-
+spring2016/Data/plots.csv': No such file or directory
+```
+
+```
+Error in file(file, "rt"): cannot open the connection
+```
+
+```r
+species <- read.csv("/nfs/public-data/ci-spring2016/Data/species.csv")
+```
+
+```
+Warning in file(file, "rt"): cannot open file '/nfs/public-data/ci-
+spring2016/Data/species.csv': No such file or directory
+```
+
+```
+Error in file(file, "rt"): cannot open the connection
+```
+
+```r
+surveys <- read.csv("/nfs/public-data/ci-spring2016/Data/surveys.csv", na.strings = "")
+```
+
+```
+Warning in file(file, "rt"): cannot open file '/nfs/public-data/ci-
+spring2016/Data/surveys.csv': No such file or directory
+```
+
+```
+Error in file(file, "rt"): cannot open the connection
+```
 
 
 ## Tidy data concept
@@ -63,7 +95,6 @@ counts_df <- data.frame(
 )
 counts_df
 ```
-{:.input}
 
 ```
         day wolf hare fox
@@ -71,7 +102,6 @@ counts_df
 2   Tuesday    1   25   4
 3 Wednesday    3   30   4
 ```
-{:.output}
 
 **Question**: How to structure this data in a tidy format as defined above?
 
@@ -91,7 +121,6 @@ library(tidyr)
 counts_gather <- gather(counts_df, key = "species", value = "count", wolf:fox)
 counts_gather
 ```
-{:.input}
 
 ```
         day species count
@@ -105,7 +134,6 @@ counts_gather
 8   Tuesday     fox     4
 9 Wednesday     fox     4
 ```
-{:.output}
 
 Here, `gather` takes all columns between `wolf` and `fox` and reshapes them into two columns, the names of which are specified as the key and value. For each row, the key column in the new dataset indicates the column that contained that value in the original dataset.
 
@@ -117,7 +145,6 @@ If your analysis requires a "wide" data format rather than the tall format produ
 counts_spread <- spread(counts_gather, key = species, value = count)
 counts_spread
 ```
-{:.input}
 
 ```
         day fox hare wolf
@@ -125,7 +152,6 @@ counts_spread
 2   Tuesday   4   25    1
 3 Wednesday   4   30    3
 ```
-{:.output}
 Why are `species` and `count` not quoted here? (They refer to existing column names.)
 
 ### Exercise 1
@@ -160,48 +186,55 @@ After loading dplyr, we begin our analysis by extracting the survey observations
 library(dplyr)
 surveys1990_winter <- filter(surveys, year == 1990, month %in% 1:3)
 ```
-{:.input}
 
+```
+Error in filter_(.data, .dots = lazyeval::lazy_dots(...)): object 'surveys' not found
+```
 Note that a logical "and" is implied when conditions are separated by commas. (This is perhaps the main way in which `filter` differs from the base R `subset` function.) Therefore, the example above is equivalent to `filter(surveys, year == 1990 & month %in% 1:3)`. A logical "or" must be specified explicitly with the `|` operator.
 
 To subset the columns (rather than the rows) of a data frame, we would call `select` with the name of the variables to retain, e.g. `select(df, name, address)` returns a new data frame containing the *name* and *address* columns from *df*. Alternatively, we can *exclude* a column by preceding its name with a minus sign. We use this option here to remove the redundant year column from *surveys_1990_winter*:
 
 ```r
 surveys1990_winter <- select(surveys1990_winter, -year)
-head(surveys1990_winter)
 ```
-{:.input}
 
 ```
-  record_id month day plot_id species_id sex hindfoot_length weight
-1     16879     1   6       1         DM   F              37     35
-2     16880     1   6       1         OL   M              21     28
-3     16881     1   6       6         PF   M              16      7
-4     16882     1   6      23         RM   F              17      9
-5     16883     1   6      12         RM   M              17     10
-6     16884     1   6      24         RM   M              17      9
+Error in select_(.data, .dots = lazyeval::lazy_dots(...)): object 'surveys1990_winter' not found
 ```
-{:.output}
+
+```r
+head(surveys1990_winter)
+```
+
+```
+Error in head(surveys1990_winter): object 'surveys1990_winter' not found
+```
 
 To complete this section, we sort the 1990 winter surveys data by descending order of species name, then by ascending order of weight. For comparison purposes, I include both the dplyr code (`arrange` function) and the base R code performing the same operation. Note that `arrange` assumes ascending order unless the variable name is enclosed by `desc()`.
 
 ```r
 sorted1 <- arrange(surveys1990_winter, desc(species_id), weight)
-sorted2 <- surveys1990_winter[order(-xtfrm(surveys1990_winter$species_id), surveys1990_winter$weight), ]
-head(sorted1)
 ```
-{:.input}
 
 ```
-  record_id month day plot_id species_id sex hindfoot_length weight
-1     16929     1   7       3         SH   M              31     61
-2     17172     2  25       3         SH   F              29     67
-3     17327     3  30       2         SH   M              30     69
-4     16886     1   6      24         SH   F              30     73
-5     17359     3  30       3         SH   F              31     77
-6     17170     2  25       3         SH   M              30     80
+Error in arrange_(.data, .dots = lazyeval::lazy_dots(...)): object 'surveys1990_winter' not found
 ```
-{:.output}
+
+```r
+sorted2 <- surveys1990_winter[order(-xtfrm(surveys1990_winter$species_id), surveys1990_winter$weight), ]
+```
+
+```
+Error in eval(expr, envir, enclos): object 'surveys1990_winter' not found
+```
+
+```r
+head(sorted1)
+```
+
+```
+Error in head(sorted1): object 'sorted1' not found
+```
 
 ### Exercise 2
 
@@ -216,24 +249,27 @@ Another common type of operation on tabular data involves the aggregation of rec
 
 ```r
 surveys1990_winter <- group_by(surveys1990_winter, species_id)
+```
+
+```
+Error in group_by_(.data, .dots = lazyeval::lazy_dots(...), add = add): object 'surveys1990_winter' not found
+```
+
+```r
 counts_1990w <- summarize(surveys1990_winter, count = n())
+```
+
+```
+Error in summarise_(.data, .dots = lazyeval::lazy_dots(...)): object 'surveys1990_winter' not found
+```
+
+```r
 head(counts_1990w)
 ```
-{:.input}
 
 ```
-Source: local data frame [6 x 2]
-
-  species_id count
-      (fctr) (int)
-1         AB    25
-2         AH     4
-3         BA     3
-4         DM   132
-5         DO    65
-6         DS     6
+Error in head(counts_1990w): object 'counts_1990w' not found
 ```
-{:.output}
 
 A few notes on these functions: 
 
@@ -253,23 +289,19 @@ The `mutate` function creates new columns by performing the same operation on ea
 
 ```r
 counts_1990w <- mutate(counts_1990w, prop = count / sum(count))
+```
+
+```
+Error in mutate_(.data, .dots = lazyeval::lazy_dots(...)): object 'counts_1990w' not found
+```
+
+```r
 head(counts_1990w)
 ```
-{:.input}
 
 ```
-Source: local data frame [6 x 3]
-
-  species_id count       prop
-      (fctr) (int)      (dbl)
-1         AB    25 0.05091650
-2         AH     4 0.00814664
-3         BA     3 0.00610998
-4         DM   132 0.26883910
-5         DO    65 0.13238289
-6         DS     6 0.01221996
+Error in head(counts_1990w): object 'counts_1990w' not found
 ```
-{:.output}
 
 Notes:
 
@@ -285,35 +317,18 @@ Inspired by relational databases, the join functions combine information in two 
 ```r
 counts_1990w_join <- inner_join(counts_1990w, species)
 ```
-{:.input}
 
 ```
-Joining by: "species_id"
-
-Warning in inner_join_impl(x, y, by$x, by$y): joining factors with
-different levels, coercing to character vector
+Error in inner_join(counts_1990w, species): object 'counts_1990w' not found
 ```
-{:.output}
 
 ```r
 head(counts_1990w_join)
 ```
-{:.input}
 
 ```
-Source: local data frame [6 x 6]
-
-  species_id count       prop            genus     species   taxa
-       (chr) (int)      (dbl)           (fctr)      (fctr) (fctr)
-1         AB    25 0.05091650       Amphispiza   bilineata   Bird
-2         AH     4 0.00814664 Ammospermophilus     harrisi Rodent
-3         BA     3 0.00610998          Baiomys     taylori Rodent
-4         DM   132 0.26883910        Dipodomys    merriami Rodent
-5         DO    65 0.13238289        Dipodomys       ordii Rodent
-6         DS     6 0.01221996        Dipodomys spectabilis Rodent
+Error in head(counts_1990w_join): object 'counts_1990w_join' not found
 ```
-{:.output}
-
 The messages output by R point to two useful features of `inner_join`: it automatically joins the tables based on shared column names (here, *species\_id*) and it converts factors to characters when their levels don't match. 
 
 It is sometimes useful to manually specify the columns that should be joined, i.e. when corresponding columns don't share the same name, or columns of the same name shouldn't be matched. This can be done with the `by` argument, e.g. if column `id` in *A* matches column `A_id` in *B*, you would write: 
@@ -321,14 +336,12 @@ It is sometimes useful to manually specify the columns that should be joined, i.
 ```r
 inner_join(tableA, tableB, by = c("id" = "A_id")
 ```
-{:.input}
 
 By inspecting the *counts_1990w_join* data frame, you may notice that the last row of *counts_1990w* (where the *species\_id* was *NA*) was excluded. An `inner_join` only keeps rows for which a match was found in the other table. To keep all rows from the first table, use `left_join` instead.
 
 ```r
 counts_1990w_join <- left_join(counts_1990w, species)
 ```
-{:.input}
 
 ### Exercise 4
 
@@ -347,12 +360,10 @@ We have seen that dplyr functions all take a data frame as their first argument 
 ```r
 c(1,3,5,NA) %>% sum(na.rm = TRUE)   # same as sum(c(1,3,5,NA), na.rm = TRUE)
 ```
-{:.input}
 
 ```
 [1] 9
 ```
-{:.output}
 
 This particular syntax may appear strange in the example above. The pipe operator's main utility is to condense a chain of operations applied to the same piece of data, when you don't need to save the intermediate results. To illustrate this, the code below reproduces all the steps that led to the *counts_1990w_join* data frame.
 
@@ -364,15 +375,19 @@ new_counts <- surveys %>%
     summarize(count = n()) %>%
     mutate(prop = count / sum(count)) %>%
     inner_join(species)
+```
 
+```
+Error in eval(expr, envir, enclos): object 'surveys' not found
+```
+
+```r
 identical(new_counts, counts_1990w_join)
 ```
-{:.input}
 
 ```
-[1] TRUE
+Error in identical(new_counts, counts_1990w_join): object 'new_counts' not found
 ```
-{:.output}
 
 
 ## Bonus: Databases queries with dplyr
@@ -383,31 +398,27 @@ Another big advantage of dplyr is that you can query tables from a SQL database 
 portal_db <- src_postgres(host = "pgstudio.research.sesync.org",
                           dbname = "portal", user = "student", 
                           password = "%password%")
+```
+
+```
+Error: RPostgreSQL package required to connect to postgres db
+```
+
+```r
 surveys_sql <- tbl(portal_db, "surveys")
+```
+
+```
+Error in tbl(portal_db, "surveys"): object 'portal_db' not found
+```
+
+```r
 surveys_sql
 ```
-{:.input}
 
 ```
-Source: postgres 9.5.3 [student@pgstudio.research.sesync.org:5432/portal]
-From: surveys [35,549 x 10]
-
-   record_id month   day  year plot_id species_id   sex hindfoot_length
-       (int) (int) (int) (int)   (int)      (chr) (chr)           (int)
-1          3     7    16  1977       2         DM     F              37
-2          4     7    16  1977       7         DM     M              36
-3          5     7    16  1977       3         DM     M              35
-4          6     7    16  1977       1         PF     M              14
-5          7     7    16  1977       2         PE     F              NA
-6          8     7    16  1977       1         DM     M              37
-7          9     7    16  1977       1         DM     F              34
-8         10     7    16  1977       6         PF     F              20
-9         11     7    16  1977       5         DS     F              53
-10        12     7    16  1977       7         DM     M              38
-..       ...   ...   ...   ...     ...        ...   ...             ...
-Variables not shown: weight (int), person_id (int)
+Error in eval(expr, envir, enclos): object 'surveys_sql' not found
 ```
-{:.output}
 
 Following those preliminary steps, we can use exactly the same analysis code as before to get the species counts for the 1990 winter months.
 
@@ -416,29 +427,19 @@ counts_1990w_sql <-  surveys_sql %>% filter(year == 1990, month %in% 1:3) %>%
                                      select(-year) %>%
                                      group_by(species_id) %>%
                                      summarise(count = n())
+```
+
+```
+Error in eval(expr, envir, enclos): object 'surveys_sql' not found
+```
+
+```r
 counts_1990w_sql
 ```
-{:.input}
 
 ```
-Source: postgres 9.5.3 [student@pgstudio.research.sesync.org:5432/portal]
-From: <derived table> [?? x 2]
-
-   species_id count
-        (chr) (dbl)
-1          NA     1
-2          PP     1
-3          RF    10
-4          RM   115
-5          PC     7
-6          SH     7
-7          AB    25
-8          OL     7
-9          SF    13
-10         PF    19
-..        ...   ...
+Error in eval(expr, envir, enclos): object 'counts_1990w_sql' not found
 ```
-{:.output}
 
 In this case, dplyr translated the R commands to SQL and sent them in a single query to PostgreSQL. Note that the output is still stored on disk rather than in memory. The `collect` function can be used to import a remote table into R, as in `counts_1990w_local <- collect(counts_1990w_sql)`.
 
@@ -460,7 +461,6 @@ If any species/day combination is missing, the corresponding cell after `spread`
 ```r
 counts_spread <- spread(counts_gather, key = species, value = count, fill = 0)
 ```
-{:.input}
 
 [Return](#exercise-1)
 
@@ -473,7 +473,6 @@ Write code that returns the *record_id*, *sex* and *weight* of all surveyed indi
 surveys_RO <- filter(surveys, species_id == "RO")
 select(surveys_RO, record_id, sex, weight)
 ```
-{:.input}
 
 [Return](#exercise-2)
 
@@ -488,7 +487,6 @@ surveys_dm <- group_by(surveys_dm, month)
 summarize(surveys_dm, avg_wgt = mean(weight, na.rm = TRUE),
           avg_hfl = mean(hindfoot_length, na.rm = TRUE))
 ```
-{:.input}
 
 [Return](#exercise-3)
 
@@ -501,7 +499,6 @@ Return only the rows in *counts_1990w_join* that correspond to the most common s
 counts_1990w_join <- group_by(counts_1990w_join, genus)
 filter(counts_1990w_join, count == max(count))
 ```
-{:.input}
 
 Calculate the fraction of total counts by taxa (birds or rodents) represented by each species within that taxon.
 
@@ -509,6 +506,5 @@ Calculate the fraction of total counts by taxa (birds or rodents) represented by
 counts_1990w_join <- group_by(counts_1990w_join, taxa)
 mutate(counts_1990w_join, prop_of_taxa = count / sum(count))
 ```
-{:.input}
 
 [Return](#exercise-4)
