@@ -1,4 +1,5 @@
-baseurl: '/data-manipulation-in-R-lesson'
+baseurl: /data-manipulation-in-R-lesson
+styleurl: https://rawgit.com/sesync-ci/lesson-stylesheets
 exclude: [index.Rmd]
 defaults:
   -
