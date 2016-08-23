@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+    
+    <head>
+	
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<title>{{ site.title }}</title>
+	<meta name="description"
+	      content="{% if page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}{% else %}{{ site.description }}{% endif %}">
+
+	<link rel="stylesheet" href="{{ page.reveal }}/css/reveal.css">
+	<link rel="stylesheet" href="{{ page.reveal }}/css/theme/sky.css" id="theme">
+	
+	<!--[if lt IE 9]>
+            <script src="{{ page.reveal }}/lib/js/html5shiv.js"></script>
+	<![endif]-->
+	
+	<style type="text/css">
+	 img + br + em {
+	     font-size: 0.5em !Important;
+	 }
+	 
+	 .reveal section p {
+	     margin-top: 2em;
+	     margin-bottom: 1em;
+	 }
+	 
+	 .reveal .slides section.right-third {
+	     width: 50%;
+	     margin-left: 65vw;
+	 }
+	 
+	 .input pre {
+	     width: 100%;
+	     margin: 2px;
+	     background-color: #EBECE4;
+	 }
+	 
+	 .output pre {
+	     width: 100%;
+	     margin: 2px;
+	     background-color: #FFFFFF;
+	 }
+	 
+	 .text-document.highlighter-rouge pre {
+	     background-color: #000000;
+	     margin: 2px auto;
+	     width: 100%;
+     	     border-radius: 0px 0px 5px 5px;
+	 }
+	 
+	 .text-document.highlighter-rouge code {
+	     background-color: transparent;
+	     color: #FFFFFF;
+	 }
+	 
+	 div.text-document::before {
+	     content: attr(title);
+	     text-align: left;
+	     font-family: Monaco, Bitstream Vera Sans Mono, Lucida Console, Terminal, Consolas, Liberation Mono, DejaVu Sans Mono, Courier New, monospace;
+	     /* font-size: 14px; */
+	     color: #000000;
+	     background: #C0C0C0;
+	     padding: 8px 15px;
+	     border-radius: 5px 5px 0px 0px;
+	     border: 1px solid #C0C0C0;
+	     display: block;
+	 }     
+
+	 .reveal pre {
+	     font-size: 100%;
+	 }
+
+	 .reveal {
+             font-size: 42px;
+	 }
+	 
+	 p.on-white {
+	     background-color: rgba(255,255,255,0.75);
+	     border: 2px solid rgba(255,255,255,0.75);
+	     border-radius: 15px;
+	 }
+	 
+	</style>
+
+    </head>
+    
+    <body>
+	
+	<div class="reveal">
+      
+	    <div class="slides">
+
+		{{ content }}
+	
+	    </div>
+      
+	</div>
+
+	<script src="{{ page.reveal }}/lib/js/head.min.js"></script>
+	<script src="{{ page.reveal }}/js/reveal.js"></script>
+	<script>
+	 Reveal.initialize({
+
+	     // Size
+	     width: 1300,
+	     height: 1200,
+	     margin: 0.15,
+
+	     // Transition
+	     transition: 'default',
+
+	     // Plugins
+	     dependencies: [
+
+		 // Zoom in and out with Alt+click
+		 { src: '{{ page.reveal }}/plugin/zoom-js/zoom.js', async: true },
+
+		 // Speaker notes
+		 { src: '{{ page.reveal }}/plugin/notes/notes.js', async: true },
+
+		 // MathJax
+		 { src: '{{ page.reveal }}/plugin/math/math.js', async: true },
+	     ],
+	 });
+	 
+	</script>
+	
+    </body>
+    
+</html>

@@ -1,6 +1,10 @@
 baseurl: /data-manipulation-in-R-lesson
 styleurl: https://rawgit.com/sesync-ci/lesson-stylesheets
-exclude: [index.Rmd]
+kramdown:
+  parse_block_html: true
+  toc_levels: 2..2
+exclude:
+  - '*.Rmd'
 defaults:
   -
     scope:
