@@ -57,7 +57,7 @@ counts_df <- data.frame(
   fox = c(4, 4, 4)
 )
 ~~~
-{:.text-document title="lesson-1.R"}
+{:.text-document title="lesson-2.R"}
 
 ~~~r
 counts_df
@@ -103,7 +103,7 @@ Let's load the **tidyr** package and use its `gather` function to reshape *count
 library(tidyr)
 counts_gather <- gather(counts_df, key = "species", value = "count", wolf:fox)
 ~~~
-{:.text-document}
+{:.text-document title="lesson-2.R"}
 
   </section>
   <section>
@@ -145,7 +145,7 @@ If your analysis requires a "wide" data format rather than the tall format produ
 ~~~r
 counts_spread <- spread(counts_gather, key = species, value = count)
 ~~~
-{:.text-document}
+{:.text-document title="lesson-2.R"}
 
 
 ~~~r
@@ -196,7 +196,7 @@ We will use the [Portal teaching database](http://github.com/weecology/portal-te
 ~~~r
 surveys <- read.csv("data/surveys.csv")
 ~~~
-{:.text-document}
+{:.text-document title="lesson-2.R"}
 
 
 ~~~r
@@ -233,7 +233,7 @@ Modify the function to specify what string in the CSV file represents NAs, a.k.a
 ~~~r
 surveys <- read.csv("data/surveys.csv", na.strings = "")
 ~~~
-{:.text-document}
+{:.text-document title="lesson-2.R"}
 
 Question
 : What has changed?
@@ -276,7 +276,7 @@ After loading dplyr, we begin our analysis by extracting the survey observations
 library(dplyr)
 surveys_1990_winter <- filter(surveys, year == 1990, month %in% 1:3)
 ~~~
-{:.text-document}
+{:.text-document title="lesson-2.R"}
 
 
 ~~~r
@@ -324,7 +324,7 @@ Alternatively, we can *exclude* a column by preceding its name with a minus sign
 ~~~r
 surveys_1990_winter <- select(surveys_1990_winter, -year)
 ~~~
-{:.text-document}
+{:.text-document title="lesson-2.R"}
 
 
 ~~~r
@@ -354,7 +354,7 @@ To complete this section, we sort the 1990 winter surveys data by descending ord
 ~~~r
 sorted <- arrange(surveys_1990_winter, desc(species_id), weight)
 ~~~
-{:.text-document}
+{:.text-document title="lesson-2.R"}
 
 
 ~~~r
@@ -404,7 +404,7 @@ We first define a grouping of our *surveys_1990_winter* data frame with `group_b
 surveys_1990_winter_gb <- group_by(surveys_1990_winter, species_id)
 counts_1990_winter <- summarize(surveys_1990_winter_gb, count = n())
 ~~~
-{:.text-document}
+{:.text-document title="lesson-2.R"}
 
 
 ~~~r
@@ -464,7 +464,7 @@ The `mutate` function creates new columns by performing the same operation on ea
 ~~~r
 prop_1990_winter <- mutate(counts_1990_winter, prop = count / sum(count))
 ~~~
-{:.text-document}
+{:.text-document title="lesson-2.R"}
 
 
 ~~~r
@@ -571,7 +571,7 @@ prop_1990_winter_piped <- surveys %>%
     summarize(count = n()) %>%
     mutate(prop = count / sum(count))
 ~~~
-{:.text-document}
+{:.text-document title="lesson-2.R"}
 
 
 ~~~r
@@ -611,7 +611,7 @@ If any species/day combination is missing, the corresponding cell after `spread`
 ~~~r
 sol1 <- spread(counts_gather, key = species, value = count, fill = 0)
 ~~~
-{:.text-document}
+{:.text-document title="lesson-2.R"}
 
 
 ~~~r
@@ -696,7 +696,7 @@ summarize(surveys_dm, avg_wgt = mean(weight, na.rm = TRUE),
 </section>
 <section>
 
-### Solution 4
+### Solution 4a
 
 Filter a grouped data frame to return only rows showing the records from *surveys_1990_winter* with the minimum weight for each *species_id*.
 
@@ -727,6 +727,11 @@ Groups: species_id [11]
 13     17216     2    25      10         RM      M              17      6
 ~~~
 {:.output}
+
+</section>
+<section>
+
+### Solution 4b
 
 For each species in surveys_1990_winter_gb, create a new colum giving the rank order of hindfoot length.
 
