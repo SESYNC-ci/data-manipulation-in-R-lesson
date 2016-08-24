@@ -516,7 +516,7 @@ A few notes about transformations:
 We often use `group_by` along with `summarize`, but you can also apply `filter` and `mutate` operations on groups.
 
 - Filter a grouped data frame to return only rows showing the records from *surveys_1990_winter* with the minimum weight for each *species_id*.
-- Calculate the fraction of total counts by taxa (birds or rodents) represented by each species within that taxon.
+- For each species in *surveys_1990_winter_gb*, create a new colum giving the rank order (within that species!) of hindfoot length.
 
 <aside class="notes">
 
@@ -650,7 +650,6 @@ str(sol1)
 
 ### Solution 2
 
-Write code that returns the *record_id*, *sex* and *weight* of all surveyed individuals of *Reithrodontomys montanus* (RO).
 
 ~~~r
 surveys_RO <- filter(surveys, species_id == "RO")
@@ -669,7 +668,6 @@ surveys_R0 <- select(surveys_RO, record_id, sex, weight)
 
 ### Solution 3
 
-Write code that returns the average weight and hindfoot length of *Dipodomys merriami* (DM) individuals observed in each month (irrespective of the year). Make sure to exclude *NA* values.
 
 ~~~r
 surveys_dm <- filter(surveys, species_id == "DM")
@@ -709,8 +707,6 @@ summarize(surveys_dm, avg_wgt = mean(weight, na.rm = TRUE),
 
 ### Solution 4a
 
-Filter a grouped data frame to return only rows showing the records from *surveys_1990_winter* with the minimum weight for each *species_id*.
-
 
 ~~~r
 filter(surveys_1990_winter_gb, weight == min(weight))
@@ -743,8 +739,6 @@ Groups: species_id [11]
 <section>
 
 ### Solution 4b
-
-For each species in surveys_1990_winter_gb, create a new colum giving the rank order of hindfoot length.
 
 
 ~~~r
