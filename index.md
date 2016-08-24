@@ -2,7 +2,7 @@
 title: "Data manipulation with tidyr and dplyr"
 author: "Philippe Marchand"
 output: md_document
-style: /master/css/lesson.css
+style: /css/lesson.css
 ---
 
 <section>
@@ -101,7 +101,10 @@ Let's load the **tidyr** package and use its `gather` function to reshape *count
 
 ~~~r
 library(tidyr)
-counts_gather <- gather(counts_df, key = "species", value = "count", wolf:fox)
+counts_gather <- gather(counts_df,
+			key = "species",
+			value = "count",
+			wolf:fox)
 ~~~
 {:.text-document title="lesson-2.R"}
 
@@ -143,7 +146,9 @@ If your analysis requires a "wide" data format rather than the tall format produ
 
 
 ~~~r
-counts_spread <- spread(counts_gather, key = species, value = count)
+counts_spread <- spread(counts_gather,
+			key = species,
+			value = count)
 ~~~
 {:.text-document title="lesson-2.R"}
 
@@ -274,7 +279,9 @@ After loading dplyr, we begin our analysis by extracting the survey observations
 
 ~~~r
 library(dplyr)
-surveys_1990_winter <- filter(surveys, year == 1990, month %in% 1:3)
+surveys_1990_winter <- filter(surveys,
+			      year == 1990,
+			      month %in% 1:3)
 ~~~
 {:.text-document title="lesson-2.R"}
 
@@ -311,7 +318,9 @@ To choose particular columns (rather than the rows) of a data frame, we would ca
 
 
 ~~~r
-select(surveys_1990_winter, record_id, month, day, plot_id, species_id, sex, hindfoot_length, weight)
+select(surveys_1990_winter,
+       record_id, month, day, plot_id,
+       species_id, sex, hindfoot_length, weight)
 ~~~
 {:.input}
 
@@ -352,7 +361,8 @@ To complete this section, we sort the 1990 winter surveys data by descending ord
 
 
 ~~~r
-sorted <- arrange(surveys_1990_winter, desc(species_id), weight)
+sorted <- arrange(surveys_1990_winter,
+                  desc(species_id), weight)
 ~~~
 {:.text-document title="lesson-2.R"}
 
@@ -462,7 +472,8 @@ The `mutate` function creates new columns by performing the same operation on ea
 
 
 ~~~r
-prop_1990_winter <- mutate(counts_1990_winter, prop = count / sum(count))
+prop_1990_winter <- mutate(counts_1990_winter,
+                           prop = count / sum(count))
 ~~~
 {:.text-document title="lesson-2.R"}
 
@@ -737,7 +748,8 @@ For each species in surveys_1990_winter_gb, create a new colum giving the rank o
 
 
 ~~~r
-mutate(surveys_1990_winter_gb, ranked_hf_length = row_number(hindfoot_length))
+mutate(surveys_1990_winter_gb,
+       ranked_hf_length = row_number(hindfoot_length))
 ~~~
 {:.input}
 
@@ -766,4 +778,5 @@ Groups: species_id [20]
 [Return](#exercise-4)
 
 </aside>
+
 </section>
