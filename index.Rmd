@@ -368,7 +368,7 @@ A few notes about transformations:
 We often use `group_by` along with `summarize`, but you can also apply `filter` and `mutate` operations on groups.
 
 - Filter a grouped data frame to return only rows showing the records from *surveys_1990_winter* with the minimum weight for each *species_id*.
-- For each species in *surveys_1990_winter_gb*, create a new colum giving the rank order (within that species!) of hindfoot length.
+- For each species in *surveys_1990_winter_gb*, create a new colum giving the rank order (within that species!) of hindfoot length. (Hint: Read the documentation under `?ranking`.)
 
 <aside class="notes">
 
