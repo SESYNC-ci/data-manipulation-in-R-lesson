@@ -705,7 +705,9 @@ summarize(surveys_dm, avg_wgt = mean(weight, na.rm = TRUE),
 </section>
 <section>
 
-### Solution 4a
+### Solution 4
+
+#### Part 1
 
 
 ~~~r
@@ -738,7 +740,7 @@ Groups: species_id [11]
 </section>
 <section>
 
-### Solution 4b
+#### Part 2
 
 
 ~~~r
