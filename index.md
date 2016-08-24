@@ -9,7 +9,7 @@ style: /css/lesson.css
 
 # Data manipulation with tidyr and dplyr
 
-Instructor: Philippe Marchand
+Instructor: Mary Shelley
 
 <aside class="notes">
 
