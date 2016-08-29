@@ -1,5 +1,6 @@
 baseurl: /data-manipulation-in-R-lesson
-styleurl: "https://rawgit.com/sesync-ci/lesson-stylesheets/master"
+styleurl: https://cdn.rawgit.com/SESYNC-ci/lesson-stylesheets
+
 kramdown:
   parse_block_html: true
   toc_levels: 2..2

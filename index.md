@@ -2,7 +2,7 @@
 title: "Data manipulation with tidyr and dplyr"
 author: "Philippe Marchand"
 output: md_document
-style: /css/lesson.css
+style: /1.0.0//css/lesson.css
 ---
 
 <section>
