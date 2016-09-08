@@ -1,0 +1,43 @@
+---
+---
+
+## Tidy data concept
+
+R developer Hadley Wickham (author of the tidyr, dplyr and ggplot packages, among others) defines tidy datasets as those where:
+
+* each variable forms a column;
+* each observation forms a row; and
+* each type of observational unit forms a table. ([Wickham 2014](http://www.jstatsoft.org/v59/i10/paper))
+
+These guidelines may be familiar to some of you, as they closely map to best practices in database design.
+
+<!--split-->
+
+Build a `data.frame` where the counts of three species are recorded for each day in a week:
+
+```{r counts_df, block_ial='{:.text-document title="lesson-2.R"}'}
+counts_df <- data.frame(
+  day = c("Monday", "Tuesday", "Wednesday"),
+  wolf = c(2, 1, 3),
+  hare = c(20, 25, 30),
+  fox = c(4, 4, 4)
+)
+
+```{r view_counts_df}
+counts_df
+```
+
+<!--split-->
+
+- Question
+  - How would you structure this data in a tidy format as defined above?
+- Answer
+  - {:.fragment} Currently, *counts_df* has three columns (*wolf*, *hare* and *fox*) representing the same variable (a count). Since each reported observation is the count of individuals from a given species on a given day, the tidy format should have three columns: *day*, *species* and *count*.
+
+<aside class="notes">
+
+To put it another way, if your analysis requires grouping observations based on some characteristic (e.g. draw a graph of the counts over time with a different color for each species), then this characteristic should be recorded as different levels of a categorical variable (species) rather than spread across different variables/columns. 
+
+While the tidy format is optimal for many common data frame operations in R (aggregation, plotting, fitting statistical models), it is not the optimal structure for every case. As an example, community ecology analyses often start from a matrix of counts where rows and columns correspond to species and sites.
+
+</aside>

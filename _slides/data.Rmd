@@ -1,0 +1,34 @@
+---
+---
+
+## Sample data
+
+We will use the [Portal teaching database](http://github.com/weecology/portal-teachingdb), a simplified dataset derived from a long-term study of animal populations in the Chihuahuan Desert.
+
+```{r read_data, block_ial='{:.text-document title="lesson-2.R"}'}
+surveys <- read.csv("data/surveys.csv")
+```
+
+```{r}
+str(surveys)
+```
+
+<aside class="notes">
+
+The teaching dataset includes three tables: two contain summary information on the study plots and observed species, respectively, while the third and largest one (surveys) lists all individual observations. We only need the surveys table for this lesson.
+
+</aside>
+
+<!--split-->
+
+Modify the function to specify what string in the CSV file represents NAs, a.k.a. data that is not-available or missing.
+
+```{r read_data_na, block_ial='{:.text-document title="lesson-2.R"}'}
+surveys <- read.csv("data/surveys.csv", na.strings = "")
+```
+
+Question
+: What has changed?
+
+Answer
+: {:.fragment} The `str` shows that the factors have one less level, and the empty string is not included.
