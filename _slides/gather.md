@@ -39,7 +39,7 @@ counts_gather
 
 Here, `gather` takes all columns between `wolf` and `fox` and reshapes them into two columns, the names of which are specified as the key and value. For each row, the key column in the new dataset indicates the column that contained that value in the original dataset.
 
-<aside class="notes">
+<aside class="notes" markdown="block">
 
 Some notes on the syntax: From a workflow perspective, a big advantage of tidyr and dplyr is that each function takes a data frame as its first parameter and returns the transformed data frame. As we will see later, it makes it very easy to apply these functions in a chain. All functions also let us use column names as variables without having to prefix them with the name of the data frame (i.e. `wolf` instead of `counts_df$wolf`).
 
@@ -86,7 +86,7 @@ Try removing a row from `counts_gather` (e.g. `counts_gather <- counts_gather[-8
 
 Hint: View the help file for that function by entering `?gather` on the console.
 
-<aside class="notes">
+<aside class="notes" markdown="block">
 
 [View solution](#solution-1)
 

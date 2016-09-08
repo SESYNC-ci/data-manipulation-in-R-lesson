@@ -28,7 +28,7 @@ str(sol1)
 ~~~
 {:.output}
 
-<aside class="notes">
+<aside class="notes" markdown="block">
 
 [Return](#exercise-1)
 
@@ -41,25 +41,11 @@ str(sol1)
 
 ~~~r
 surveys_RO <- filter(surveys, species_id == "RO")
-~~~
-{:.input}
-
-~~~
-Error in filter_(.data, .dots = lazyeval::lazy_dots(...)): object 'surveys' not found
-~~~
-{:.input}
-
-~~~r
 surveys_R0 <- select(surveys_RO, record_id, sex, weight)
 ~~~
 {:.input}
 
-~~~
-Error in select_(.data, .dots = lazyeval::lazy_dots(...)): object 'surveys_RO' not found
-~~~
-{:.output}
-
-<aside class="notes">
+<aside class="notes" markdown="block">
 
 [Return](#exercise-2)
 
@@ -72,36 +58,32 @@ Error in select_(.data, .dots = lazyeval::lazy_dots(...)): object 'surveys_RO' n
 
 ~~~r
 surveys_dm <- filter(surveys, species_id == "DM")
-~~~
-{:.input}
-
-~~~
-Error in filter_(.data, .dots = lazyeval::lazy_dots(...)): object 'surveys' not found
-~~~
-{:.input}
-
-~~~r
 surveys_dm <- group_by(surveys_dm, month)
-~~~
-{:.input}
-
-~~~
-Error in group_by_(.data, .dots = lazyeval::lazy_dots(...), add = add): object 'surveys_dm' not found
-~~~
-{:.input}
-
-~~~r
 summarize(surveys_dm, avg_wgt = mean(weight, na.rm = TRUE),
           avg_hfl = mean(hindfoot_length, na.rm = TRUE))
 ~~~
 {:.input}
 
 ~~~
-Error in summarise_(.data, .dots = lazyeval::lazy_dots(...)): object 'surveys_dm' not found
+# A tibble: 12 x 3
+   month  avg_wgt  avg_hfl
+   <int>    <dbl>    <dbl>
+1      1 42.93697 36.09476
+2      2 43.95270 36.18777
+3      3 45.19864 36.11765
+4      4 44.75411 36.18793
+5      5 43.16449 35.82848
+6      6 41.52889 35.97699
+7      7 41.93692 35.71283
+8      8 41.84119 35.79850
+9      9 43.32794 35.83817
+10    10 42.50980 35.95254
+11    11 42.35932 35.94831
+12    12 42.98561 36.04545
 ~~~
 {:.output}
 
-<aside class="notes">
+<aside class="notes" markdown="block">
 
 [Return](#exercise-3)
 
@@ -120,7 +102,24 @@ filter(surveys_1990_winter_gb, weight == min(weight))
 {:.input}
 
 ~~~
-Error in filter_(.data, .dots = lazyeval::lazy_dots(...)): object 'surveys_1990_winter_gb' not found
+Source: local data frame [13 x 8]
+Groups: species_id [11]
+
+   record_id month   day plot_id species_id    sex hindfoot_length weight
+       <int> <int> <int>   <int>     <fctr> <fctr>           <int>  <int>
+1      16885     1     6      12         SF      M              25     35
+2      16894     1     6       1         OT      F              21     20
+3      16915     1     6      19         PF      F              16      6
+4      16929     1     7       3         SH      M              31     61
+5      16959     1     7      13         PP      M              21     14
+6      17003     1    29      24         RF      F              19     11
+7      17024     1    29      22         PH      F              28     33
+8      17036     1    29       1         OL      F              22     24
+9      17146     2    24       1         NL      M              25     48
+10     17155     2    24      22         PH      F              27     33
+11     17174     2    25       5         BA      M              14      7
+12     17190     2    25       5         BA      F              14      7
+13     17216     2    25      10         RM      M              17      6
 ~~~
 {:.output}
 
@@ -138,11 +137,26 @@ mutate(surveys_1990_winter_gb,
 {:.input}
 
 ~~~
-Error in mutate_(.data, .dots = lazyeval::lazy_dots(...)): object 'surveys_1990_winter_gb' not found
+Source: local data frame [491 x 9]
+Groups: species_id [20]
+
+   record_id month   day plot_id species_id    sex hindfoot_length weight
+       <int> <int> <int>   <int>     <fctr> <fctr>           <int>  <int>
+1      16879     1     6       1         DM      F              37     35
+2      16880     1     6       1         OL      M              21     28
+3      16881     1     6       6         PF      M              16      7
+4      16882     1     6      23         RM      F              17      9
+5      16883     1     6      12         RM      M              17     10
+6      16884     1     6      24         RM      M              17      9
+7      16885     1     6      12         SF      M              25     35
+8      16886     1     6      24         SH      F              30     73
+9      16887     1     6      12         SF      M              28     44
+10     16888     1     6      17         DO      M              36     55
+# ... with 481 more rows, and 1 more variables: ranked_hf_length <int>
 ~~~
 {:.output}
 
-<aside class="notes">
+<aside class="notes" markdown="block">
 
 [Return](#exercise-4)
 

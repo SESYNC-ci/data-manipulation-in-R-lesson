@@ -12,7 +12,7 @@
 | summarize(*data*, *newvar* = *function*) | a data frame with *newvar* columns that summarize *data* (or each group in *data*) based on an aggregation *function* |
 | mutate(*data*, *newvar* = *function*)    | a data frame with *newvar* columns defined by a *function* of existing columns                                        |
 
-<aside class="notes">
+<aside class="notes" markdown="block">
 
 The table above presents the most commonly used functions in `dplyr`, which we will demonstrate in turn, starting from the *surveys* data frame.
 
@@ -33,11 +33,6 @@ surveys_1990_winter <- filter(surveys,
 ~~~
 {:.text-document title="lesson-2.R"}
 
-~~~
-Error in filter_(.data, .dots = lazyeval::lazy_dots(...)): object 'surveys' not found
-~~~
-NA
-
 
 ~~~r
 str(surveys_1990_winter)
@@ -45,11 +40,20 @@ str(surveys_1990_winter)
 {:.input}
 
 ~~~
-Error in str(surveys_1990_winter): object 'surveys_1990_winter' not found
+'data.frame':	491 obs. of  9 variables:
+ $ record_id      : int  16879 16880 16881 16882 16883 16884 16885 16886 16887 16888 ...
+ $ month          : int  1 1 1 1 1 1 1 1 1 1 ...
+ $ day            : int  6 6 6 6 6 6 6 6 6 6 ...
+ $ year           : int  1990 1990 1990 1990 1990 1990 1990 1990 1990 1990 ...
+ $ plot_id        : int  1 1 6 23 12 24 12 24 12 17 ...
+ $ species_id     : Factor w/ 48 levels "AB","AH","AS",..: 12 17 23 33 33 33 38 39 38 13 ...
+ $ sex            : Factor w/ 2 levels "F","M": 1 2 2 1 2 2 2 1 2 2 ...
+ $ hindfoot_length: int  37 21 16 17 17 17 25 30 28 36 ...
+ $ weight         : int  35 28 7 9 10 9 35 73 44 55 ...
 ~~~
 {:.output}
 
-<aside class="notes">
+<aside class="notes" markdown="block">
 
 Note that a logical "and" is implied when conditions are separated by commas. (This is perhaps the main way in which `filter` differs from the base R `subset` function.) Therefore, the example above is equivalent to `filter(surveys, year == 1990 & month %in% 1:3)`. A logical "or" must be specified explicitly with the `|` operator.
 
@@ -78,11 +82,6 @@ surveys_1990_winter <- select(surveys_1990_winter, -year)
 ~~~
 {:.text-document title="lesson-2.R"}
 
-~~~
-Error in select_(.data, .dots = lazyeval::lazy_dots(...)): object 'surveys_1990_winter' not found
-~~~
-NA
-
 
 ~~~r
 str(surveys_1990_winter)
@@ -90,7 +89,15 @@ str(surveys_1990_winter)
 {:.input}
 
 ~~~
-Error in str(surveys_1990_winter): object 'surveys_1990_winter' not found
+'data.frame':	491 obs. of  8 variables:
+ $ record_id      : int  16879 16880 16881 16882 16883 16884 16885 16886 16887 16888 ...
+ $ month          : int  1 1 1 1 1 1 1 1 1 1 ...
+ $ day            : int  6 6 6 6 6 6 6 6 6 6 ...
+ $ plot_id        : int  1 1 6 23 12 24 12 24 12 17 ...
+ $ species_id     : Factor w/ 48 levels "AB","AH","AS",..: 12 17 23 33 33 33 38 39 38 13 ...
+ $ sex            : Factor w/ 2 levels "F","M": 1 2 2 1 2 2 2 1 2 2 ...
+ $ hindfoot_length: int  37 21 16 17 17 17 25 30 28 36 ...
+ $ weight         : int  35 28 7 9 10 9 35 73 44 55 ...
 ~~~
 {:.output}
 
@@ -106,11 +113,6 @@ sorted <- arrange(surveys_1990_winter,
 ~~~
 {:.text-document title="lesson-2.R"}
 
-~~~
-Error in arrange_(.data, .dots = lazyeval::lazy_dots(...)): object 'surveys_1990_winter' not found
-~~~
-NA
-
 
 ~~~r
 head(sorted)
@@ -118,7 +120,13 @@ head(sorted)
 {:.input}
 
 ~~~
-Error in head(sorted): object 'sorted' not found
+  record_id month day plot_id species_id sex hindfoot_length weight
+1     16929     1   7       3         SH   M              31     61
+2     17172     2  25       3         SH   F              29     67
+3     17327     3  30       2         SH   M              30     69
+4     16886     1   6      24         SH   F              30     73
+5     17359     3  30       3         SH   F              31     77
+6     17170     2  25       3         SH   M              30     80
 ~~~
 {:.output}
 
@@ -128,7 +136,7 @@ Error in head(sorted): object 'sorted' not found
 
 Write code that returns the *record_id*, *sex* and *weight* of all surveyed individuals of *Reithrodontomys montanus* (RO).
 
-<aside class="notes">
+<aside class="notes" markdown="block">
 
 [View solution](#solution-2)
 
@@ -140,7 +148,7 @@ Write code that returns the *record_id*, *sex* and *weight* of all surveyed indi
 
 Another common type of operation on tabular data involves the aggregation of records according to specific grouping variables. In particular, let's say we want to count the number of individuals by species observed in the winter of 1990.
 
-<aside class="notes">
+<aside class="notes" markdown="block">
 
 We first define a grouping of our *surveys_1990_winter* data frame with `group_by`, then call `summarize` to aggregate values in each group using a given function (here, the built-in function `n()` to count the rows).
 
@@ -149,23 +157,9 @@ We first define a grouping of our *surveys_1990_winter* data frame with `group_b
 
 ~~~r
 surveys_1990_winter_gb <- group_by(surveys_1990_winter, species_id)
-~~~
-{:.text-document title="lesson-2.R"}
-
-~~~
-Error in group_by_(.data, .dots = lazyeval::lazy_dots(...), add = add): object 'surveys_1990_winter' not found
-~~~
-{:.text-document title="lesson-2.R"}
-
-~~~r
 counts_1990_winter <- summarize(surveys_1990_winter_gb, count = n())
 ~~~
 {:.text-document title="lesson-2.R"}
-
-~~~
-Error in summarise_(.data, .dots = lazyeval::lazy_dots(...)): object 'surveys_1990_winter_gb' not found
-~~~
-NA
 
 
 ~~~r
@@ -174,7 +168,15 @@ head(counts_1990_winter)
 {:.input}
 
 ~~~
-Error in head(counts_1990_winter): object 'counts_1990_winter' not found
+# A tibble: 6 x 2
+  species_id count
+      <fctr> <int>
+1         AB    25
+2         AH     4
+3         BA     3
+4         DM   132
+5         DO    65
+6         DS     6
 ~~~
 {:.output}
 
@@ -186,7 +188,7 @@ A few notes on these functions:
 - You can add multiple variables (separated by commas) in `group_by`; each distinct combination of values across these columns defines a different group.
 - A single call to `summarize` can define more than one variable, each with its own function.
 
-<aside class="notes">
+<aside class="notes" markdown="block">
 
 You can see attributes either by running the `str()` function on the data frame or by inspecting it in the RStudio *Environment* pane.
 
@@ -199,7 +201,7 @@ You can see attributes either by running the `str()` function on the data frame 
 
 Write code that returns the average weight and hindfoot length of *Dipodomys merriami* (DM) individuals observed in each month (irrespective of the year). Make sure to exclude *NA* values.
 
-<aside class="notes">
+<aside class="notes" markdown="block">
 
 [View solution](#solution-3)
 
@@ -218,11 +220,6 @@ prop_1990_winter <- mutate(counts_1990_winter,
 ~~~
 {:.text-document title="lesson-2.R"}
 
-~~~
-Error in mutate_(.data, .dots = lazyeval::lazy_dots(...)): object 'counts_1990_winter' not found
-~~~
-NA
-
 
 ~~~r
 head(prop_1990_winter)
@@ -230,7 +227,15 @@ head(prop_1990_winter)
 {:.input}
 
 ~~~
-Error in head(prop_1990_winter): object 'prop_1990_winter' not found
+# A tibble: 6 x 3
+  species_id count       prop
+      <fctr> <int>      <dbl>
+1         AB    25 0.05091650
+2         AH     4 0.00814664
+3         BA     3 0.00610998
+4         DM   132 0.26883910
+5         DO    65 0.13238289
+6         DS     6 0.01221996
 ~~~
 {:.output}
 
@@ -252,7 +257,7 @@ We often use `group_by` along with `summarize`, but you can also apply `filter` 
 - Filter a grouped data frame to return only rows showing the records from *surveys_1990_winter* with the minimum weight for each *species_id*.
 - For each species in *surveys_1990_winter_gb*, create a new colum giving the rank order (within that species!) of hindfoot length. (Hint: Read the documentation under `?ranking`.)
 
-<aside class="notes">
+<aside class="notes" markdown="block">
 
 [View solution](#solution-4)
 

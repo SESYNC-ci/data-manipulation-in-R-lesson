@@ -1,6 +1,5 @@
 ---
 layout: slideshow
-reveal: https://cdn.rawgit.com/hakimel/reveal.js/3.3.0
 reveal-theme: /css/theme/sky.css
 style: /css/slideshow.css
 ---

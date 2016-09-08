@@ -1,32 +1,30 @@
-# Site Settings
+# Site
 
+title: Data Manipulation in R
 baseurl: /data-manipulation-in-R-lesson
 email: cyberhelp@sesync.org
 description: ""
-styleurl: https://cdn.rawgit.com/SESYNC-ci/lesson-stylesheets/1.0.0
+# styleurl: https://cdn.rawgit.com/sesync-ci/lesson-stylesheets/1.0.0
+styleurl: https://rawgit.com/sesync-ci/lesson-stylesheets/master
+reveal: https://cdn.rawgit.com/hakimel/reveal.js/3.3.0
 
-# Slide Settings
+# Slides
 
-# slide_sorter:
-#   - title
-#   - intro
-#   - tidy
-#   - gather
-#   - data
-#   - dplyr
-#   - pipe
-#   - conclude
-#   - solutions
-
-# slide_sorter:
+slide_sorter:
   - title
   - intro
+  - tidy
+  - gather
+  - data
+  - dplyr
+  - pipe
+  - conclude
+  - solutions
 
+# Jekyll
 
-# Jekyll Settings
-
+markdown: kramdown
 kramdown:
-  parse_block_html: true
   toc_levels: 2..2
 collections:
   - slides
@@ -35,4 +33,3 @@ exclude:
   - build.R
   - "*.Rproj"
   - "*.Rmd"
-  - data/

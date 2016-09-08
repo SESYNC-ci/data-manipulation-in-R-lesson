@@ -13,7 +13,7 @@ surveys <- read.csv("data/surveys.csv")
 str(surveys)
 ```
 
-<aside class="notes">
+<aside class="notes" markdown="block">
 
 The teaching dataset includes three tables: two contain summary information on the study plots and observed species, respectively, while the third and largest one (surveys) lists all individual observations. We only need the surveys table for this lesson.
 

@@ -15,7 +15,7 @@ sol1 <- spread(counts_gather, key = species, value = count, fill = 0)
 str(sol1)
 ```
 
-<aside class="notes">
+<aside class="notes" markdown="block">
 
 [Return](#exercise-1)
 
@@ -30,7 +30,7 @@ surveys_RO <- filter(surveys, species_id == "RO")
 surveys_R0 <- select(surveys_RO, record_id, sex, weight)
 ```
 
-<aside class="notes">
+<aside class="notes" markdown="block">
 
 [Return](#exercise-2)
 
@@ -47,7 +47,7 @@ summarize(surveys_dm, avg_wgt = mean(weight, na.rm = TRUE),
           avg_hfl = mean(hindfoot_length, na.rm = TRUE))
 ```
 
-<aside class="notes">
+<aside class="notes" markdown="block">
 
 [Return](#exercise-3)
 
@@ -74,7 +74,7 @@ mutate(surveys_1990_winter_gb,
        ranked_hf_length = row_number(hindfoot_length))
 ```
 
-<aside class="notes">
+<aside class="notes" markdown="block">
 
 [Return](#exercise-4)
 

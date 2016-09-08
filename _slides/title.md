@@ -1,13 +1,6 @@
 ---
 ---
 
-# Data manipulation with tidyr and dplyr
+# {{ site.title }}
 
 Instructor: Mary Shelley
-
-<aside class="notes">
-
-* ToC
-{:toc}
-
-</aside>

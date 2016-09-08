@@ -3,7 +3,7 @@
 
 ## Chaining operations with pipes (%>%)
 
-<aside class="notes">
+<aside class="notes" markdown="block">
 
 We have seen that dplyr functions all take a data frame as their first argument and return a transformed data frame. This consistent syntax has the added benefit of making these functions compatible the "pipe" operator (`%>%`). This operator actually comes from another R package, **magrittr**, which is loaded with dplyr by default.
 
@@ -54,11 +54,6 @@ prop_1990_winter_piped <- surveys %>%
 ~~~
 {:.text-document title="lesson-2.R"}
 
-~~~
-Error in eval(expr, envir, enclos): object 'surveys' not found
-~~~
-NA
-
 
 ~~~r
 identical(prop_1990_winter_piped, prop_1990_winter)
@@ -66,6 +61,6 @@ identical(prop_1990_winter_piped, prop_1990_winter)
 {:.input}
 
 ~~~
-Error in identical(prop_1990_winter_piped, prop_1990_winter): object 'prop_1990_winter_piped' not found
+[1] TRUE
 ~~~
 {:.output}
