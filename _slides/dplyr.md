@@ -214,43 +214,31 @@ Its equivalent to a particular way of grouping and aggregation with `dplyr` comb
 ~~~r
 surveys_1990_winter_gb <- group_by(surveys_1990_winter, species_id, month)
 counts_by_month <- summarize(surveys_1990_winter_gb, count = n())
-pivot <- spread(counts_by_month, value = count, key = month)
+pivot <- spread(counts_by_month, value = count, key = month, fill = 0)
 ~~~
 {:.text-document title="lesson-4.R"}
 
 
 ~~~r
-pivot
+head(pivot)
 ~~~
 {:.input}
 ~~~
-Source: local data frame [20 x 4]
-Groups: species_id [20]
+Source: local data frame [6 x 4]
+Groups: species_id [6]
 
-   species_id     1     2     3
-*      <fctr> <int> <int> <int>
-1          AB    24    NA     1
-2          AH     3     1    NA
-3          BA     1     2    NA
-4          DM    60    35    37
-5          DO    31    17    17
-6          DS     3     1     2
-7          NL     2     5     3
-8          OL     4     2     1
-9          OT    10     6     6
-10         PC    NA     7    NA
-11         PE    13    10    14
-12         PF     8     5     6
-13         PG     4    NA    NA
-14         PH     1     1     1
-15         PP     1    NA    NA
-16         RF     6     1     3
-17         RM    54    31    30
-18         SF     8     3     2
-19         SH     2     2     3
-20         NA     1    NA    NA
+  species_id     1     2     3
+      <fctr> <dbl> <dbl> <dbl>
+1         AB    24     0     1
+2         AH     3     1     0
+3         BA     1     2     0
+4         DM    60    35    37
+5         DO    31    17    17
+6         DS     3     1     2
 ~~~
 {:.output}
+
+<!--split-->
 
 ## Transformation of variables
 
