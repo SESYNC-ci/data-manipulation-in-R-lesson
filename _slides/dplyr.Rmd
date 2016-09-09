@@ -24,7 +24,7 @@ The table above presents the most commonly used functions in `dplyr`, which we w
 
 After loading dplyr, we begin our analysis by extracting the survey observations for the first three months of 1990 with `filter`:
 
-```{r filter, message=FALSE, block_ial='{:.text-document title="lesson-2.R"}'}
+```{r filter, message=FALSE, title="lesson-4.R"}
 library(dplyr)
 surveys_1990_winter <- filter(surveys,
 			      year == 1990,
@@ -56,7 +56,7 @@ select(surveys_1990_winter,
 
 Alternatively, we can *exclude* a column by preceding its name with a minus sign. We use this option here to remove the redundant year column from *surveys_1990_winter*:
 
-```{r select, block_ial='{:.text-document title="lesson-2.R"}'}
+```{r select, title="lesson-4.R"}
 surveys_1990_winter <- select(surveys_1990_winter, -year)
 ```
 
@@ -69,7 +69,7 @@ str(surveys_1990_winter)
 
 To complete this section, we sort the 1990 winter surveys data by descending order of species name, then by ascending order of weight. Note that `arrange` assumes ascending order unless the variable name is enclosed by `desc()`.
 
-```{r arrange, block_ial='{:.text-document title="lesson-2.R"}'}
+```{r arrange, title="lesson-4.R"}
 sorted <- arrange(surveys_1990_winter,
                   desc(species_id), weight)
 ```
@@ -102,7 +102,7 @@ We first define a grouping of our *surveys_1990_winter* data frame with `group_b
 
 </aside>
 
-```{r summarize, block_ial='{:.text-document title="lesson-2.R"}'}
+```{r summarize, title="lesson-4.R"}
 surveys_1990_winter_gb <- group_by(surveys_1990_winter, species_id)
 counts_1990_winter <- summarize(surveys_1990_winter_gb, count = n())
 ```
@@ -140,11 +140,28 @@ Write code that returns the average weight and hindfoot length of *Dipodomys mer
 
 <!--split-->
 
+## Pivot tables through aggregate and spread
+
+A pivot table takes tidy data into an untidy format, summarizing data by two factors (one as a row, the other a column).
+Its equivalent to a particular way of grouping and aggregation with `dplyr` combined with the `spread()` function.
+
+```{r pivot, title="lesson-4.R"}
+surveys_1990_winter_gb <- group_by(surveys_1990_winter, species_id, month)
+counts_by_month <- summarize(surveys_1990_winter_gb, count = n())
+pivot <- spread(counts_by_month, value = count, key = month, fill = 0)
+```
+
+```{r}
+head(pivot)
+```
+
+<!--split-->
+
 ## Transformation of variables
 
 The `mutate` function creates new columns by performing the same operation on each row. Here, we use the previously obtained *count* variable to derive the proportion of individuals represented by each species, and assign the result to a new *prop* column.
 
-```{r mutate, block_ial='{:.text-document title="lesson-2.R"}'}
+```{r mutate, title="lesson-4.R"}
 prop_1990_winter <- mutate(counts_1990_winter,
                            prop = count / sum(count))
 ```

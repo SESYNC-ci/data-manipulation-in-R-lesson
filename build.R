@@ -13,8 +13,14 @@ opts_chunk$set(
 current_chunk = knit_hooks$get("chunk")
 chunk = function(x, options) {
     x <- current_chunk(x, options)
-    x <- gsub("~~~\n\n",
-              paste0("~~~\n", options$block_ial[1], "\n\n"),
+    if (!is.null(options$title)) {
+        x <- gsub("~~~(\n*$)",
+                  paste0("~~~\n{:.text-document title=\"", options$title, "\"}\\1"),
+                  x)
+        return(x)
+    }
+    x <- gsub("~~~\n(\n+~~~)",
+              paste0("~~~\n", options$block_ial[1], "\\1"),
               x)
     if (str_count(x, "~~~") > 2) {
         idx <- 2

@@ -7,7 +7,7 @@
 
 If any species/day combination is missing, the corresponding cell after `spread` is filled with `NA`. To interpret missing values as zero counts, use the optional `fill` argument: 
 
-```{r sol1, block_ial='{:.text-document title="lesson-2.R"}'}
+```{r sol1, title="lesson-4.R"}
 sol1 <- spread(counts_gather, key = species, value = count, fill = 0)
 ```
 

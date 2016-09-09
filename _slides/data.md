@@ -9,14 +9,13 @@ We will use the [Portal teaching database](http://github.com/weecology/portal-te
 ~~~r
 surveys <- read.csv("data/surveys.csv")
 ~~~
-{:.text-document title="lesson-2.R"}
+{:.text-document title="lesson-4.R"}
 
 
 ~~~r
 str(surveys)
 ~~~
 {:.input}
-
 ~~~
 'data.frame':	35549 obs. of  9 variables:
  $ record_id      : int  1 2 3 4 5 6 7 8 9 10 ...
@@ -45,7 +44,7 @@ Modify the function to specify what string in the CSV file represents NAs, a.k.a
 ~~~r
 surveys <- read.csv("data/surveys.csv", na.strings = "")
 ~~~
-{:.text-document title="lesson-2.R"}
+{:.text-document title="lesson-4.R"}
 
 Question
 : What has changed?

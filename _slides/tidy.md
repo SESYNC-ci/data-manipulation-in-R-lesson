@@ -24,13 +24,12 @@ counts_df <- data.frame(
   fox = c(4, 4, 4)
 )
 ~~~
-{:.text-document title="lesson-2.R"}
+{:.text-document title="lesson-4.R"}
 
 ~~~r
 counts_df
 ~~~
 {:.input}
-
 ~~~
         day wolf hare fox
 1    Monday    2   20   4

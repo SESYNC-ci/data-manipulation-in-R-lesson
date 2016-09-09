@@ -16,7 +16,6 @@ What a pipe, or `%>%`, does is to take the expression on its left-hand side and 
 c(1, 3, 5) %>% sum()
 ~~~
 {:.input}
-
 ~~~
 [1] 9
 ~~~
@@ -33,7 +32,6 @@ Additional arguments are accepted, a pipe only handles the first.
 c(1, 3, 5, NA) %>% sum(na.rm = TRUE)
 ~~~
 {:.input}
-
 ~~~
 [1] 9
 ~~~
@@ -52,14 +50,13 @@ prop_1990_winter_piped <- surveys %>%
     summarize(count = n()) %>%
     mutate(prop = count / sum(count))
 ~~~
-{:.text-document title="lesson-2.R"}
+{:.text-document title="lesson-4.R"}
 
 
 ~~~r
 identical(prop_1990_winter_piped, prop_1990_winter)
 ~~~
 {:.input}
-
 ~~~
 [1] TRUE
 ~~~

@@ -31,14 +31,13 @@ surveys_1990_winter <- filter(surveys,
 			      year == 1990,
 			      month %in% 1:3)
 ~~~
-{:.text-document title="lesson-2.R"}
+{:.text-document title="lesson-4.R"}
 
 
 ~~~r
 str(surveys_1990_winter)
 ~~~
 {:.input}
-
 ~~~
 'data.frame':	491 obs. of  9 variables:
  $ record_id      : int  16879 16880 16881 16882 16883 16884 16885 16886 16887 16888 ...
@@ -80,14 +79,13 @@ Alternatively, we can *exclude* a column by preceding its name with a minus sign
 ~~~r
 surveys_1990_winter <- select(surveys_1990_winter, -year)
 ~~~
-{:.text-document title="lesson-2.R"}
+{:.text-document title="lesson-4.R"}
 
 
 ~~~r
 str(surveys_1990_winter)
 ~~~
 {:.input}
-
 ~~~
 'data.frame':	491 obs. of  8 variables:
  $ record_id      : int  16879 16880 16881 16882 16883 16884 16885 16886 16887 16888 ...
@@ -111,14 +109,13 @@ To complete this section, we sort the 1990 winter surveys data by descending ord
 sorted <- arrange(surveys_1990_winter,
                   desc(species_id), weight)
 ~~~
-{:.text-document title="lesson-2.R"}
+{:.text-document title="lesson-4.R"}
 
 
 ~~~r
 head(sorted)
 ~~~
 {:.input}
-
 ~~~
   record_id month day plot_id species_id sex hindfoot_length weight
 1     16929     1   7       3         SH   M              31     61
@@ -159,14 +156,13 @@ We first define a grouping of our *surveys_1990_winter* data frame with `group_b
 surveys_1990_winter_gb <- group_by(surveys_1990_winter, species_id)
 counts_1990_winter <- summarize(surveys_1990_winter_gb, count = n())
 ~~~
-{:.text-document title="lesson-2.R"}
+{:.text-document title="lesson-4.R"}
 
 
 ~~~r
 head(counts_1990_winter)
 ~~~
 {:.input}
-
 ~~~
 # A tibble: 6 x 2
   species_id count
@@ -209,6 +205,53 @@ Write code that returns the average weight and hindfoot length of *Dipodomys mer
 
 <!--split-->
 
+## Pivot tables through aggregate and spread
+
+A pivot table takes tidy data into an untidy format, summarizing data by two factors (one as a row, the other a column).
+Its equivalent to a particular way of grouping and aggregation with `dplyr` combined with the `spread()` function.
+
+
+~~~r
+surveys_1990_winter_gb <- group_by(surveys_1990_winter, species_id, month)
+counts_by_month <- summarize(surveys_1990_winter_gb, count = n())
+pivot <- spread(counts_by_month, value = count, key = month)
+~~~
+{:.text-document title="lesson-4.R"}
+
+
+~~~r
+pivot
+~~~
+{:.input}
+~~~
+Source: local data frame [20 x 4]
+Groups: species_id [20]
+
+   species_id     1     2     3
+*      <fctr> <int> <int> <int>
+1          AB    24    NA     1
+2          AH     3     1    NA
+3          BA     1     2    NA
+4          DM    60    35    37
+5          DO    31    17    17
+6          DS     3     1     2
+7          NL     2     5     3
+8          OL     4     2     1
+9          OT    10     6     6
+10         PC    NA     7    NA
+11         PE    13    10    14
+12         PF     8     5     6
+13         PG     4    NA    NA
+14         PH     1     1     1
+15         PP     1    NA    NA
+16         RF     6     1     3
+17         RM    54    31    30
+18         SF     8     3     2
+19         SH     2     2     3
+20         NA     1    NA    NA
+~~~
+{:.output}
+
 ## Transformation of variables
 
 The `mutate` function creates new columns by performing the same operation on each row. Here, we use the previously obtained *count* variable to derive the proportion of individuals represented by each species, and assign the result to a new *prop* column.
@@ -218,14 +261,13 @@ The `mutate` function creates new columns by performing the same operation on ea
 prop_1990_winter <- mutate(counts_1990_winter,
                            prop = count / sum(count))
 ~~~
-{:.text-document title="lesson-2.R"}
+{:.text-document title="lesson-4.R"}
 
 
 ~~~r
 head(prop_1990_winter)
 ~~~
 {:.input}
-
 ~~~
 # A tibble: 6 x 3
   species_id count       prop

@@ -13,7 +13,7 @@ counts_gather <- gather(counts_df,
 			value = "count",
 			wolf:fox)
 ~~~
-{:.text-document title="lesson-2.R"}
+{:.text-document title="lesson-4.R"}
 
 <!--split-->
 
@@ -22,7 +22,6 @@ counts_gather <- gather(counts_df,
 counts_gather
 ~~~
 {:.input}
-
 ~~~
         day species count
 1    Monday    wolf     2
@@ -55,14 +54,13 @@ counts_spread <- spread(counts_gather,
 			key = species,
 			value = count)
 ~~~
-{:.text-document title="lesson-2.R"}
+{:.text-document title="lesson-4.R"}
 
 
 ~~~r
 counts_spread
 ~~~
 {:.input}
-
 ~~~
         day fox hare wolf
 1    Monday   4   20    2

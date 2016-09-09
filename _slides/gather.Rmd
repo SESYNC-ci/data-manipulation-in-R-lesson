@@ -5,7 +5,7 @@
 
 Let's load the **tidyr** package and use its `gather` function to reshape *counts_df* into a tidy format:
 
-```{r gather, block_ial='{:.text-document title="lesson-2.R"}'}
+```{r gather, title="lesson-4.R"}
 library(tidyr)
 counts_gather <- gather(counts_df,
 			key = "species",
@@ -31,7 +31,7 @@ Some notes on the syntax: From a workflow perspective, a big advantage of tidyr 
 
 If your analysis requires a "wide" data format rather than the tall format produced by `gather`, you can use the opposite operation, named `spread`.
 
-```{r spread, block_ial='{:.text-document title="lesson-2.R"}'}
+```{r spread, title="lesson-4.R"}
 counts_spread <- spread(counts_gather,
 			key = species,
 			value = count)

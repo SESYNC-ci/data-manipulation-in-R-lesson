@@ -11,14 +11,13 @@ If any species/day combination is missing, the corresponding cell after `spread`
 ~~~r
 sol1 <- spread(counts_gather, key = species, value = count, fill = 0)
 ~~~
-{:.text-document title="lesson-2.R"}
+{:.text-document title="lesson-4.R"}
 
 
 ~~~r
 str(sol1)
 ~~~
 {:.input}
-
 ~~~
 'data.frame':	3 obs. of  4 variables:
  $ day : Factor w/ 3 levels "Monday","Tuesday",..: 1 2 3
@@ -63,7 +62,6 @@ summarize(surveys_dm, avg_wgt = mean(weight, na.rm = TRUE),
           avg_hfl = mean(hindfoot_length, na.rm = TRUE))
 ~~~
 {:.input}
-
 ~~~
 # A tibble: 12 x 3
    month  avg_wgt  avg_hfl
@@ -100,26 +98,23 @@ summarize(surveys_dm, avg_wgt = mean(weight, na.rm = TRUE),
 filter(surveys_1990_winter_gb, weight == min(weight))
 ~~~
 {:.input}
-
 ~~~
-Source: local data frame [13 x 8]
-Groups: species_id [11]
+Source: local data frame [52 x 8]
+Groups: species_id, month [36]
 
    record_id month   day plot_id species_id    sex hindfoot_length weight
        <int> <int> <int>   <int>     <fctr> <fctr>           <int>  <int>
 1      16885     1     6      12         SF      M              25     35
 2      16894     1     6       1         OT      F              21     20
-3      16915     1     6      19         PF      F              16      6
-4      16929     1     7       3         SH      M              31     61
-5      16959     1     7      13         PP      M              21     14
-6      17003     1    29      24         RF      F              19     11
-7      17024     1    29      22         PH      F              28     33
-8      17036     1    29       1         OL      F              22     24
-9      17146     2    24       1         NL      M              25     48
-10     17155     2    24      22         PH      F              27     33
-11     17174     2    25       5         BA      M              14      7
-12     17190     2    25       5         BA      F              14      7
-13     17216     2    25      10         RM      M              17      6
+3      16910     1     6      20         RM      M              16      7
+4      16915     1     6      19         PF      F              16      6
+5      16916     1     6      17         NL      F              32    165
+6      16929     1     7       3         SH      M              31     61
+7      16937     1     7      15         PE      F              20     19
+8      16951     1     7       5         BA      F              13      9
+9      16959     1     7      13         PP      M              21     14
+10     17003     1    29      24         RF      F              19     11
+# ... with 42 more rows
 ~~~
 {:.output}
 
@@ -135,10 +130,9 @@ mutate(surveys_1990_winter_gb,
        ranked_hf_length = row_number(hindfoot_length))
 ~~~
 {:.input}
-
 ~~~
 Source: local data frame [491 x 9]
-Groups: species_id [20]
+Groups: species_id, month [49]
 
    record_id month   day plot_id species_id    sex hindfoot_length weight
        <int> <int> <int>   <int>     <fctr> <fctr>           <int>  <int>
