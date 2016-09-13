@@ -7,14 +7,14 @@ render_markdown(fence_char = "~")
 opts_knit$set(base.url = paste0(config$baseurl, "/"))
 opts_chunk$set(
     comment = NA,
-    fig.path = "images/",
+    fig.path = "../images/",
     block_ial = c("{:.input}", "{:.output}"))
 
 current_chunk = knit_hooks$get("chunk")
 chunk = function(x, options) {
     x <- current_chunk(x, options)
     if (!is.null(options$title)) {
-        x <- gsub("~~~(\n*[!$].*)",
+        x <- gsub("~~~(\n*(!\\[.+)?$)",
                   paste0("~~~\n{:.text-document title=\"", options$title, "\"}\\1"),
                   x)
         return(x)

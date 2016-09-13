@@ -50,6 +50,7 @@ prop_1990_winter_piped <- surveys %>%
     summarize(count = n()) %>%
     mutate(prop = count / sum(count))
 ~~~
+{:.text-document title="lesson-4.R"}
 
 
 ~~~r

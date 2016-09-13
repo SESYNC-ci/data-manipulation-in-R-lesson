@@ -22,6 +22,7 @@ counts_df <- data.frame(
   hare = c(20, 25, 30),
   fox = c(4, 4, 4)
 )
+```
 
 ```{r view_counts_df}
 counts_df

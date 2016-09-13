@@ -31,6 +31,7 @@ surveys_1990_winter <- filter(surveys,
 			      year == 1990,
 			      month %in% 1:3)
 ~~~
+{:.text-document title="lesson-4.R"}
 
 
 ~~~r
@@ -78,6 +79,7 @@ Alternatively, we can *exclude* a column by preceding its name with a minus sign
 ~~~r
 surveys_1990_winter <- select(surveys_1990_winter, -year)
 ~~~
+{:.text-document title="lesson-4.R"}
 
 
 ~~~r
@@ -107,6 +109,7 @@ To complete this section, we sort the 1990 winter surveys data by descending ord
 sorted <- arrange(surveys_1990_winter,
                   desc(species_id), weight)
 ~~~
+{:.text-document title="lesson-4.R"}
 
 
 ~~~r
@@ -153,6 +156,7 @@ We first define a grouping of our *surveys_1990_winter* data frame with `group_b
 surveys_1990_winter_gb <- group_by(surveys_1990_winter, species_id)
 counts_1990_winter <- summarize(surveys_1990_winter_gb, count = n())
 ~~~
+{:.text-document title="lesson-4.R"}
 
 
 ~~~r
@@ -212,6 +216,7 @@ surveys_1990_winter_gb <- group_by(surveys_1990_winter, species_id, month)
 counts_by_month <- summarize(surveys_1990_winter_gb, count = n())
 pivot <- spread(counts_by_month, value = count, key = month, fill = 0)
 ~~~
+{:.text-document title="lesson-4.R"}
 
 
 ~~~r
@@ -244,6 +249,7 @@ The `mutate` function creates new columns by performing the same operation on ea
 prop_1990_winter <- mutate(counts_1990_winter,
                            prop = count / sum(count))
 ~~~
+{:.text-document title="lesson-4.R"}
 
 
 ~~~r
