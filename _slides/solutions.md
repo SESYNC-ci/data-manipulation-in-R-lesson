@@ -11,7 +11,6 @@ If any species/day combination is missing, the corresponding cell after `spread`
 ~~~r
 sol1 <- spread(counts_gather, key = species, value = count, fill = 0)
 ~~~
-{:.text-document title="lesson-4.R"}
 
 
 ~~~r

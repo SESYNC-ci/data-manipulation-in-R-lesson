@@ -3,4 +3,4 @@
 
 # {{ site.title }}
 
-Instructor: Mary Shelley
+Lesson {{ site.lesson }} by *Mary Shelley*
