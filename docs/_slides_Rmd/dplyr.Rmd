@@ -18,13 +18,13 @@ The table above presents the most commonly used functions in `dplyr`, which we w
 
 </aside>
 
-<!--split-->
+===
 
 ## Subsetting and sorting
 
 After loading dplyr, we begin our analysis by extracting the survey observations for the first three months of 1990 with `filter`:
 
-```{r filter, message=FALSE, title="lesson-4.R"}
+```{r filter, message=FALSE, title="{{ site.worksheet }}"}
 library(dplyr)
 surveys_1990_winter <- filter(surveys,
 			      year == 1990,
@@ -41,7 +41,7 @@ Note that a logical "and" is implied when conditions are separated by commas. (T
 
 </aside>
 
-<!--split-->
+===
 
 To choose particular columns (rather than the rows) of a data frame, we would call `select` with the name of the variables to retain.
 
@@ -51,12 +51,12 @@ select(surveys_1990_winter,
        species_id, sex, hindfoot_length, weight)
 ```
 
-<!--split-->
+===
 
 
 Alternatively, we can *exclude* a column by preceding its name with a minus sign. We use this option here to remove the redundant year column from *surveys_1990_winter*:
 
-```{r select, title="lesson-4.R"}
+```{r select, title="{{ site.worksheet }}"}
 surveys_1990_winter <- select(surveys_1990_winter, -year)
 ```
 
@@ -64,12 +64,12 @@ surveys_1990_winter <- select(surveys_1990_winter, -year)
 str(surveys_1990_winter)
 ```
 
-<!--split-->
+===
 
 
 To complete this section, we sort the 1990 winter surveys data by descending order of species name, then by ascending order of weight. Note that `arrange` assumes ascending order unless the variable name is enclosed by `desc()`.
 
-```{r arrange, title="lesson-4.R"}
+```{r arrange, title="{{ site.worksheet }}"}
 sorted <- arrange(surveys_1990_winter,
                   desc(species_id), weight)
 ```
@@ -78,7 +78,7 @@ sorted <- arrange(surveys_1990_winter,
 head(sorted)
 ```
 
-<!--split-->
+===
 
 ### Exercise 2
 
@@ -90,7 +90,7 @@ Write code that returns the *record_id*, *sex* and *weight* of all surveyed indi
 
 </aside>
 
-<!--split-->
+===
 
 ## Grouping and aggregation
 
@@ -102,7 +102,7 @@ We first define a grouping of our *surveys_1990_winter* data frame with `group_b
 
 </aside>
 
-```{r summarize, title="lesson-4.R"}
+```{r summarize, title="{{ site.worksheet }}"}
 surveys_1990_winter_gb <- group_by(surveys_1990_winter, species_id)
 counts_1990_winter <- summarize(surveys_1990_winter_gb, count = n())
 ```
@@ -111,7 +111,7 @@ counts_1990_winter <- summarize(surveys_1990_winter_gb, count = n())
 head(counts_1990_winter)
 ```
 
-<!--split-->
+===
 
 A few notes on these functions: 
 
@@ -125,7 +125,7 @@ You can see attributes either by running the `str()` function on the data frame 
 
 </aside>
 
-<!--split-->
+===
 
 
 ### Exercise 3
@@ -138,14 +138,14 @@ Write code that returns the average weight and hindfoot length of *Dipodomys mer
 
 </aside>
 
-<!--split-->
+===
 
 ## Pivot tables through aggregate and spread
 
 A pivot table takes tidy data into an untidy format, summarizing data by two factors (one as a row, the other a column).
 Its equivalent to a particular way of grouping and aggregation with `dplyr` combined with the `spread()` function.
 
-```{r pivot, title="lesson-4.R"}
+```{r pivot, title="{{ site.worksheet }}"}
 surveys_1990_winter_gb <- group_by(surveys_1990_winter, species_id, month)
 counts_by_month <- summarize(surveys_1990_winter_gb, count = n())
 pivot <- spread(counts_by_month, value = count, key = month, fill = 0)
@@ -155,13 +155,13 @@ pivot <- spread(counts_by_month, value = count, key = month, fill = 0)
 head(pivot)
 ```
 
-<!--split-->
+===
 
 ## Transformation of variables
 
 The `mutate` function creates new columns by performing the same operation on each row. Here, we use the previously obtained *count* variable to derive the proportion of individuals represented by each species, and assign the result to a new *prop* column.
 
-```{r mutate, title="lesson-4.R"}
+```{r mutate, title="{{ site.worksheet }}"}
 prop_1990_winter <- mutate(counts_1990_winter,
                            prop = count / sum(count))
 ```
@@ -170,7 +170,7 @@ prop_1990_winter <- mutate(counts_1990_winter,
 head(prop_1990_winter)
 ```
 
-<!--split-->
+===
 
 A few notes about transformations:
 
@@ -179,7 +179,7 @@ A few notes about transformations:
 - For a concise way to apply the same transformation to multiple columns, check the `mutate_each` function. There is also a `summarize_each` function to perform the same aggregation operation on multiple columns.
 ^
 
-<!--split-->
+===
 
 ### Exercise 4
 

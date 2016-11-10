@@ -18,7 +18,7 @@ The table above presents the most commonly used functions in `dplyr`, which we w
 
 </aside>
 
-<!--split-->
+===
 
 ## Subsetting and sorting
 
@@ -31,7 +31,7 @@ surveys_1990_winter <- filter(surveys,
 			      year == 1990,
 			      month %in% 1:3)
 ~~~
-{:.text-document title="lesson-4.R"}
+{:.text-document title="{{ site.worksheet }}"}
 
 
 ~~~r
@@ -58,7 +58,7 @@ Note that a logical "and" is implied when conditions are separated by commas. (T
 
 </aside>
 
-<!--split-->
+===
 
 To choose particular columns (rather than the rows) of a data frame, we would call `select` with the name of the variables to retain.
 
@@ -70,7 +70,7 @@ select(surveys_1990_winter,
 ~~~
 {:.input}
 
-<!--split-->
+===
 
 
 Alternatively, we can *exclude* a column by preceding its name with a minus sign. We use this option here to remove the redundant year column from *surveys_1990_winter*:
@@ -79,7 +79,7 @@ Alternatively, we can *exclude* a column by preceding its name with a minus sign
 ~~~r
 surveys_1990_winter <- select(surveys_1990_winter, -year)
 ~~~
-{:.text-document title="lesson-4.R"}
+{:.text-document title="{{ site.worksheet }}"}
 
 
 ~~~r
@@ -99,7 +99,7 @@ str(surveys_1990_winter)
 ~~~
 {:.output}
 
-<!--split-->
+===
 
 
 To complete this section, we sort the 1990 winter surveys data by descending order of species name, then by ascending order of weight. Note that `arrange` assumes ascending order unless the variable name is enclosed by `desc()`.
@@ -109,7 +109,7 @@ To complete this section, we sort the 1990 winter surveys data by descending ord
 sorted <- arrange(surveys_1990_winter,
                   desc(species_id), weight)
 ~~~
-{:.text-document title="lesson-4.R"}
+{:.text-document title="{{ site.worksheet }}"}
 
 
 ~~~r
@@ -127,7 +127,7 @@ head(sorted)
 ~~~
 {:.output}
 
-<!--split-->
+===
 
 ### Exercise 2
 
@@ -139,7 +139,7 @@ Write code that returns the *record_id*, *sex* and *weight* of all surveyed indi
 
 </aside>
 
-<!--split-->
+===
 
 ## Grouping and aggregation
 
@@ -156,7 +156,7 @@ We first define a grouping of our *surveys_1990_winter* data frame with `group_b
 surveys_1990_winter_gb <- group_by(surveys_1990_winter, species_id)
 counts_1990_winter <- summarize(surveys_1990_winter_gb, count = n())
 ~~~
-{:.text-document title="lesson-4.R"}
+{:.text-document title="{{ site.worksheet }}"}
 
 
 ~~~r
@@ -176,7 +176,7 @@ head(counts_1990_winter)
 ~~~
 {:.output}
 
-<!--split-->
+===
 
 A few notes on these functions: 
 
@@ -190,7 +190,7 @@ You can see attributes either by running the `str()` function on the data frame 
 
 </aside>
 
-<!--split-->
+===
 
 
 ### Exercise 3
@@ -203,7 +203,7 @@ Write code that returns the average weight and hindfoot length of *Dipodomys mer
 
 </aside>
 
-<!--split-->
+===
 
 ## Pivot tables through aggregate and spread
 
@@ -216,7 +216,7 @@ surveys_1990_winter_gb <- group_by(surveys_1990_winter, species_id, month)
 counts_by_month <- summarize(surveys_1990_winter_gb, count = n())
 pivot <- spread(counts_by_month, value = count, key = month, fill = 0)
 ~~~
-{:.text-document title="lesson-4.R"}
+{:.text-document title="{{ site.worksheet }}"}
 
 
 ~~~r
@@ -238,7 +238,7 @@ Groups: species_id [6]
 ~~~
 {:.output}
 
-<!--split-->
+===
 
 ## Transformation of variables
 
@@ -249,7 +249,7 @@ The `mutate` function creates new columns by performing the same operation on ea
 prop_1990_winter <- mutate(counts_1990_winter,
                            prop = count / sum(count))
 ~~~
-{:.text-document title="lesson-4.R"}
+{:.text-document title="{{ site.worksheet }}"}
 
 
 ~~~r
@@ -269,7 +269,7 @@ head(prop_1990_winter)
 ~~~
 {:.output}
 
-<!--split-->
+===
 
 A few notes about transformations:
 
@@ -278,7 +278,7 @@ A few notes about transformations:
 - For a concise way to apply the same transformation to multiple columns, check the `mutate_each` function. There is also a `summarize_each` function to perform the same aggregation operation on multiple columns.
 ^
 
-<!--split-->
+===
 
 ### Exercise 4
 

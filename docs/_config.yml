@@ -1,3 +1,26 @@
+# Site
+
+title: Manipulating Tabular Data
+worksheet: worksheet.R
+tag: v0.0
+lesson: 4
+instructor: Mary Shelley
+authors:
+  - Philippe Marchand
+  - Ian Carroll
+  
+# Slides
+
+slide_sorter:
+  - intro
+  - tidy
+  - gather
+  - data
+  - dplyr
+  - pipe
+  - conclude
+  - solutions
+  
 #####################################
 # Only modify content above or risk #
 # merge conflicts with upstream.    #

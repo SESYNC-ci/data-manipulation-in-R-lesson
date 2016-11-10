@@ -13,9 +13,9 @@ counts_gather <- gather(counts_df,
 			value = "count",
 			wolf:fox)
 ~~~
-{:.text-document title="lesson-4.R"}
+{:.text-document title="{{ site.worksheet }}"}
 
-<!--split-->
+===
 
 
 ~~~r
@@ -44,7 +44,7 @@ Some notes on the syntax: From a workflow perspective, a big advantage of tidyr 
 
 </aside>
 
-<!--split-->
+===
 
 If your analysis requires a "wide" data format rather than the tall format produced by `gather`, you can use the opposite operation, named `spread`.
 
@@ -54,7 +54,7 @@ counts_spread <- spread(counts_gather,
 			key = species,
 			value = count)
 ~~~
-{:.text-document title="lesson-4.R"}
+{:.text-document title="{{ site.worksheet }}"}
 
 
 ~~~r
@@ -76,7 +76,7 @@ Answer
 : {:.fragment} They refer to existing column names.
 ^
 
-<!--split-->
+===
 
 ### Exercise 1
 

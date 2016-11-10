@@ -11,7 +11,7 @@ If any species/day combination is missing, the corresponding cell after `spread`
 ~~~r
 sol1 <- spread(counts_gather, key = species, value = count, fill = 0)
 ~~~
-{:.text-document title="lesson-4.R"}
+{:.text-document title="{{ site.worksheet }}"}
 
 
 ~~~r
@@ -33,7 +33,7 @@ str(sol1)
 
 </aside>
 
-<!--split-->
+===
 
 ### Solution 2
 
@@ -50,7 +50,7 @@ surveys_R0 <- select(surveys_RO, record_id, sex, weight)
 
 </aside>
 
-<!--split-->
+===
 
 ### Solution 3
 
@@ -87,7 +87,7 @@ summarize(surveys_dm, avg_wgt = mean(weight, na.rm = TRUE),
 
 </aside>
 
-<!--split-->
+===
 
 ### Solution 4
 
@@ -118,7 +118,7 @@ Groups: species_id, month [36]
 ~~~
 {:.output}
 
-<!--split-->
+===
 
 ### Solution 4
 

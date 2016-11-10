@@ -17,7 +17,7 @@ c(1, 3, 5) %>% sum()
 
 It's identical to `sum(c(1,3,5))`.
 
-<!--split-->
+===
 
 Additional arguments are accepted, a pipe only handles the first.
 
@@ -25,11 +25,11 @@ Additional arguments are accepted, a pipe only handles the first.
 c(1, 3, 5, NA) %>% sum(na.rm = TRUE)
 ```
 
-<!--split-->
+===
 
 The pipe operator's main utility is to condense a chain of operations applied to the same piece of data, when you don't need to save the intermediate results. We can do all the dplyr operations from above with a chain of pipes:
 
-```{r pipe_dplyr_example, title="lesson-4.R"}
+```{r pipe_dplyr_example, title="{{ site.worksheet }}"}
 prop_1990_winter_piped <- surveys %>%
     filter(year == 1990, month %in% 1:3) %>% 
     select(-year) %>%

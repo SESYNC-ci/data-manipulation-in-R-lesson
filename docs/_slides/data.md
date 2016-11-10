@@ -9,7 +9,7 @@ We will use the [Portal teaching database](http://github.com/weecology/portal-te
 ~~~r
 surveys <- read.csv("data/surveys.csv")
 ~~~
-{:.text-document title="lesson-4.R"}
+{:.text-document title="{{ site.worksheet }}"}
 
 
 ~~~r
@@ -36,7 +36,7 @@ The teaching dataset includes three tables: two contain summary information on t
 
 </aside>
 
-<!--split-->
+===
 
 Modify the function to specify what string in the CSV file represents NAs, a.k.a. data that is not-available or missing.
 
@@ -44,7 +44,7 @@ Modify the function to specify what string in the CSV file represents NAs, a.k.a
 ~~~r
 surveys <- read.csv("data/surveys.csv", na.strings = "")
 ~~~
-{:.text-document title="lesson-4.R"}
+{:.text-document title="{{ site.worksheet }}"}
 
 Question
 : What has changed?

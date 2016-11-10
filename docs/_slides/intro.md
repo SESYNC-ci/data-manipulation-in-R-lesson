@@ -1,6 +1,8 @@
 ---
 ---
 
+## Objectives
+
 We will first discuss what is a **tidy** dataset and how to convert data to this standard form with `tidyr`.
 Next, we will explore the data processing functions in `dplyr`, which work particularly well with the tidy data format.
 

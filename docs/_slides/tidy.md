@@ -11,7 +11,7 @@ R developer Hadley Wickham (author of the tidyr, dplyr and ggplot packages, amon
 
 These guidelines may be familiar to some of you, as they closely map to best practices in database design.
 
-<!--split-->
+===
 
 Build a `data.frame` where the counts of three species are recorded for each day in a week:
 
@@ -24,7 +24,7 @@ counts_df <- data.frame(
   fox = c(4, 4, 4)
 )
 ~~~
-{:.text-document title="lesson-4.R"}
+{:.text-document title="{{ site.worksheet }}"}
 
 
 ~~~r
@@ -39,7 +39,7 @@ counts_df
 ~~~
 {:.output}
 
-<!--split-->
+===
 
 Question
 : How would you structure this data in a tidy format as defined above?

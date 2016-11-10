@@ -23,7 +23,7 @@ c(1, 3, 5) %>% sum()
 
 It's identical to `sum(c(1,3,5))`.
 
-<!--split-->
+===
 
 Additional arguments are accepted, a pipe only handles the first.
 
@@ -37,7 +37,7 @@ c(1, 3, 5, NA) %>% sum(na.rm = TRUE)
 ~~~
 {:.output}
 
-<!--split-->
+===
 
 The pipe operator's main utility is to condense a chain of operations applied to the same piece of data, when you don't need to save the intermediate results. We can do all the dplyr operations from above with a chain of pipes:
 
@@ -50,7 +50,7 @@ prop_1990_winter_piped <- surveys %>%
     summarize(count = n()) %>%
     mutate(prop = count / sum(count))
 ~~~
-{:.text-document title="lesson-4.R"}
+{:.text-document title="{{ site.worksheet }}"}
 
 
 ~~~r
