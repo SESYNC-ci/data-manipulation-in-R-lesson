@@ -47,7 +47,7 @@ The repository `lesson-style` is intended to be upstream of all `*-lesson` repos
 ```
 git remote add upstream git@github.com:SESYNC-ci/lesson-style.git
 git fetch upstream
-git checkout -b upstream upstream/master
+git branch --track upstream upstream/master
 ```
 
 The `upstream` branch will not have a shared history with the `master` branch—that is okay. To merge changes made within the `lesson-style` repository into a lesson, run `git merge upstream` from the master branch. Modifications to the upstream branch shall be meant for all lessons. A change to `docs/_layouts/default.html`, for example, should be commited to the upstream branch and pushed to the origin:
@@ -56,10 +56,48 @@ The `upstream` branch will not have a shared history with the `master` branch—
 git checkout upstream
 git add docs/_layouts/default.html
 git commit
-git push upstream upstream:master
+git push
 ```
 
 ## Creating a **new** lesson
 
+Create a new, public repository owned by the SESYNC-CI organization: use a short name, provide a description that can be exported as a human readable lesson title (e.g. on SESYNC's [lessons] tab), and do not include a README.
+
+Locally clone the new empty repository and initialize it with the content of the lesson-style repo:
+
+```
+git remote add upstream git@github.com:SESYNC-ci/lesson-style.git
+git fetch upstream
+git branch --track upstream upstream/master
+git merge upstream
+git push
+```
+
+Go to the repository's GitHub settings and select 'master/docs' as the GitHub Pages source. Configure the README by commiting the following to the `README.md` file, where `<new-lesson>` should be replaced with the new repository's name.
+
+```
+[lesson]: https://sesync-ci.github.io/<new-lesson>
+[slideshow]: https://sesync-ci.github.io/<new-lesson>/instructor
+```
+
+Everythin above is standard, the following is where the real work begins! Configure the GitHub page by setting the following variables in the `# Site` section of the `docs/_config.yml` YAML file.
+
+- `title`: a lesson title
+- `worksheet`: the base string displayed for `code.text-document` titles
+- `handouts`: the release version associated with the `handouts.zip` attached to a release, if any
+- `instructor`: who will give the lesson in a workshop setting
+- `authors`: the list of contributors
+- `lesson`: the number of the lesson in a workshop setting
+
+Always create the `docs/_slides` folder, but develop content within one of the following folders as appropriate:
+
+- `docs/_slides` for markdown (.md)
+- `docs/_slides_Rmd` for RMarkdown (.Rmd)
+- `docs/_slides_pmd` for Pweave (.pmd)
+
+A file within one of these folders becomes a vertical stack of slides in a [Reveal.js] presentation: use "===" on it's own line to indicate a slide break. Vertical stacks on concatenated horizontally in the order supplied by the `slide_sorter` variable in `docs/_config.yml`.
+
 ## Archiving a delivered lesson
 
+[Reveal.js]: http://lab.hakim.se/reveal-js
+[lessons]: http://www.sesync.org/for-you/cyberinfrastructure/training/%C3%A0-la-carte-lessons
