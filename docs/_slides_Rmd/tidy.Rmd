@@ -15,7 +15,7 @@ These guidelines may be familiar to some of you, as they closely map to best pra
 
 Build a `data.frame` where the counts of three species are recorded for each day in a week:
 
-```{r counts_df, title="{{ site.worksheet }}"}
+```{r counts_df, title="{{ site.handouts }}"}
 counts_df <- data.frame(
   day = c("Monday", "Tuesday", "Wednesday"),
   wolf = c(2, 1, 3),
