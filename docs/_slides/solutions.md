@@ -11,7 +11,7 @@ If any species/day combination is missing, the corresponding cell after `spread`
 ~~~r
 sol1 <- spread(counts_gather, key = species, value = count, fill = 0)
 ~~~
-{:.text-document title="{{ site.worksheet }}"}
+{:.text-document title="{{ site.handouts }}"}
 
 
 ~~~r
@@ -63,7 +63,7 @@ summarize(surveys_dm, avg_wgt = mean(weight, na.rm = TRUE),
 ~~~
 {:.input}
 ~~~
-# A tibble: 12 x 3
+# A tibble: 12 × 3
    month  avg_wgt  avg_hfl
    <int>    <dbl>    <dbl>
 1      1 42.93697 36.09476

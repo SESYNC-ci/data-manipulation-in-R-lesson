@@ -9,5 +9,5 @@
 -- a merge conflict with upstream.   --
 -------------------------------------->
 
-[lesson]: https://sesync-ci.github.io/basic-R-lesson
-[slideshow]: https://sesync-ci.github.io/basic-R-lesson/instructor
+[lesson]: https://sesync-ci.github.io/data-manipulation-in-R-lesson
+[slideshow]: https://sesync-ci.github.io/data-manipulation-in-R-lesson/instructor

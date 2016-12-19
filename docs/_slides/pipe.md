@@ -50,7 +50,7 @@ prop_1990_winter_piped <- surveys %>%
     summarize(count = n()) %>%
     mutate(prop = count / sum(count))
 ~~~
-{:.text-document title="{{ site.worksheet }}"}
+{:.text-document title="{{ site.handouts }}"}
 
 
 ~~~r

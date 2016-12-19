@@ -31,7 +31,7 @@ surveys_1990_winter <- filter(surveys,
 			      year == 1990,
 			      month %in% 1:3)
 ~~~
-{:.text-document title="{{ site.worksheet }}"}
+{:.text-document title="{{ site.handouts }}"}
 
 
 ~~~r
@@ -79,7 +79,7 @@ Alternatively, we can *exclude* a column by preceding its name with a minus sign
 ~~~r
 surveys_1990_winter <- select(surveys_1990_winter, -year)
 ~~~
-{:.text-document title="{{ site.worksheet }}"}
+{:.text-document title="{{ site.handouts }}"}
 
 
 ~~~r
@@ -109,7 +109,7 @@ To complete this section, we sort the 1990 winter surveys data by descending ord
 sorted <- arrange(surveys_1990_winter,
                   desc(species_id), weight)
 ~~~
-{:.text-document title="{{ site.worksheet }}"}
+{:.text-document title="{{ site.handouts }}"}
 
 
 ~~~r
@@ -156,7 +156,7 @@ We first define a grouping of our *surveys_1990_winter* data frame with `group_b
 surveys_1990_winter_gb <- group_by(surveys_1990_winter, species_id)
 counts_1990_winter <- summarize(surveys_1990_winter_gb, count = n())
 ~~~
-{:.text-document title="{{ site.worksheet }}"}
+{:.text-document title="{{ site.handouts }}"}
 
 
 ~~~r
@@ -164,7 +164,7 @@ head(counts_1990_winter)
 ~~~
 {:.input}
 ~~~
-# A tibble: 6 x 2
+# A tibble: 6 × 2
   species_id count
       <fctr> <int>
 1         AB    25
@@ -216,7 +216,7 @@ surveys_1990_winter_gb <- group_by(surveys_1990_winter, species_id, month)
 counts_by_month <- summarize(surveys_1990_winter_gb, count = n())
 pivot <- spread(counts_by_month, value = count, key = month, fill = 0)
 ~~~
-{:.text-document title="{{ site.worksheet }}"}
+{:.text-document title="{{ site.handouts }}"}
 
 
 ~~~r
@@ -227,7 +227,7 @@ head(pivot)
 Source: local data frame [6 x 4]
 Groups: species_id [6]
 
-  species_id     1     2     3
+  species_id   `1`   `2`   `3`
       <fctr> <dbl> <dbl> <dbl>
 1         AB    24     0     1
 2         AH     3     1     0
@@ -249,7 +249,7 @@ The `mutate` function creates new columns by performing the same operation on ea
 prop_1990_winter <- mutate(counts_1990_winter,
                            prop = count / sum(count))
 ~~~
-{:.text-document title="{{ site.worksheet }}"}
+{:.text-document title="{{ site.handouts }}"}
 
 
 ~~~r
@@ -257,7 +257,7 @@ head(prop_1990_winter)
 ~~~
 {:.input}
 ~~~
-# A tibble: 6 x 3
+# A tibble: 6 × 3
   species_id count       prop
       <fctr> <int>      <dbl>
 1         AB    25 0.05091650

@@ -13,7 +13,7 @@ counts_gather <- gather(counts_df,
 			value = "count",
 			wolf:fox)
 ~~~
-{:.text-document title="{{ site.worksheet }}"}
+{:.text-document title="{{ site.handouts }}"}
 
 ===
 
@@ -54,7 +54,7 @@ counts_spread <- spread(counts_gather,
 			key = species,
 			value = count)
 ~~~
-{:.text-document title="{{ site.worksheet }}"}
+{:.text-document title="{{ site.handouts }}"}
 
 
 ~~~r

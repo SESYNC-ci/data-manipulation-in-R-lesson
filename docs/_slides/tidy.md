@@ -24,7 +24,7 @@ counts_df <- data.frame(
   fox = c(4, 4, 4)
 )
 ~~~
-{:.text-document title="{{ site.worksheet }}"}
+{:.text-document title="{{ site.handouts }}"}
 
 
 ~~~r
