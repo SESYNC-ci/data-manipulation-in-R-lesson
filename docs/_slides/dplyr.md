@@ -14,7 +14,7 @@
 
 <aside class="notes" markdown="block">
 
-The table above presents the most commonly used functions in `dplyr`, which we will demonstrate in turn, starting from the *surveys* data frame.
+The table above presents the most commonly used functions in `dplyr`, which we will demonstrate in turn, starting from the *animals* data frame.
 
 </aside>
 
@@ -27,7 +27,7 @@ After loading dplyr, we begin our analysis by extracting the survey observations
 
 ~~~r
 library(dplyr)
-surveys_1990_winter <- filter(surveys,
+animals_1990_winter <- filter(animals,
 			      year == 1990,
 			      month %in% 1:3)
 ~~~
@@ -35,12 +35,12 @@ surveys_1990_winter <- filter(surveys,
 
 
 ~~~r
-str(surveys_1990_winter)
+str(animals_1990_winter)
 ~~~
 {:.input}
 ~~~
 'data.frame':	491 obs. of  9 variables:
- $ record_id      : int  16879 16880 16881 16882 16883 16884 16885 16886 16887 16888 ...
+ $ id             : int  16879 16880 16881 16882 16883 16884 16885 16886 16887 16888 ...
  $ month          : int  1 1 1 1 1 1 1 1 1 1 ...
  $ day            : int  6 6 6 6 6 6 6 6 6 6 ...
  $ year           : int  1990 1990 1990 1990 1990 1990 1990 1990 1990 1990 ...
@@ -54,7 +54,7 @@ str(surveys_1990_winter)
 
 <aside class="notes" markdown="block">
 
-Note that a logical "and" is implied when conditions are separated by commas. (This is perhaps the main way in which `filter` differs from the base R `subset` function.) Therefore, the example above is equivalent to `filter(surveys, year == 1990 & month %in% 1:3)`. A logical "or" must be specified explicitly with the `|` operator.
+Note that a logical "and" is implied when conditions are separated by commas. (This is perhaps the main way in which `filter` differs from the base R `subset` function.) Therefore, the example above is equivalent to `filter(animals, year == 1990 & month %in% 1:3)`. A logical "or" must be specified explicitly with the `|` operator.
 
 </aside>
 
@@ -64,8 +64,8 @@ To choose particular columns (rather than the rows) of a data frame, we would ca
 
 
 ~~~r
-select(surveys_1990_winter,
-       record_id, month, day, plot_id,
+select(animals_1990_winter,
+       id, month, day, plot_id,
        species_id, sex, hindfoot_length, weight)
 ~~~
 {:.input}
@@ -73,22 +73,22 @@ select(surveys_1990_winter,
 ===
 
 
-Alternatively, we can *exclude* a column by preceding its name with a minus sign. We use this option here to remove the redundant year column from *surveys_1990_winter*:
+Alternatively, we can *exclude* a column by preceding its name with a minus sign. We use this option here to remove the redundant year column from *animals_1990_winter*:
 
 
 ~~~r
-surveys_1990_winter <- select(surveys_1990_winter, -year)
+animals_1990_winter <- select(animals_1990_winter, -year)
 ~~~
 {:.text-document title="{{ site.handouts }}"}
 
 
 ~~~r
-str(surveys_1990_winter)
+str(animals_1990_winter)
 ~~~
 {:.input}
 ~~~
 'data.frame':	491 obs. of  8 variables:
- $ record_id      : int  16879 16880 16881 16882 16883 16884 16885 16886 16887 16888 ...
+ $ id             : int  16879 16880 16881 16882 16883 16884 16885 16886 16887 16888 ...
  $ month          : int  1 1 1 1 1 1 1 1 1 1 ...
  $ day            : int  6 6 6 6 6 6 6 6 6 6 ...
  $ plot_id        : int  1 1 6 23 12 24 12 24 12 17 ...
@@ -102,11 +102,11 @@ str(surveys_1990_winter)
 ===
 
 
-To complete this section, we sort the 1990 winter surveys data by descending order of species name, then by ascending order of weight. Note that `arrange` assumes ascending order unless the variable name is enclosed by `desc()`.
+To complete this section, we sort the 1990 winter animals data by descending order of species name, then by ascending order of weight. Note that `arrange` assumes ascending order unless the variable name is enclosed by `desc()`.
 
 
 ~~~r
-sorted <- arrange(surveys_1990_winter,
+sorted <- arrange(animals_1990_winter,
                   desc(species_id), weight)
 ~~~
 {:.text-document title="{{ site.handouts }}"}
@@ -117,27 +117,28 @@ head(sorted)
 ~~~
 {:.input}
 ~~~
-  record_id month day plot_id species_id sex hindfoot_length weight
-1     16929     1   7       3         SH   M              31     61
-2     17172     2  25       3         SH   F              29     67
-3     17327     3  30       2         SH   M              30     69
-4     16886     1   6      24         SH   F              30     73
-5     17359     3  30       3         SH   F              31     77
-6     17170     2  25       3         SH   M              30     80
+     id month day plot_id species_id sex hindfoot_length weight
+1 16929     1   7       3         SH   M              31     61
+2 17172     2  25       3         SH   F              29     67
+3 17327     3  30       2         SH   M              30     69
+4 16886     1   6      24         SH   F              30     73
+5 17359     3  30       3         SH   F              31     77
+6 17170     2  25       3         SH   M              30     80
 ~~~
 {:.output}
 
 ===
 
+![]({{ site.baseurl }}/images/img_4185.jpg){: width="40%"}  
+*Credit: [The Portal Project](https://portalproject.wordpress.com)*
+{:.captioned}
+
 ### Exercise 2
 
-Write code that returns the *record_id*, *sex* and *weight* of all surveyed individuals of *Reithrodontomys montanus* (RO).
-
-<aside class="notes" markdown="block">
+Write code that returns the *id*, *sex* and *weight* of all surveyed individuals of *Reithrodontomys montanus* (RO).
 
 [View solution](#solution-2)
-
-</aside>
+{:.notes}
 
 ===
 
@@ -147,14 +148,14 @@ Another common type of operation on tabular data involves the aggregation of rec
 
 <aside class="notes" markdown="block">
 
-We first define a grouping of our *surveys_1990_winter* data frame with `group_by`, then call `summarize` to aggregate values in each group using a given function (here, the built-in function `n()` to count the rows).
+We first define a grouping of our *animals_1990_winter* data frame with `group_by`, then call `summarize` to aggregate values in each group using a given function (here, the built-in function `n()` to count the rows).
 
 </aside>
 
 
 ~~~r
-surveys_1990_winter_gb <- group_by(surveys_1990_winter, species_id)
-counts_1990_winter <- summarize(surveys_1990_winter_gb, count = n())
+animals_1990_winter_gb <- group_by(animals_1990_winter, species_id)
+counts_1990_winter <- summarize(animals_1990_winter_gb, count = n())
 ~~~
 {:.text-document title="{{ site.handouts }}"}
 
@@ -164,7 +165,7 @@ head(counts_1990_winter)
 ~~~
 {:.input}
 ~~~
-# A tibble: 6 × 2
+# A tibble: 6 x 2
   species_id count
       <fctr> <int>
 1         AB    25
@@ -212,8 +213,8 @@ Its equivalent to a particular way of grouping and aggregation with `dplyr` comb
 
 
 ~~~r
-surveys_1990_winter_gb <- group_by(surveys_1990_winter, species_id, month)
-counts_by_month <- summarize(surveys_1990_winter_gb, count = n())
+animals_1990_winter_gb <- group_by(animals_1990_winter, species_id, month)
+counts_by_month <- summarize(animals_1990_winter_gb, count = n())
 pivot <- spread(counts_by_month, value = count, key = month, fill = 0)
 ~~~
 {:.text-document title="{{ site.handouts }}"}
@@ -224,9 +225,8 @@ head(pivot)
 ~~~
 {:.input}
 ~~~
-Source: local data frame [6 x 4]
-Groups: species_id [6]
-
+# A tibble: 6 x 4
+# Groups:   species_id [6]
   species_id   `1`   `2`   `3`
       <fctr> <dbl> <dbl> <dbl>
 1         AB    24     0     1
@@ -257,7 +257,7 @@ head(prop_1990_winter)
 ~~~
 {:.input}
 ~~~
-# A tibble: 6 × 3
+# A tibble: 6 x 3
   species_id count       prop
       <fctr> <int>      <dbl>
 1         AB    25 0.05091650
@@ -284,8 +284,8 @@ A few notes about transformations:
 
 We often use `group_by` along with `summarize`, but you can also apply `filter` and `mutate` operations on groups.
 
-- Filter a grouped data frame to return only rows showing the records from *surveys_1990_winter* with the minimum weight for each *species_id*.
-- For each species in *surveys_1990_winter_gb*, create a new colum giving the rank order (within that species!) of hindfoot length. (Hint: Read the documentation under `?ranking`.)
+- Filter a grouped data frame to return only rows showing the records from *animals_1990_winter* with the minimum weight for each *species_id*.
+- For each species in *animals_1990_winter_gb*, create a new column giving the rank order (within that species!) of hindfoot length. (Hint: Read the documentation under `?ranking`.)
 
 <aside class="notes" markdown="block">
 

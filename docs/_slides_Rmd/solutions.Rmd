@@ -26,8 +26,8 @@ str(sol1)
 ### Solution 2
 
 ```{r sol2}
-surveys_RO <- filter(surveys, species_id == "RO")
-surveys_R0 <- select(surveys_RO, record_id, sex, weight)
+animals_RO <- filter(animals, species_id == "RO")
+animals_R0 <- select(animals_RO, record_id, sex, weight)
 ```
 
 <aside class="notes" markdown="block">
@@ -41,9 +41,9 @@ surveys_R0 <- select(surveys_RO, record_id, sex, weight)
 ### Solution 3
 
 ```{r sol3}
-surveys_dm <- filter(surveys, species_id == "DM")
-surveys_dm <- group_by(surveys_dm, month)
-summarize(surveys_dm, avg_wgt = mean(weight, na.rm = TRUE),
+animals_dm <- filter(animals, species_id == "DM")
+animals_dm <- group_by(animals_dm, month)
+summarize(animals_dm, avg_wgt = mean(weight, na.rm = TRUE),
           avg_hfl = mean(hindfoot_length, na.rm = TRUE))
 ```
 
@@ -60,7 +60,7 @@ summarize(surveys_dm, avg_wgt = mean(weight, na.rm = TRUE),
 #### Part 1
 
 ```{r sol4a}
-filter(surveys_1990_winter_gb, weight == min(weight))
+filter(animals_1990_winter_gb, weight == min(weight))
 ```
 
 ===
@@ -70,7 +70,7 @@ filter(surveys_1990_winter_gb, weight == min(weight))
 #### Part 2
 
 ```{r sol4b}
-mutate(surveys_1990_winter_gb,
+mutate(animals_1990_winter_gb,
        ranked_hf_length = row_number(hindfoot_length))
 ```
 

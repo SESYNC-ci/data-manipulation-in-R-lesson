@@ -43,7 +43,7 @@ The pipe operator's main utility is to condense a chain of operations applied to
 
 
 ~~~r
-prop_1990_winter_piped <- surveys %>%
+prop_1990_winter_piped <- animals %>%
     filter(year == 1990, month %in% 1:3) %>% 
     select(-year) %>%
     group_by(species_id) %>%

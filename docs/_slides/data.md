@@ -5,20 +5,26 @@
 
 We will use the [Portal teaching database](http://github.com/weecology/portal-teachingdb), a simplified dataset derived from a long-term study of animal populations in the Chihuahuan Desert.
 
+![]({{ site.baseurl }}/images/portal-oct-07-15.jpg){: width="40%"}  
+*Credit: [The Portal Project](https://portalproject.wordpress.com)*
+{:.captioned}
+
+===
+
 
 ~~~r
-surveys <- read.csv("data/surveys.csv")
+animals <- read.csv("data/animals.csv")
 ~~~
 {:.text-document title="{{ site.handouts }}"}
 
 
 ~~~r
-str(surveys)
+str(animals)
 ~~~
 {:.input}
 ~~~
 'data.frame':	35549 obs. of  9 variables:
- $ record_id      : int  1 2 3 4 5 6 7 8 9 10 ...
+ $ id             : int  1 2 3 4 5 6 7 8 9 10 ...
  $ month          : int  7 7 7 7 7 7 7 7 7 7 ...
  $ day            : int  16 16 16 16 16 16 16 16 16 16 ...
  $ year           : int  1977 1977 1977 1977 1977 1977 1977 1977 1977 1977 ...
@@ -32,7 +38,7 @@ str(surveys)
 
 <aside class="notes" markdown="block">
 
-The teaching dataset includes three tables: two contain summary information on the study plots and observed species, respectively, while the third and largest one (surveys) lists all individual observations. We only need the surveys table for this lesson.
+The teaching dataset includes three tables: two contain summary information on the study plots and observed species, respectively, while the third and largest one (animals) lists all individual observations. We only need the animals table for this lesson.
 
 </aside>
 
@@ -42,7 +48,7 @@ Modify the function to specify what string in the CSV file represents NAs, a.k.a
 
 
 ~~~r
-surveys <- read.csv("data/surveys.csv", na.strings = "")
+animals <- read.csv("data/animals.csv", na.strings = "")
 ~~~
 {:.text-document title="{{ site.handouts }}"}
 
@@ -51,3 +57,18 @@ Question
 
 Answer
 : {:.fragment} The `str` shows that the factors have one less level, and the empty string is not included.
+
+===
+
+Aleternatively, we could pull the table from the PostgreSQL database server using R as our database client.
+
+
+~~~r
+library(dplyr)
+con <- dbConnect(RPostgreSQL::PostgreSQL(), host = 'localhost', dbname = 'portal')
+animals_db <- tbl(con, 'animals')
+animals <- collect(animals_db)
+~~~
+{:.text-document title="{{ site.handouts }}"}
+
+The difference between `animals_db` and `animals` is where the data are. For `animals_db` the data remain on the PostgreSQL server, while `collect` copies the data to the client.

@@ -34,12 +34,10 @@ Question
 : How would you structure this data in a tidy format as defined above?
 
 Answer
-: {:.fragment} Currently, *counts_df* has three columns (*wolf*, *hare* and *fox*) representing the same variable (a count). Since each reported observation is the count of indiviuuals from a given species on a given day, the tidy format should have three columns: *day*, *species* and *count*.
-
-<aside class="notes" markdown="block">
+: {:.fragment} Currently, *counts_df* has three columns (*wolf*, *hare* and *fox*) representing the same variable (a count). Since each reported observation is the count of individuals from a given species on a given day, the tidy format should have three columns: *day*, *species* and *count*.
 
 To put it another way, if your analysis requires grouping observations based on some characteristic (e.g. draw a graph of the counts over time with a different color for each species), then this characteristic should be recorded as different levels of a categorical variable (species) rather than spread across different variables/columns. 
+{:.notes}
 
-While the tidy format is optimal for many common data frame operations in R (aggregation, plotting, fitting statistical models), it is not the optimal structure for every case. As an example, community ecology analyses often start from a matrix of counts where rows and columns correspond to species and sites.
-
-</aside>
+While the tidy format is optimal for many common data frame operations in R (aggregation, plotting, fitting statistical models), it is not the optimal structure for every case. As an example, community ecology analyses often start from a matrix of counts where rows correspond to species and columns to sites.
+{:.notes}
