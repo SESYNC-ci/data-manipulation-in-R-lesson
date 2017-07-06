@@ -64,9 +64,11 @@ Aleternatively, we could pull the table from the PostgreSQL database server usin
 
 ~~~r
 library(dplyr)
-con <- dbConnect(RPostgreSQL::PostgreSQL(), host = 'localhost', dbname = 'portal')
+library(RPostgreSQL)
+con <- dbConnect(PostgreSQL(), host = 'localhost', dbname = 'portal')
 animals_db <- tbl(con, 'animals')
 animals <- collect(animals_db)
+dbDisconnect(con)
 ~~~
 {:.text-document title="{{ site.handouts }}"}
 
