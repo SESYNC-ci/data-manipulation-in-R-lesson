@@ -36,11 +36,8 @@ str(animals)
 ~~~
 {:.output}
 
-<aside class="notes" markdown="block">
-
 The teaching dataset includes three tables: two contain summary information on the study plots and observed species, respectively, while the third and largest one (animals) lists all individual observations. We only need the animals table for this lesson.
-
-</aside>
+{:.notes}
 
 ===
 
@@ -52,11 +49,13 @@ animals <- read.csv("data/animals.csv", na.strings = "")
 ~~~
 {:.text-document title="{{ site.handouts }}"}
 
+===
+
 Question
-: What has changed?
+: What changed?
 
 Answer
-: {:.fragment} The `str` shows that the factors have one less level, and the empty string is not included.
+: {:.fragment} Using `str()` shows that the factors have one less level, and the empty string is no longer included.
 
 ===
 

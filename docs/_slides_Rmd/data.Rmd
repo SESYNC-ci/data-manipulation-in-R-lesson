@@ -19,11 +19,8 @@ animals <- read.csv("data/animals.csv")
 str(animals)
 ```
 
-<aside class="notes" markdown="block">
-
 The teaching dataset includes three tables: two contain summary information on the study plots and observed species, respectively, while the third and largest one (animals) lists all individual observations. We only need the animals table for this lesson.
-
-</aside>
+{:.notes}
 
 ===
 
@@ -33,11 +30,13 @@ Modify the function to specify what string in the CSV file represents NAs, a.k.a
 animals <- read.csv("data/animals.csv", na.strings = "")
 ```
 
+===
+
 Question
-: What has changed?
+: What changed?
 
 Answer
-: {:.fragment} The `str` shows that the factors have one less level, and the empty string is not included.
+: {:.fragment} Using `str()` shows that the factors have one less level, and the empty string is no longer included.
 
 ===
 

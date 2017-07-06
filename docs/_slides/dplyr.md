@@ -12,11 +12,8 @@
 | summarize(*data*, *newvar* = *function*) | a data frame with *newvar* columns that summarize *data* (or each group in *data*) based on an aggregation *function* |
 | mutate(*data*, *newvar* = *function*)    | a data frame with *newvar* columns defined by a *function* of existing columns                                        |
 
-<aside class="notes" markdown="block">
-
 The table above presents the most commonly used functions in `dplyr`, which we will demonstrate in turn, starting from the *animals* data frame.
-
-</aside>
+{:.notes}
 
 ===
 
@@ -52,11 +49,8 @@ str(animals_1990_winter)
 ~~~
 {:.output}
 
-<aside class="notes" markdown="block">
-
 Note that a logical "and" is implied when conditions are separated by commas. (This is perhaps the main way in which `filter` differs from the base R `subset` function.) Therefore, the example above is equivalent to `filter(animals, year == 1990 & month %in% 1:3)`. A logical "or" must be specified explicitly with the `|` operator.
-
-</aside>
+{:.notes}
 
 ===
 
@@ -146,11 +140,8 @@ Write code that returns the *id*, *sex* and *weight* of all surveyed individuals
 
 Another common type of operation on tabular data involves the aggregation of records according to specific grouping variables. In particular, let's say we want to count the number of individuals by species observed in the winter of 1990.
 
-<aside class="notes" markdown="block">
-
 We first define a grouping of our *animals_1990_winter* data frame with `group_by`, then call `summarize` to aggregate values in each group using a given function (here, the built-in function `n()` to count the rows).
-
-</aside>
+{:.notes}
 
 
 ~~~r
@@ -185,11 +176,8 @@ A few notes on these functions:
 - You can add multiple variables (separated by commas) in `group_by`; each distinct combination of values across these columns defines a different group.
 - A single call to `summarize` can define more than one variable, each with its own function.
 
-<aside class="notes" markdown="block">
-
 You can see attributes either by running the `str()` function on the data frame or by inspecting it in the RStudio *Environment* pane.
-
-</aside>
+{:.notes}
 
 ===
 
@@ -198,11 +186,9 @@ You can see attributes either by running the `str()` function on the data frame 
 
 Write code that returns the average weight and hindfoot length of *Dipodomys merriami* (DM) individuals observed in each month (irrespective of the year). Make sure to exclude *NA* values.
 
-<aside class="notes" markdown="block">
 
 [View solution](#solution-3)
-
-</aside>
+{:.notes}
 
 ===
 
@@ -287,8 +273,5 @@ We often use `group_by` along with `summarize`, but you can also apply `filter` 
 - Filter a grouped data frame to return only rows showing the records from *animals_1990_winter* with the minimum weight for each *species_id*.
 - For each species in *animals_1990_winter_gb*, create a new column giving the rank order (within that species!) of hindfoot length. (Hint: Read the documentation under `?ranking`.)
 
-<aside class="notes" markdown="block">
-
 [View solution](#solution-4)
-
-</aside>
+{:.notes}

@@ -3,11 +3,8 @@
 
 ## Chaining operations with pipes (%>%)
 
-<aside class="notes" markdown="block">
-
 We have seen that dplyr functions all take a data frame as their first argument and return a transformed data frame. This consistent syntax has the added benefit of making these functions compatible the "pipe" operator (`%>%`). This operator actually comes from another R package, **magrittr**, which is loaded with dplyr by default.
-
-</aside>
+{:.notes}
 
 What a pipe, or `%>%`, does is to take the expression on its left-hand side and pass it as the first argument to the function on its right-hand side. Here is a simple example:
 

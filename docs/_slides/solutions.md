@@ -3,7 +3,9 @@
 
 ## Exercise solutions
 
-### Solution 1
+===
+
+## Solution 1
 
 If any species/day combination is missing, the corresponding cell after `spread` is filled with `NA`. To interpret missing values as zero counts, use the optional `fill` argument: 
 
@@ -27,43 +29,52 @@ str(sol1)
 ~~~
 {:.output}
 
-<aside class="notes" markdown="block">
-
 [Return](#exercise-1)
-
-</aside>
+{:.notes}
 
 ===
 
-### Solution 2
+## Solution 2
 
 
 ~~~r
 animals_RO <- filter(animals, species_id == "RO")
-animals_R0 <- select(animals_RO, record_id, sex, weight)
+sol2 <- select(animals_RO, id, sex, weight)
+~~~
+{:.text-document title="{{ site.handouts }}"}
+
+
+~~~r
+str(sol2)
 ~~~
 {:.input}
 ~~~
-Error in overscope_eval_next(overscope, expr): object 'record_id' not found
+'data.frame':	8 obs. of  3 variables:
+ $ id    : int  18871 33397 33556 33565 34517 35402 35420 35487
+ $ sex   : Factor w/ 2 levels "F","M": 1 2 2 1 2 1 2 1
+ $ weight: int  11 8 9 8 11 12 10 13
 ~~~
 {:.output}
 
-<aside class="notes" markdown="block">
-
 [Return](#exercise-2)
-
-</aside>
+{:.notes}
 
 ===
 
-### Solution 3
+## Solution 3
 
 
 ~~~r
 animals_dm <- filter(animals, species_id == "DM")
 animals_dm <- group_by(animals_dm, month)
-summarize(animals_dm, avg_wgt = mean(weight, na.rm = TRUE),
+sol3 <- summarize(animals_dm, avg_wgt = mean(weight, na.rm = TRUE),
           avg_hfl = mean(hindfoot_length, na.rm = TRUE))
+~~~
+{:.text-document title="{{ site.handouts }}"}
+
+
+~~~r
+sol3
 ~~~
 {:.input}
 ~~~
@@ -85,21 +96,22 @@ summarize(animals_dm, avg_wgt = mean(weight, na.rm = TRUE),
 ~~~
 {:.output}
 
-<aside class="notes" markdown="block">
-
 [Return](#exercise-3)
-
-</aside>
+{:.notes}
 
 ===
 
-### Solution 4
-
-#### Part 1
+## Solution 4: Part 1
 
 
 ~~~r
-filter(animals_1990_winter_gb, weight == min(weight))
+sol4a <- filter(animals_1990_winter_gb, weight == min(weight))
+~~~
+{:.text-document title="{{ site.handouts }}"}
+
+
+~~~r
+sol4a
 ~~~
 {:.input}
 ~~~
@@ -123,14 +135,18 @@ filter(animals_1990_winter_gb, weight == min(weight))
 
 ===
 
-### Solution 4
-
-#### Part 2
+## Solution 4:  Part 2
 
 
 ~~~r
-mutate(animals_1990_winter_gb,
+sol4b <- mutate(animals_1990_winter_gb,
        ranked_hf_length = row_number(hindfoot_length))
+~~~
+{:.text-document title="{{ site.handouts }}"}
+
+
+~~~r
+sol4b
 ~~~
 {:.input}
 ~~~
@@ -152,8 +168,5 @@ mutate(animals_1990_winter_gb,
 ~~~
 {:.output}
 
-<aside class="notes" markdown="block">
-
 [Return](#exercise-4)
-
-</aside>
+{:.notes}

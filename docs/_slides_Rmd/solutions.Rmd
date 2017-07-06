@@ -3,7 +3,9 @@
 
 ## Exercise solutions
 
-### Solution 1
+===
+
+## Solution 1
 
 If any species/day combination is missing, the corresponding cell after `spread` is filled with `NA`. To interpret missing values as zero counts, use the optional `fill` argument: 
 
@@ -15,67 +17,67 @@ sol1 <- spread(counts_gather, key = species, value = count, fill = 0)
 str(sol1)
 ```
 
-<aside class="notes" markdown="block">
-
 [Return](#exercise-1)
-
-</aside>
+{:.notes}
 
 ===
 
-### Solution 2
+## Solution 2
 
-```{r sol2}
+```{r sol2, title="{{ site.handouts }}"}
 animals_RO <- filter(animals, species_id == "RO")
-animals_R0 <- select(animals_RO, record_id, sex, weight)
+sol2 <- select(animals_RO, id, sex, weight)
 ```
 
-<aside class="notes" markdown="block">
+```{r}
+str(sol2)
+```
 
 [Return](#exercise-2)
-
-</aside>
+{:.notes}
 
 ===
 
-### Solution 3
+## Solution 3
 
-```{r sol3}
+```{r sol3, title="{{ site.handouts }}"}
 animals_dm <- filter(animals, species_id == "DM")
 animals_dm <- group_by(animals_dm, month)
-summarize(animals_dm, avg_wgt = mean(weight, na.rm = TRUE),
+sol3 <- summarize(animals_dm, avg_wgt = mean(weight, na.rm = TRUE),
           avg_hfl = mean(hindfoot_length, na.rm = TRUE))
 ```
 
-<aside class="notes" markdown="block">
+```{r}
+sol3
+```
 
 [Return](#exercise-3)
-
-</aside>
+{:.notes}
 
 ===
 
-### Solution 4
+## Solution 4: Part 1
 
-#### Part 1
+```{r sol4a, title="{{ site.handouts }}"}
+sol4a <- filter(animals_1990_winter_gb, weight == min(weight))
+```
 
-```{r sol4a}
-filter(animals_1990_winter_gb, weight == min(weight))
+```{r}
+sol4a
 ```
 
 ===
 
-### Solution 4
+## Solution 4:  Part 2
 
-#### Part 2
-
-```{r sol4b}
-mutate(animals_1990_winter_gb,
+```{r sol4b, title="{{ site.handouts }}"}
+sol4b <- mutate(animals_1990_winter_gb,
        ranked_hf_length = row_number(hindfoot_length))
 ```
 
-<aside class="notes" markdown="block">
+```{r}
+sol4b
+```
 
 [Return](#exercise-4)
-
-</aside>
+{:.notes}
