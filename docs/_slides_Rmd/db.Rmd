@@ -1,0 +1,26 @@
+---
+---
+
+## Database Connections
+
+The [dplyr](){:.rlib} package reads data from multiple kinds of sources. We used CSV files above, but data could also be read from a database.
+
+To read the "animals" table from a PostgreSQL database server using R as a database client:
+
+```{r read_dbdata_na, title="{{ site.handouts }}", eval=FALSE}
+library(RPostgreSQL)
+
+con <- dbConnect(PostgreSQL(), host = 'localhost', dbname = 'portal')
+animals_db <- tbl(con, 'animals')
+```
+
+The "localhost" is not a typical location for a database server (because "localhost" means your own system). If you have a database administrator, that person will give you the correct host and credentials. If you do not have a database administrator, [here you go](https://www.postgresql.org/docs/).
+{:.notes}
+
+===
+
+
+
+```{r}
+dbDisconnect(con)
+```

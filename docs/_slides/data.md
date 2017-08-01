@@ -59,17 +59,3 @@ Answer
 
 ===
 
-Aleternatively, we could pull the table from the PostgreSQL database server using R as our database client.
-
-
-~~~r
-library(dplyr)
-library(RPostgreSQL)
-con <- dbConnect(PostgreSQL(), host = 'localhost', dbname = 'portal')
-animals_db <- tbl(con, 'animals')
-animals <- collect(animals_db)
-dbDisconnect(con)
-~~~
-{:.text-document title="{{ site.handouts }}"}
-
-The difference between `animals_db` and `animals` is where the data are. For `animals_db` the data remain on the PostgreSQL server, while `collect` copies the data to the client.

@@ -3,39 +3,38 @@
 
 ## Tidy data concept
 
-R developer Hadley Wickham (author of the tidyr, dplyr and ggplot packages, among others) defines tidy datasets as those where:
+R developer Hadley Wickham (author of the tidyr, dplyr and ggplot packages, among others) defines tidy datasets ([Wickham 2014](http://www.jstatsoft.org/v59/i10/paper)) as those where:
 
 * each variable forms a column;
 * each observation forms a row; and
-* each type of observational unit forms a table. ([Wickham 2014](http://www.jstatsoft.org/v59/i10/paper))
+* each type of observational unit forms a table. 
 
-These guidelines may be familiar to some of you, as they closely map to best practices in database design.
+These guidelines may be familiar to some of you---they closely map to best practices in database design.
 
 ===
 
-Build a `data.frame` where the counts of three species are recorded for each day in a week:
+Begin with a `data.frame` where the outcome of an experiment is *recorded* in a perfectly appropriate way:
 
 
 ~~~r
-counts_df <- data.frame(
-  day = c("Monday", "Tuesday", "Wednesday"),
-  wolf = c(2, 1, 3),
-  hare = c(20, 25, 30),
-  fox = c(4, 4, 4)
+response <- data.frame(
+  trial = 1:3,
+  treatment = c(0.22, 0.58, 0.31),
+  control = c(0.42, 0.19, 0.40)
 )
 ~~~
 {:.text-document title="{{ site.handouts }}"}
 
 
 ~~~r
-counts_df
+response
 ~~~
 {:.input}
 ~~~
-        day wolf hare fox
-1    Monday    2   20   4
-2   Tuesday    1   25   4
-3 Wednesday    3   30   4
+  trial treatment control
+1     1      0.22    0.42
+2     2      0.58    0.19
+3     3      0.31    0.40
 ~~~
 {:.output}
 
@@ -45,10 +44,8 @@ Question
 : How would you structure this data in a tidy format as defined above?
 
 Answer
-: {:.fragment} Currently, *counts_df* has three columns (*wolf*, *hare* and *fox*) representing the same variable (a count). Since each reported observation is the count of individuals from a given species on a given day, the tidy format should have three columns: *day*, *species* and *count*.
+: {:.fragment} Currently, `response` has multiple observations in each row: the observed response in the treatment group and in the control group. For analysis, the data should include a categorical variable for treatment vs. control. 
 
-To put it another way, if your analysis requires grouping observations based on some characteristic (e.g. draw a graph of the counts over time with a different color for each species), then this characteristic should be recorded as different levels of a categorical variable (species) rather than spread across different variables/columns. 
+To put it another way, if your analysis needs some set of names that are found in the column headers to serve as predictors, then you've got to tidy up!
 {:.notes}
 
-While the tidy format is optimal for many common data frame operations in R (aggregation, plotting, fitting statistical models), it is not the optimal structure for every case. As an example, community ecology analyses often start from a matrix of counts where rows correspond to species and columns to sites.
-{:.notes}

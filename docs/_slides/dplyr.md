@@ -1,18 +1,18 @@
 ---
 ---
 
-## Key functions in dplyr
+## Key data wrangling functions
 
-| Function                                 | Returns                                                                                                               |
-|------------------------------------------+-----------------------------------------------------------------------------------------------------------------------|
-| filter(*data*, *conditions*)             | rows from *data* where *conditions* hold                                                                              |
-| select(*data*, *variables*)              | a subset of the columns in *data*, as specified in *variables*                                                        |
-| arrange(*data*, *variables*)             | *data* sorted by *variables*                                                                                          |
-| group_by(*data*, *variables*)            | a copy of *data*, with groups defined by *variables*                                                                  |
-| summarize(*data*, *newvar* = *function*) | a data frame with *newvar* columns that summarize *data* (or each group in *data*) based on an aggregation *function* |
-| mutate(*data*, *newvar* = *function*)    | a data frame with *newvar* columns defined by a *function* of existing columns                                        |
+| Function                         | Returns                                                                                                    |
+|----------------------------------+------------------------------------------------------------------------------------------------------------|
+| `filter(data, ...)`              | rows from *data* where any conditions in place of `...` hold                                               |
+| `select(data, ...)`              | the columns of *data* named by variables in place of `...`                                                 |
+| `arrange(data, ...)`             | *data* sorted by any variables in place of `...`                                                           |
+| `mutate(data, %var% = %fun%)`    | a copy of *data* with additional *var* column defined by the output of function %fun%                      |
+| `group_by(data, ...)`            | a copy of *data* with a grouping attribute based on all variables in `...`                                 |
+| `summarize(data, %var% = %fun%)` | a data frame with %var% column that summarizes each group in *data* based on an aggregation function %fun% |
 
-The table above presents the most commonly used functions in `dplyr`, which we will demonstrate in turn, starting from the *animals* data frame.
+The table above presents the most commonly used functions in [dplyr](){:.rlib}, which we will demonstrate in turn, starting from the `animals` data frame.
 {:.notes}
 
 ===
@@ -95,7 +95,6 @@ str(animals_1990_winter)
 
 ===
 
-
 To complete this section, we sort the 1990 winter animals data by descending order of species name, then by ascending order of weight. Note that `arrange` assumes ascending order unless the variable name is enclosed by `desc()`.
 
 
@@ -123,155 +122,14 @@ head(sorted)
 
 ===
 
-![]({{ site.baseurl }}/images/img_4185.jpg){: width="40%"}  
+![]({{ site.baseurl }}/images/img_4185.jpg){:width="40%"}  
 *Credit: [The Portal Project](https://portalproject.wordpress.com)*
 {:.captioned}
 
 ### Exercise 2
 
-Write code that returns the *id*, *sex* and *weight* of all surveyed individuals of *Reithrodontomys montanus* (RO).
+Write code that returns the **id**, **sex** and **weight** of all surveyed individuals of *Reithrodontomys montanus* (RO).
 
 [View solution](#solution-2)
 {:.notes}
 
-===
-
-## Grouping and aggregation
-
-Another common type of operation on tabular data involves the aggregation of records according to specific grouping variables. In particular, let's say we want to count the number of individuals by species observed in the winter of 1990.
-
-We first define a grouping of our *animals_1990_winter* data frame with `group_by`, then call `summarize` to aggregate values in each group using a given function (here, the built-in function `n()` to count the rows).
-{:.notes}
-
-
-~~~r
-animals_1990_winter_gb <- group_by(animals_1990_winter, species_id)
-counts_1990_winter <- summarize(animals_1990_winter_gb, count = n())
-~~~
-{:.text-document title="{{ site.handouts }}"}
-
-
-~~~r
-head(counts_1990_winter)
-~~~
-{:.input}
-~~~
-# A tibble: 6 x 2
-  species_id count
-      <fctr> <int>
-1         AB    25
-2         AH     4
-3         BA     3
-4         DM   132
-5         DO    65
-6         DS     6
-~~~
-{:.output}
-
-===
-
-A few notes on these functions: 
-
-- `group_by` makes no changes to the data frame values, but it adds metadata -- in the form of R *attributes* -- to identify groups.
-- You can add multiple variables (separated by commas) in `group_by`; each distinct combination of values across these columns defines a different group.
-- A single call to `summarize` can define more than one variable, each with its own function.
-
-You can see attributes either by running the `str()` function on the data frame or by inspecting it in the RStudio *Environment* pane.
-{:.notes}
-
-===
-
-
-### Exercise 3
-
-Write code that returns the average weight and hindfoot length of *Dipodomys merriami* (DM) individuals observed in each month (irrespective of the year). Make sure to exclude *NA* values.
-
-
-[View solution](#solution-3)
-{:.notes}
-
-===
-
-## Pivot tables through aggregate and spread
-
-A pivot table takes tidy data into an untidy format, summarizing data by two factors (one as a row, the other a column).
-Its equivalent to a particular way of grouping and aggregation with `dplyr` combined with the `spread()` function.
-
-
-~~~r
-animals_1990_winter_gb <- group_by(animals_1990_winter, species_id, month)
-counts_by_month <- summarize(animals_1990_winter_gb, count = n())
-pivot <- spread(counts_by_month, value = count, key = month, fill = 0)
-~~~
-{:.text-document title="{{ site.handouts }}"}
-
-
-~~~r
-head(pivot)
-~~~
-{:.input}
-~~~
-# A tibble: 6 x 4
-# Groups:   species_id [6]
-  species_id   `1`   `2`   `3`
-      <fctr> <dbl> <dbl> <dbl>
-1         AB    24     0     1
-2         AH     3     1     0
-3         BA     1     2     0
-4         DM    60    35    37
-5         DO    31    17    17
-6         DS     3     1     2
-~~~
-{:.output}
-
-===
-
-## Transformation of variables
-
-The `mutate` function creates new columns by performing the same operation on each row. Here, we use the previously obtained *count* variable to derive the proportion of individuals represented by each species, and assign the result to a new *prop* column.
-
-
-~~~r
-prop_1990_winter <- mutate(counts_1990_winter,
-                           prop = count / sum(count))
-~~~
-{:.text-document title="{{ site.handouts }}"}
-
-
-~~~r
-head(prop_1990_winter)
-~~~
-{:.input}
-~~~
-# A tibble: 6 x 3
-  species_id count       prop
-      <fctr> <int>      <dbl>
-1         AB    25 0.05091650
-2         AH     4 0.00814664
-3         BA     3 0.00610998
-4         DM   132 0.26883910
-5         DO    65 0.13238289
-6         DS     6 0.01221996
-~~~
-{:.output}
-
-===
-
-A few notes about transformations:
-
-- With `mutate`, you can assign the result of an expression to an existing column name to overwrite that column.
-- As we will see below, `mutate` also works with groups. The key difference between `mutate` and `summarize` is that the former always returns a data frame with the same number of rows, while the latter reduces the number of rows.
-- For a concise way to apply the same transformation to multiple columns, check the `mutate_each` function. There is also a `summarize_each` function to perform the same aggregation operation on multiple columns.
-^
-
-===
-
-### Exercise 4
-
-We often use `group_by` along with `summarize`, but you can also apply `filter` and `mutate` operations on groups.
-
-- Filter a grouped data frame to return only rows showing the records from *animals_1990_winter* with the minimum weight for each *species_id*.
-- For each species in *animals_1990_winter_gb*, create a new column giving the rank order (within that species!) of hindfoot length. (Hint: Read the documentation under `?ranking`.)
-
-[View solution](#solution-4)
-{:.notes}

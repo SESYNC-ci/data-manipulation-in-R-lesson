@@ -40,21 +40,25 @@ The pipe operator's main utility is to condense a chain of operations applied to
 
 
 ~~~r
-prop_1990_winter_piped <- animals %>%
-    filter(year == 1990, month %in% 1:3) %>% 
+sorted_pipe <- animals %>%
+    filter(year == 1990, month %in% 1:3) %>%
     select(-year) %>%
-    group_by(species_id) %>%
-    summarize(count = n()) %>%
-    mutate(prop = count / sum(count))
+    arrange(desc(species_id), weight)
 ~~~
 {:.text-document title="{{ site.handouts }}"}
 
 
 ~~~r
-identical(prop_1990_winter_piped, prop_1990_winter)
+head(sorted_pipe)
 ~~~
 {:.input}
 ~~~
-[1] TRUE
+     id month day plot_id species_id sex hindfoot_length weight
+1 16929     1   7       3         SH   M              31     61
+2 17172     2  25       3         SH   F              29     67
+3 17327     3  30       2         SH   M              30     69
+4 16886     1   6      24         SH   F              30     73
+5 17359     3  30       3         SH   F              31     77
+6 17170     2  25       3         SH   M              30     80
 ~~~
 {:.output}
