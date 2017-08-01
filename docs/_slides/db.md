@@ -66,19 +66,12 @@ Error in eval(expr, envir, enclos): object 'species_month_prop' not found
 
 ===
 
-To complete the pivot table, however, the `species_month_prop` values must be copied into a R data.frame using `collect` for processing with `spread`. There is not SQL equivalent for what `spread` does.
+To complete the pivot table, however, the `species_month_prop` values must be copied into a R data.frame using `collect` for processing with `spread`. There is no SQL equivalent for what `spread` does.
 
-
-~~~r
-species_month_prop <- collect(species_month_prop)
-~~~
-
-~~~
-Error in collect(species_month_prop): object 'species_month_prop' not found
-~~~
 
 ~~~r
 pivot <- species_month_prop %>%
+  collect() %>%
   spread(month, prop, fill = 0)
 ~~~
 
