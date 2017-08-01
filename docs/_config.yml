@@ -19,6 +19,7 @@ slide_sorter:
   - dplyr
   - pipe
   - group
+  - db
   - conclude
   - solutions
   
