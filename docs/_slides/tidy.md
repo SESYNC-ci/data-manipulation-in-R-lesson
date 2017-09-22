@@ -5,25 +5,24 @@
 
 R developer Hadley Wickham (author of the tidyr, dplyr and ggplot packages, among others) defines tidy datasets ([Wickham 2014](http://www.jstatsoft.org/v59/i10/paper)) as those where:
 
-* each variable forms a column;
-* each observation forms a row; and
-* each type of observational unit forms a table. 
+* each variable forms a column
+* each observation forms a row
+* each type of observational unit forms a table
 
 These guidelines may be familiar to some of you---they closely map to best practices in database design.
+{:.notes}
 
 ===
 
-Begin with a `data.frame` where the outcome of an experiment is *recorded* in a perfectly appropriate way:
+Conser a data frame where the outcome of an experiment has been *recorded* in a perfectly appropriate way:
 
+trial | drug_A | drug_B | placebo
+    1 |   0.22 |   0.58 |    0.31
+    2 |   0.12 |   0.98 |    0.47
+    3 |   0.42 |   0.19 |     0.4
 
-~~~r
-response <- data.frame(
-  trial = 1:3,
-  treatment = c(0.22, 0.58, 0.31),
-  control = c(0.42, 0.19, 0.40)
-)
-~~~
-{:.text-document title="{{ site.handouts }}"}
+===
+
 
 
 ~~~r
@@ -31,13 +30,27 @@ response
 ~~~
 {:.input}
 ~~~
-  trial treatment control
-1     1      0.22    0.42
-2     2      0.58    0.19
-3     3      0.31    0.40
+  trial drug_A drug_B placebo
+1     1   0.22   0.58    0.31
+2     2   0.12   0.98    0.47
+3     3   0.42   0.19    0.40
 ~~~
 {:.output}
 
+===
+
+The response data are present in a compact matrix, as you might record it on a spreadsheet. The form does not match how we think about a statistical model, such as:
+
+~~~r
+response ~ treatment + trial
+~~~
+{:.output}
+
+===
+
+In a tidy format, each row is a complete observation: it includes one response value and all the predictor values. In this data, some of those values are column headers, so we've got to tidy up!
+
+<!--
 ===
 
 Question
@@ -48,4 +61,4 @@ Answer
 
 To put it another way, if your analysis needs some set of names that are found in the column headers to serve as predictors, then you've got to tidy up!
 {:.notes}
-
+-->

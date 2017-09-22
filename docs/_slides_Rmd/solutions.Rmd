@@ -7,10 +7,8 @@
 
 ## Solution 1
 
-If any species/day combination is missing, the corresponding cell after `spread` is filled with `NA`. To interpret missing values as zero counts, use the optional `fill` argument: 
-
-```{r title = '{{ site.handouts }}'}
-spread(counts[-5, ], key = species, value = n, fill = 0)
+```{r}
+gather(wide_counts, key = "species", value = "n", -site)
 ```
 
 [Return](#exercise-1)
@@ -20,13 +18,9 @@ spread(counts[-5, ], key = species, value = n, fill = 0)
 
 ## Solution 2
 
-```{r title = '{{ site.handouts }}'}
-animals_RO <- filter(animals, species_id == "RO")
-sol2 <- select(animals_RO, id, sex, weight)
-```
-
 ```{r}
-str(sol2)
+animals_RO <- filter(animals, species_id == "RO")
+select(animals_RO, id, sex, weight)
 ```
 
 [Return](#exercise-2)
@@ -36,15 +30,12 @@ str(sol2)
 
 ## Solution 3
 
-```{r title = '{{ site.handouts }}'}
-animals_dm <- filter(animals, species_id == "DM")
-animals_dm <- group_by(animals_dm, month)
-sol3 <- summarize(animals_dm, avg_wgt = mean(weight, na.rm = TRUE),
-          avg_hfl = mean(hindfoot_length, na.rm = TRUE))
-```
-
 ```{r}
-sol3
+filter(animals, species_id == "DM") %>%
+  group_by(month) %>%
+  summarize(
+    avg_wgt = mean(weight, na.rm = TRUE),
+    avg_hfl = mean(hindfoot_length, na.rm = TRUE))
 ```
 
 [Return](#exercise-3)
@@ -54,17 +45,10 @@ sol3
 
 ## Solution 4
 
-```{r title = '{{ site.handouts }}'}
-sol4 <- animals_1990_winter %>%
-    group_by(species_id, month) %>%
-    summarize(count = n()) %>%
-    mutate(prop = count / sum(count)) %>%
-    select(-count) %>%
-    spread(key = month, value = prop, fill = 0)
-```
-
 ```{r}
-head(sol4)
+group_by(animals, species_id, month) %>%
+  summarize(count = n()) %>%
+  spread(key = month, value = count, fill = 0)
 ```
 
 [Return](#exercise-3)

@@ -3,7 +3,9 @@
 
 ## Sample data
 
-We will use the [Portal teaching database](http://github.com/weecology/portal-teachingdb), a simplified dataset derived from a long-term study of animal populations in the Chihuahuan Desert.
+To learn about data transformation with dplyr, we need more data. The [Portal teaching database](http://github.com/weecology/portal-teachingdb) is a simplified dataset derived from a long-term study of animal populations in the Chihuahuan Desert.
+
+===
 
 ![]({{ site.baseurl }}/images/portal-oct-07-15.jpg){: width="40%"}  
 *Credit: [The Portal Project](https://portalproject.wordpress.com)*
@@ -11,12 +13,14 @@ We will use the [Portal teaching database](http://github.com/weecology/portal-te
 
 ===
 
+The teaching dataset includes three tables: two contain summary information on the study plots and observed species, respectively, while the third and largest one (animals) lists all individual observations. We only need the animals table for this lesson.
+{:.notes}
+
 
 ~~~r
-animals <- read.csv("data/animals.csv")
+animals <- read.csv('data/animals.csv')
 ~~~
 {:.text-document title="{{ site.handouts }}"}
-
 
 ~~~r
 str(animals)
@@ -36,16 +40,15 @@ str(animals)
 ~~~
 {:.output}
 
-The teaching dataset includes three tables: two contain summary information on the study plots and observed species, respectively, while the third and largest one (animals) lists all individual observations. We only need the animals table for this lesson.
-{:.notes}
-
 ===
 
 Modify the function to specify what string in the CSV file represents NAs, a.k.a. data that is not-available or missing.
 
 
 ~~~r
-animals <- read.csv("data/animals.csv", na.strings = "")
+animals <- read.csv(
+  'data/animals.csv',
+  na.strings = '')
 ~~~
 {:.text-document title="{{ site.handouts }}"}
 
@@ -56,6 +59,4 @@ Question
 
 Answer
 : {:.fragment} Using `str()` shows that the factors have one less level, and the empty string is no longer included.
-
-===
 

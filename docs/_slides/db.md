@@ -10,9 +10,26 @@ To read the "animals" table from a PostgreSQL database server using R as a datab
 
 ~~~r
 library(RPostgreSQL)
+~~~
 
+~~~
+Error in library(RPostgreSQL): there is no package called 'RPostgreSQL'
+~~~
+
+~~~r
 con <- dbConnect(PostgreSQL(), host = 'localhost', dbname = 'portal')
+~~~
+
+~~~
+Error in dbConnect(PostgreSQL(), host = "localhost", dbname = "portal"): could not find function "dbConnect"
+~~~
+
+~~~r
 animals_db <- tbl(con, 'animals')
+~~~
+
+~~~
+Error in tbl(con, "animals"): object 'con' not found
 ~~~
 {:.text-document title="{{ site.handouts }}"}
 
@@ -31,6 +48,10 @@ species_month_prop <- animals_db %>%
     mutate(prop = count / sum(count)) %>%
     select(-count)
 ~~~
+
+~~~
+Error in eval(lhs, parent, parent): object 'animals_db' not found
+~~~
 {:.text-document title="{{ site.handouts }}"}
 
 
@@ -39,22 +60,7 @@ species_month_prop
 ~~~
 {:.input}
 ~~~
-# Source:   lazy query [?? x 3]
-# Database: postgres 9.6.3 [ian@localhost:5432/portal]
-# Groups:   species_id
-   species_id month       prop
-        <chr> <int>      <dbl>
- 1         AB     9 0.03960396
- 2         AB     3 0.12541254
- 3         AB     2 0.17161716
- 4         AB     5 0.03960396
- 5         AB    11 0.06600660
- 6         AB     4 0.05940594
- 7         AB    12 0.12871287
- 8         AB    10 0.02970297
- 9         AB     7 0.03960396
-10         AB     6 0.01650165
-# ... with more rows
+Error in eval(expr, envir, enclos): object 'species_month_prop' not found
 ~~~
 {:.output}
 
@@ -68,6 +74,10 @@ pivot <- species_month_prop %>%
   collect() %>%
   spread(month, prop, fill = 0)
 ~~~
+
+~~~
+Error in eval(lhs, parent, parent): object 'species_month_prop' not found
+~~~
 {:.text-document title="{{ site.handouts }}"}
 
 ===
@@ -80,6 +90,6 @@ dbDisconnect(con)
 ~~~
 {:.input}
 ~~~
-[1] TRUE
+Error in dbDisconnect(con): could not find function "dbDisconnect"
 ~~~
 {:.output}

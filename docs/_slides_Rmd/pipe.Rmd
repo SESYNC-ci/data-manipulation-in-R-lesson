@@ -1,18 +1,21 @@
 ---
 ---
 
-## Chaining operations with pipes (%>%)
+## Chaining functions
 
-We have seen that dplyr functions all take a data frame as their first argument and return a transformed data frame. This consistent syntax has the added benefit of making these functions compatible the "pipe" operator (`%>%`). This operator actually comes from another R package, **magrittr**, which is loaded with dplyr by default.
-{:.notes}
+All those functions from the dplyr package take a data frame as their first argument, and they return a data frame. This consistent syntax is on purpose. It is designed for easily chaining data transformations together: processing data frames in easy-to-read steps.
 
-What a pipe, or `%>%`, does is to take the expression on its left-hand side and pass it as the first argument to the function on its right-hand side. Here is a simple example:
+===
+
+The "pipe" operator (`%>%`) from the [magrittr](){:.rpkg} package is loaded by dplyr. The pipe takes the expression on its left-hand side and hands it over as the first argument to the function on its right-hand side.
+
+===
+
+Equivalent to `sum(c(1,3,5))`, for example, we have:
 
 ```{r pipe_example_1}
 c(1, 3, 5) %>% sum()
 ```
-
-It's identical to `sum(c(1,3,5))`.
 
 ===
 
@@ -24,15 +27,18 @@ c(1, 3, 5, NA) %>% sum(na.rm = TRUE)
 
 ===
 
-The pipe operator's main utility is to condense a chain of operations applied to the same piece of data, when you don't need to save the intermediate results. We can do all the dplyr operations from above with a chain of pipes:
+The pipe operator's main utility is to condense a chain of operations applied to the same piece of data, when you don't need to save the intermediate results. We can do both the filter and select operations from above with one assignment.
+
+===
 
 ```{r title = '{{ site.handouts }}'}
-sorted_pipe <- animals %>%
+animals_1990_winter <- animals %>%
     filter(year == 1990, month %in% 1:3) %>%
-    select(-year) %>%
-    arrange(desc(species_id), weight)
+    select(-year)
 ```
 
+===
+
 ```{r}
-head(sorted_pipe)
+str(animals_1990_winter)
 ```

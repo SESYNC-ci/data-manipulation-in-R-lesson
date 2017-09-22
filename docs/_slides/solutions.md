@@ -7,20 +7,21 @@
 
 ## Solution 1
 
-If any species/day combination is missing, the corresponding cell after `spread` is filled with `NA`. To interpret missing values as zero counts, use the optional `fill` argument: 
-
 
 ~~~r
-spread(counts[-5, ], key = species, value = n, fill = 0)
+gather(wide_counts, key = "species", value = "n", -site)
 ~~~
-
+{:.input}
 ~~~
-  site hare lynx
-1    1  341    2
-2    2   42    7
-3    3  289    0
+  site   species   n
+1    1  hare     341
+2    2  hare      42
+3    3  hare     289
+4    1  lynx       2
+5    2  lynx       7
+6    3  lynx       0
 ~~~
-{:.text-document title="{{ site.handouts }}"}
+{:.output}
 
 [Return](#exercise-1)
 {:.notes}
@@ -32,20 +33,19 @@ spread(counts[-5, ], key = species, value = n, fill = 0)
 
 ~~~r
 animals_RO <- filter(animals, species_id == "RO")
-sol2 <- select(animals_RO, id, sex, weight)
-~~~
-{:.text-document title="{{ site.handouts }}"}
-
-
-~~~r
-str(sol2)
+select(animals_RO, id, sex, weight)
 ~~~
 {:.input}
 ~~~
-'data.frame':	8 obs. of  3 variables:
- $ id    : int  18871 33397 33556 33565 34517 35402 35420 35487
- $ sex   : Factor w/ 2 levels "F","M": 1 2 2 1 2 1 2 1
- $ weight: int  11 8 9 8 11 12 10 13
+     id sex weight
+1 18871   F     11
+2 33397   M      8
+3 33556   M      9
+4 33565   F      8
+5 34517   M     11
+6 35402   F     12
+7 35420   M     10
+8 35487   F     13
 ~~~
 {:.output}
 
@@ -58,16 +58,11 @@ str(sol2)
 
 
 ~~~r
-animals_dm <- filter(animals, species_id == "DM")
-animals_dm <- group_by(animals_dm, month)
-sol3 <- summarize(animals_dm, avg_wgt = mean(weight, na.rm = TRUE),
-          avg_hfl = mean(hindfoot_length, na.rm = TRUE))
-~~~
-{:.text-document title="{{ site.handouts }}"}
-
-
-~~~r
-sol3
+filter(animals, species_id == "DM") %>%
+  group_by(month) %>%
+  summarize(
+    avg_wgt = mean(weight, na.rm = TRUE),
+    avg_hfl = mean(hindfoot_length, na.rm = TRUE))
 ~~~
 {:.input}
 ~~~
@@ -98,31 +93,27 @@ sol3
 
 
 ~~~r
-sol4 <- animals_1990_winter %>%
-    group_by(species_id, month) %>%
-    summarize(count = n()) %>%
-    mutate(prop = count / sum(count)) %>%
-    select(-count) %>%
-    spread(key = month, value = prop, fill = 0)
-~~~
-{:.text-document title="{{ site.handouts }}"}
-
-
-~~~r
-head(sol4)
+group_by(animals, species_id, month) %>%
+  summarize(count = n()) %>%
+  spread(key = month, value = count, fill = 0)
 ~~~
 {:.input}
 ~~~
-# A tibble: 6 x 4
-# Groups:   species_id [6]
-  species_id       `1`       `2`       `3`
-      <fctr>     <dbl>     <dbl>     <dbl>
-1         AB 0.9600000 0.0000000 0.0400000
-2         AH 0.7500000 0.2500000 0.0000000
-3         BA 0.3333333 0.6666667 0.0000000
-4         DM 0.4545455 0.2651515 0.2803030
-5         DO 0.4769231 0.2615385 0.2615385
-6         DS 0.5000000 0.1666667 0.3333333
+# A tibble: 49 x 13
+# Groups:   species_id [49]
+   species_id   `1`   `2`   `3`   `4`   `5`   `6`   `7`   `8`   `9`  `10`
+ *     <fctr> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
+ 1         AB    75    52    38    18    12     5    12    11    12     9
+ 2         AH    27    38    24    29    58    54    33    29    44    38
+ 3         AS     1     0     0     0     0     0     0     1     0     0
+ 4         BA     5     4     3     4     3     3     2     2     1     4
+ 5         CB     1     1     0     1     2     5     8     6    16     5
+ 6         CM     0     0     0     0     0     0     0     3     9     1
+ 7         CQ     3     0     0     0     0     1     5     6     0     1
+ 8         CS     0     0     0     1     0     0     0     0     0     0
+ 9         CT     0     0     0     0     0     0     0     0     0     0
+10         CU     0     0     0     0     0     0     0     0     0     0
+# ... with 39 more rows, and 2 more variables: `11` <dbl>, `12` <dbl>
 ~~~
 {:.output}
 

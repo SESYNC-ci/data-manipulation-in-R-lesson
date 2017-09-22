@@ -1,26 +1,35 @@
 ## Tidy data concept
 
-response <- data.frame(
-  trial = 1:3,
-  treatment = c(0.22, 0.58, 0.31),
-  control = c(0.42, 0.19, 0.40)
-)
+response <- read.csv(text = "
+trial, drug_A, drug_B, placebo
+1,     0.22,   0.58,   0.31
+2,     0.12,   0.98,   0.47
+3,     0.42,   0.19,   0.40
+")
 
 ## Reshaping multiple columns in category/value pairs
 
-library(tidyr)
+library(...)
+tidy_response <- gather(...,
+  ...)
 
-df <- gather(...)
+counts <- read.csv(text = "
+site, species, n
+1,    lynx,    2
+1,    hare,    341
+2,    lynx,    7
+2,    hare,    42
+3,    hare,    289
+")
 
-counts <- data.frame(
-  site = ...,
-  species = ...,
-  n = c(2, 341, 7, 42, 0, 289)
-)
-
-counts_spread <- ...(counts,
+wide_counts <- ...(counts,
 			...,
 			...)
+
+wide_counts <- spread(counts,
+  key = species,
+  value = n,
+  ...)
 
 ## Exercise 1
 
@@ -30,27 +39,22 @@ counts_spread <- ...(counts,
 
 animals <- ...
 
-animals <- read.csv('data/animals.csv', )
-
-library(dplyr)
-library(...)
-
-con <- ...(..., host = 'localhost', dbname = 'portal')
-animals_db <- ...
-animals <- ...
-dbDisconnect(...)
+animals <- read.csv(
+  'data/animals.csv',
+  ...)
 
 ## Subsetting and sorting
 
-library(dplyr)
-animals_1990_winter <- filter(...,
-                              ...,
-                              ...)
+library(...)
 
-animals_1990_winter <- select(animals_1990_winter, ...)
+animals_1990_winter <- filter(
+  ...,
+  ...,
+  ...)
 
-sorted <- ...(animals_1990_winter,
-              ...)
+animals_1990_winter <- select(
+  ...,
+  ...)
 
 ## Exercise 2
 
@@ -58,20 +62,21 @@ sorted <- ...(animals_1990_winter,
 
 ## Chainning with pipes
 
-sorted_pipe <- animals %>%
+animals_100_winter <- animals %>%
     ... # filter to the first 3 months of 1990
     ... # select all columns but year
-    ... # sort with descening species_id and weight
 
 ## Grouping and aggregation
 
 counts_1990_winter <- animals_1990_winter %>%
-    group_by(...) %>%
-    ...
+    group_by(...)
+
+counts_1990_winter <- animals_1990_winter %>%
+  group_by(...)
 
 weight_1990_winter <- animals_1990_winter %>%
-    ...
-    summarize(avg_weight = mean(...))
+  group_by(species_id) %>%
+  ...
 
 ## Exercise 3
 
@@ -85,21 +90,3 @@ prop_1990_winter <- counts_1990_winter %>%
 ## Exercise 4
 
 ...
-
-## Database Connection
-
-library(...)
-
-con <- ...(PostgreSQL(), host = 'localhost', dbname = 'portal')
-animals_db <- ...
-
-species_month_prop <- ...
-    group_by(species_id, month) %>%
-    summarize(count = n()) %>%
-    mutate(prop = count / sum(count)) %>%
-    select(-count)
-
-pivot <- ...
-  spread(month, prop, fill = 0)
-
-dbDisconnect(con)

@@ -1,34 +1,43 @@
 ---
 ---
 
-## Key data wrangling functions
+## Key dplyr functions
 
-| Function                         | Returns                                                                                                    |
-|----------------------------------+------------------------------------------------------------------------------------------------------------|
-| `filter(data, ...)`              | rows from *data* where any conditions in place of `...` hold                                               |
-| `select(data, ...)`              | the columns of *data* named by variables in place of `...`                                                 |
-| `arrange(data, ...)`             | *data* sorted by any variables in place of `...`                                                           |
-| `mutate(data, %var% = %fun%)`    | a copy of *data* with additional *var* column defined by the output of function %fun%                      |
-| `group_by(data, ...)`            | a copy of *data* with a grouping attribute based on all variables in `...`                                 |
-| `summarize(data, %var% = %fun%)` | a data frame with %var% column that summarizes each group in *data* based on an aggregation function %fun% |
+| Function    | Returns                                            |
+|-------------+----------------------------------------------------|
+| `filter`    | keep rows that staisfy conditions                  |
+| `select`    | keep columns with matching names                   |
+| `group_by`  | split data into groups by an existing factor       |
+| `mutate`    | apply a transformation to existing [split] columns |
+| `summarize` | summarize across rows [and combine split groups]   |
 
 The table above presents the most commonly used functions in [dplyr](){:.rlib}, which we will demonstrate in turn, starting from the `animals` data frame.
 {:.notes}
 
 ===
 
-## Subsetting and sorting
+## Subsetting
 
-After loading dplyr, we begin our analysis by extracting the survey observations for the first three months of 1990 with `filter`:
+The animals table includes numeric `year` and `month` columns. Of the 35,549 observations, lets see how many observations are left when we keep only observations from the first three months of 1990.
 
 
 ~~~r
 library(dplyr)
-animals_1990_winter <- filter(animals,
-			      year == 1990,
-			      month %in% 1:3)
 ~~~
 {:.text-document title="{{ site.handouts }}"}
+
+===
+
+
+~~~r
+animals_1990_winter <- filter(
+  animals,
+  year == 1990,
+  month %in% 1:3)
+~~~
+{:.text-document title="{{ site.handouts }}"}
+
+===
 
 
 ~~~r
@@ -54,26 +63,48 @@ Note that a logical "and" is implied when conditions are separated by commas. (T
 
 ===
 
-To choose particular columns (rather than the rows) of a data frame, we would call `select` with the name of the variables to retain.
+To keep particular columns of a data frame (rather than choosing rows) , use the `select` with arguments that match the column names.
+
+
+~~~r
+colnames(animals)
+~~~
+{:.input}
+~~~
+[1] "id"              "month"           "day"             "year"           
+[5] "plot_id"         "species_id"      "sex"             "hindfoot_length"
+[9] "weight"         
+~~~
+{:.output}
+
+===
+
+One way to "match" is by including complete names, each one you want to keep:
 
 
 ~~~r
 select(animals_1990_winter,
-       id, month, day, plot_id,
-       species_id, sex, hindfoot_length, weight)
+  id, month, day, plot_id,
+  species_id, sex, hindfoot_length, weight)
 ~~~
 {:.input}
 
 ===
 
-
-Alternatively, we can *exclude* a column by preceding its name with a minus sign. We use this option here to remove the redundant year column from *animals_1990_winter*:
+Alternatively, we can use a negative "match": keep columns that do not match the name preceded by minus sing.
 
 
 ~~~r
-animals_1990_winter <- select(animals_1990_winter, -year)
+animals_1990_winter <- select(
+  animals_1990_winter,
+  -year)
 ~~~
 {:.text-document title="{{ site.handouts }}"}
+
+Use this option to remove a single column from a data frame.
+{:.notes}
+
+===
 
 
 ~~~r
@@ -93,6 +124,7 @@ str(animals_1990_winter)
 ~~~
 {:.output}
 
+<!--
 ===
 
 To complete this section, we sort the 1990 winter animals data by descending order of species name, then by ascending order of weight. Note that `arrange` assumes ascending order unless the variable name is enclosed by `desc()`.
@@ -119,6 +151,7 @@ head(sorted)
 6 17170     2  25       3         SH   M              30     80
 ~~~
 {:.output}
+-->
 
 ===
 
@@ -126,10 +159,11 @@ head(sorted)
 *Credit: [The Portal Project](https://portalproject.wordpress.com)*
 {:.captioned}
 
-### Exercise 2
+===
 
-Write code that returns the **id**, **sex** and **weight** of all surveyed individuals of *Reithrodontomys montanus* (RO).
+## Exercise 2
+
+Write code that returns the `id`, `sex` and `weight` of all surveyed individuals of *Reithrodontomys montanus* (RO).
 
 [View solution](#solution-2)
 {:.notes}
-
