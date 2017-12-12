@@ -20,13 +20,13 @@ The table above presents the most commonly used functions in [dplyr](){:.rlib}, 
 
 The animals table includes numeric `year` and `month` columns. Of the 35,549 observations, lets see how many observations are left when we keep only observations from the first three months of 1990.
 
-```{r lib, message = FALSE, title = '{{ site.handouts }}'}
+```{r lib, message = FALSE, title = '{{ site.handouts[0] }}'}
 library(dplyr)
 ```
 
 ===
 
-```{r filter, title = '{{ site.handouts }}'}
+```{r filter, title = '{{ site.handouts[0] }}'}
 animals_1990_winter <- filter(
   animals,
   year == 1990,
@@ -64,7 +64,7 @@ select(animals_1990_winter,
 
 Alternatively, we can use a negative "match": keep columns that do not match the name preceded by minus sing.
 
-```{r select, title = '{{ site.handouts }}'}
+```{r select, title = '{{ site.handouts[0] }}'}
 animals_1990_winter <- select(
   animals_1990_winter,
   -year)
@@ -84,7 +84,7 @@ str(animals_1990_winter)
 
 To complete this section, we sort the 1990 winter animals data by descending order of species name, then by ascending order of weight. Note that `arrange` assumes ascending order unless the variable name is enclosed by `desc()`.
 
-```{r arrange, title = '{{ site.handouts }}'}
+```{r arrange, title = '{{ site.handouts[0] }}'}
 sorted <- arrange(animals_1990_winter,
                   desc(species_id), weight)
 ```

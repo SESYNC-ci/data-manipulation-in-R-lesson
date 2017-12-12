@@ -11,7 +11,7 @@ library(tidyr)
 tidy_response <- gather(response, key = "treatment",
   value = "response", -trial)
 ~~~
-{:.text-document title="{{ site.handouts }}"}
+{:.text-document title="{{ site.handouts[0] }}"}
 
 ===
 
@@ -68,7 +68,7 @@ wide_counts <- spread(counts,
   key = species,
   value = n)
 ~~~
-{:.text-document title="{{ site.handouts }}"}
+{:.text-document title="{{ site.handouts[0] }}"}
 
 ===
 
@@ -104,7 +104,7 @@ wide_counts <- spread(counts,
   value = n,
   fill = 0)
 ~~~
-{:.text-document title="{{ site.handouts }}"}
+{:.text-document title="{{ site.handouts[0] }}"}
 
 ===
 

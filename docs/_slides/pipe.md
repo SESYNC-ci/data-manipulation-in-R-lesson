@@ -49,7 +49,7 @@ animals_1990_winter <- animals %>%
     filter(year == 1990, month %in% 1:3) %>%
     select(-year)
 ~~~
-{:.text-document title="{{ site.handouts }}"}
+{:.text-document title="{{ site.handouts[0] }}"}
 
 ===
 

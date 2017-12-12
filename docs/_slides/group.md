@@ -16,7 +16,7 @@ The dplyr function `group_by` begins the process by indicating how the data fram
 counts_1990_winter <- animals_1990_winter %>%
     group_by(species_id)
 ~~~
-{:.text-document title="{{ site.handouts }}"}
+{:.text-document title="{{ site.handouts[0] }}"}
 
 ===
 
@@ -84,7 +84,7 @@ counts_1990_winter <- animals_1990_winter %>%
     group_by(species_id) %>%
     summarize(count = n())
 ~~~
-{:.text-document title="{{ site.handouts }}"}
+{:.text-document title="{{ site.handouts[0] }}"}
 
 ===
 
@@ -114,7 +114,7 @@ weight_1990_winter <- animals_1990_winter %>%
     group_by(species_id) %>%
     summarize(avg_weight = mean(weight, na.rm = TRUE))
 ~~~
-{:.text-document title="{{ site.handouts }}"}
+{:.text-document title="{{ site.handouts[0] }}"}
 
 ===
 
@@ -160,7 +160,7 @@ The `count` variable just defined, for example, can be used to calculate the pro
 prop_1990_winter <- counts_1990_winter %>%
     mutate(prop = count / sum(count))
 ~~~
-{:.text-document title="{{ site.handouts }}"}
+{:.text-document title="{{ site.handouts[0] }}"}
 
 ===
 

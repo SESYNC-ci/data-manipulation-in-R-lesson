@@ -31,7 +31,7 @@ The pipe operator's main utility is to condense a chain of operations applied to
 
 ===
 
-```{r title = '{{ site.handouts }}'}
+```{r title = '{{ site.handouts[0] }}'}
 animals_1990_winter <- animals %>%
     filter(year == 1990, month %in% 1:3) %>%
     select(-year)

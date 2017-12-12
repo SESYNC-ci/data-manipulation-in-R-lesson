@@ -11,7 +11,7 @@ A very common data manipulation procedure is doing some "group-wise" operations 
 
 The dplyr function `group_by` begins the process by indicating how the data frame should be split into subsets.
 
-```{r summarize, title="{{ site.handouts }}"}
+```{r summarize, title="{{ site.handouts[0] }}"}
 counts_1990_winter <- animals_1990_winter %>%
     group_by(species_id)
 ```
@@ -33,7 +33,7 @@ The `group_by` statement does not change any values in the data frame; it only a
 
 The operation to perform on each species is counting: we need to count how many records are in each group.
 
-```{r summarize_n, title="{{ site.handouts }}"}
+```{r summarize_n, title="{{ site.handouts[0] }}"}
 counts_1990_winter <- animals_1990_winter %>%
     group_by(species_id) %>%
     summarize(count = n())
@@ -53,7 +53,7 @@ The "combine" part of "split-apply-combine" occurs automatically, when the attri
 
 The function `n()` takes no arguments and returns the number of records in a group. Any function that collapses a vector input to a single output is a suitable function to use within `summarize`.
 
-```{r title="{{ site.handouts }}"}
+```{r title="{{ site.handouts[0] }}"}
 weight_1990_winter <- animals_1990_winter %>%
     group_by(species_id) %>%
     summarize(avg_weight = mean(weight, na.rm = TRUE))
@@ -84,7 +84,7 @@ The `mutate` function creates new columns from existing ones. The data frame ret
 
 The `count` variable just defined, for example, can be used to calculate the proportion of individuals represented by each species.
 
-```{r mutate, title="{{ site.handouts }}"}
+```{r mutate, title="{{ site.handouts[0] }}"}
 prop_1990_winter <- counts_1990_winter %>%
     mutate(prop = count / sum(count))
 ```

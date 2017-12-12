@@ -5,7 +5,7 @@
 
 The [tidyr](){:.rlib} package's `gather` function reshapes "wide" data frames into "long" ones.
 
-```{r title = '{{ site.handouts }}'}
+```{r title = '{{ site.handouts[0] }}'}
 library(tidyr)
 tidy_response <- gather(response, key = "treatment",
   value = "response", -trial)
@@ -54,7 +54,7 @@ site | species | n
 
 Transform the data with the `spread` function, which "reverses" a `gather`.
 
-```{r, title = '{{ site.handouts }}'}
+```{r, title = '{{ site.handouts[0] }}'}
 wide_counts <- spread(counts,
   key = species,
   value = n)
@@ -78,7 +78,7 @@ Answer
 
 Think about what "missing data" means in this table. Perhaps you can safely do:
 
-```{r, title = '{{ site.handouts }}'}
+```{r, title = '{{ site.handouts[0] }}'}
 wide_counts <- spread(counts,
   key = species,
   value = n,

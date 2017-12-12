@@ -24,7 +24,7 @@ The animals table includes numeric `year` and `month` columns. Of the 35,549 obs
 ~~~r
 library(dplyr)
 ~~~
-{:.text-document title="{{ site.handouts }}"}
+{:.text-document title="{{ site.handouts[0] }}"}
 
 ===
 
@@ -35,7 +35,7 @@ animals_1990_winter <- filter(
   year == 1990,
   month %in% 1:3)
 ~~~
-{:.text-document title="{{ site.handouts }}"}
+{:.text-document title="{{ site.handouts[0] }}"}
 
 ===
 
@@ -99,7 +99,7 @@ animals_1990_winter <- select(
   animals_1990_winter,
   -year)
 ~~~
-{:.text-document title="{{ site.handouts }}"}
+{:.text-document title="{{ site.handouts[0] }}"}
 
 Use this option to remove a single column from a data frame.
 {:.notes}
@@ -134,7 +134,7 @@ To complete this section, we sort the 1990 winter animals data by descending ord
 sorted <- arrange(animals_1990_winter,
                   desc(species_id), weight)
 ~~~
-{:.text-document title="{{ site.handouts }}"}
+{:.text-document title="{{ site.handouts[0] }}"}
 
 
 ~~~r

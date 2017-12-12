@@ -16,7 +16,7 @@ To learn about data transformation with dplyr, we need more data. The [Portal te
 The teaching dataset includes three tables: two contain summary information on the study plots and observed species, respectively, while the third and largest one (animals) lists all individual observations. We only need the animals table for this lesson.
 {:.notes}
 
-```{r read_data, title = '{{ site.handouts }}'}
+```{r read_data, title = '{{ site.handouts[0] }}'}
 animals <- read.csv('data/animals.csv')
 ```
 ```{r}
@@ -27,7 +27,7 @@ str(animals)
 
 Modify the function to specify what string in the CSV file represents NAs, a.k.a. data that is not-available or missing.
 
-```{r read_data_na, title = '{{ site.handouts }}'}
+```{r read_data_na, title = '{{ site.handouts[0] }}'}
 animals <- read.csv(
   'data/animals.csv',
   na.strings = '')
