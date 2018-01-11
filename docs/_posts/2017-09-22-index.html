@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Manipulating Tabular Data</title>
+<meta name="description" content="Get your data in shape with dplyr">
+<link rel="canonical" href="http://cyberhelp.sesync.org/data-manipulation-in-R-lesson/course/archive.html">
+<link rel="stylesheet" href="https://cdn.rawgit.com/sesync-ci/lesson-style/v1.3/docs/css/default.css">
+<link rel="stylesheet" href="https://cdn.rawgit.com/sesync-ci/lesson-style/v1.3/docs/css/static.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML" type="text/javascript"></script>
+
+  </head>
+  <body>
+    <div class="page-content">
+      <div class="wrapper">
+        
+        
+<h1 style="text-transform: none;" id="manipulating-tabular-data">Manipulating Tabular Data</h1>
+
+<p>Lesson 2 with <em>Ian Carroll</em></p>
+
+<h2 id="contents">Contents</h2>
+
+<ul>
+  <li><a href="#/slides/intro">Objectives for this lesson</a></li>
+  <li><a href="#/slides/tidy">Tidy data concept</a></li>
+  <li><a href="#/slides/gather">Gather</a></li>
+  <li><a href="#/slides/data">Sample data</a></li>
+  <li><a href="#/slides/dplyr">Key dplyr functions</a></li>
+  <li><a href="#/slides/pipe">Chaining functions</a></li>
+  <li><a href="#/slides/group">Split-apply-combine</a></li>
+  <li><a href="#/slides/conclude">Additional information</a></li>
+  <li><a href="#/slides/solutions">Exercise solutions</a></li>
+</ul>
+
+<hr />
+
+<p><a name="/slides/intro"></a></p>
+
+<h2 id="objectives-for-this-lesson">Objectives for this lesson</h2>
+
+<ul>
+  <li>Review what makes a <strong>tidy</strong> datasets</li>
+  <li>Learn to transform datasets with split-apply-combine procedures</li>
+  <li>Pay attention to code clarity</li>
+</ul>
+
+<h2 id="specific-achievements">Specific achievements</h2>
+
+<ul>
+  <li>Reshape data frames with <a href="" class="rlib">tidyr</a></li>
+  <li>Summarize data by groups with <a href="" class="rlib">dplyr</a></li>
+  <li>Combine multiple data frame operations with pipes</li>
+</ul>
+
+<p class="notes">Data frames generally occupy a central place in R analysis workflows. While the base R functions provide most necessary tools to subset, reformat and transform data frames, the specialized packages in this lesson offer a more succinct and often computationally faster way to perform the common data frame processing steps. Their straightforward syntax also makes scripts more readable and easier to debug. The key functions from the tidyr and dplyr packages all have close counterparts in SQL (Structured Query Language), which provides the added bonus of facilitating translation between R and relational databases.</p>
+
+<p class="ToS"><a href="#/slides/intro">Top of Section</a></p>
+
+<hr />
+
+<p><a name="/slides/tidy"></a></p>
+
+<h2 id="tidy-data-concept">Tidy data concept</h2>
+
+<p>R developer Hadley Wickham (author of the tidyr, dplyr and ggplot packages, among others) defines tidy datasets (<a href="http://www.jstatsoft.org/v59/i10/paper">Wickham 2014</a>) as those where:</p>
+
+<ul>
+  <li>each variable forms a column</li>
+  <li>each observation forms a row</li>
+  <li>each type of observational unit forms a table</li>
+</ul>
+
+<p class="notes">These guidelines may be familiar to some of you—they closely map to best practices in database design.</p>
+
+<p>Conser a data frame where the outcome of an experiment has been <em>recorded</em> in a perfectly appropriate way:</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>trial</td>
+      <td>drug_A</td>
+      <td>drug_B</td>
+      <td>placebo</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>0.22</td>
+      <td>0.58</td>
+      <td>0.31</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>0.12</td>
+      <td>0.98</td>
+      <td>0.47</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>0.42</td>
+      <td>0.19</td>
+      <td>0.4</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="language-r input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">response</span><span class="w">
+</span></code></pre></div></div>
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  trial drug_A drug_B placebo
+1     1   0.22   0.58    0.31
+2     2   0.12   0.98    0.47
+3     3   0.42   0.19    0.40
+</code></pre></div></div>
+
+<p>The response data are present in a compact matrix, as you might record it on a spreadsheet. The form does not match how we think about a statistical model, such as:</p>
+
+<div class="language-r output highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">response</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">treatment</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">trial</span><span class="w">
+</span></code></pre></div></div>
+
+<p>In a tidy format, each row is a complete observation: it includes one response value and all the predictor values. In this data, some of those values are column headers, so we’ve got to tidy up!</p>
+
+<!--
+===
+
+Question
+: How would you structure this data in a tidy format as defined above?
+
+Answer
+: {:.fragment} Currently, `response` has multiple observations in each row: the observed response in the treatment group and in the control group. For analysis, the data should include a categorical variable for treatment vs. control. 
+
+To put it another way, if your analysis needs some set of names that are found in the column headers to serve as predictors, then you've got to tidy up!
+{:.notes}
+-->
+
+<p class="ToS"><a href="#/slides/tidy">Top of Section</a></p>
+
+<hr />
+
+<p><a name="/slides/gather"></a></p>
+
+<h2 id="gather">Gather</h2>
+
+<p>The <a href="" class="rlib">tidyr</a> package’s <code class="highlighter-rouge">gather</code> function reshapes “wide” data frames into “long” ones.</p>
+
+<div class="language-r text-document highlighter-rouge" title="worksheet-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="n">tidyr</span><span class="p">)</span><span class="w">
+</span><span class="n">tidy_response</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">gather</span><span class="p">(</span><span class="n">response</span><span class="p">,</span><span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"treatment"</span><span class="p">,</span><span class="w">
+  </span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"response"</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="n">trial</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<p>All columns, accept for “trial”, are stacked in two columns: a “key” and a “value”. the key column gets the name <code class="highlighter-rouge">treatment</code> and the value column reveives the name <code class="highlighter-rouge">response</code>. For each row in the result, the key is taken from the name of the column and the value from the data in the column.</p>
+
+<div class="language-r input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tidy_response</span><span class="w">
+</span></code></pre></div></div>
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  trial treatment response
+1     1    drug_A     0.22
+2     2    drug_A     0.12
+3     3    drug_A     0.42
+4     1    drug_B     0.58
+5     2    drug_B     0.98
+6     3    drug_B     0.19
+7     1   placebo     0.31
+8     2   placebo     0.47
+9     3   placebo     0.40
+</code></pre></div></div>
+
+<p class="notes">Some notes on the syntax: a big advantage of <a href="" class="rlib">tidyr</a> and <a href="" class="rlib">dplyr</a> is that each function takes a data frame as its first argument and returns a new data frame. As we will see later, it makes it very easy to apply these functions in a chain. All functions also use column names as variables without subsetting them from a data frame (i.e. <code class="highlighter-rouge">trial</code> instead of <code class="highlighter-rouge">response$trial</code>).</p>
+
+<p>Some analyses require a “wide” data format rather than the long format produced by <code class="highlighter-rouge">gather</code>. The community ecology package <a href="" class="rlib">vegan</a> uses a matrix of species counts, where rows correspond to species and columns to sites.</p>
+
+<p>Suppose data are provided in a “entity-attribute-value” format.</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>site</td>
+      <td>species</td>
+      <td>n</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>lynx</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>hare</td>
+      <td>341</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>lynx</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>hare</td>
+      <td>42</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>hare</td>
+      <td>289</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Transform the data with the <code class="highlighter-rouge">spread</code> function, which “reverses” a <code class="highlighter-rouge">gather</code>.</p>
+
+<div class="language-r text-document highlighter-rouge" title="worksheet-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">wide_counts</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">spread</span><span class="p">(</span><span class="n">counts</span><span class="p">,</span><span class="w">
+  </span><span class="n">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">species</span><span class="p">,</span><span class="w">
+  </span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="language-r input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">wide_counts</span><span class="w">
+</span></code></pre></div></div>
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  site  hare      lynx    
+1    1       341         2
+2    2        42         7
+3    3       289        NA
+</code></pre></div></div>
+
+<dl>
+  <dt>Question</dt>
+  <dd>Why were <code class="highlighter-rouge">species</code> and <code class="highlighter-rouge">n</code> not quoted in the call to <code class="highlighter-rouge">spread</code>?</dd>
+  <dt>Answer</dt>
+  <dd class="fragment">They refer to existing column names. In <code class="highlighter-rouge">gather</code>, quotes are used to create new column names.</dd>
+</dl>
+
+<p>Think about what “missing data” means in this table. Perhaps you can safely do:</p>
+
+<div class="language-r text-document highlighter-rouge" title="worksheet-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">wide_counts</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">spread</span><span class="p">(</span><span class="n">counts</span><span class="p">,</span><span class="w">
+  </span><span class="n">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">species</span><span class="p">,</span><span class="w">
+  </span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w">
+  </span><span class="n">fill</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="language-r input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">wide_counts</span><span class="w">
+</span></code></pre></div></div>
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  site  hare      lynx    
+1    1       341         2
+2    2        42         7
+3    3       289         0
+</code></pre></div></div>
+
+<h2 id="exercise-1">Exercise 1</h2>
+
+<p>Now that we have a wide form of counts, convert it to a <code class="highlighter-rouge">tidy_counts</code> data frame using <code class="highlighter-rouge">gather</code>. The only difference between <code class="highlighter-rouge">counts</code> and <code class="highlighter-rouge">tidy_counts</code> should be the additional row for zero lynx at site 2. Remember, a tidy dataset has a row for every observation, even if the value is “implied”.</p>
+
+<p class="notes"><a href="#solution-1">View solution</a></p>
+
+<p class="ToS"><a href="#/slides/gather">Top of Section</a></p>
+
+<hr />
+
+<p><a name="/slides/data"></a></p>
+
+<h2 id="sample-data">Sample data</h2>
+
+<p>To learn about data transformation with dplyr, we need more data. The <a href="http://github.com/weecology/portal-teachingdb">Portal teaching database</a> is a simplified dataset derived from a long-term study of animal populations in the Chihuahuan Desert.</p>
+
+<p class="captioned"><img src="/data-manipulation-in-R-lesson/images/portal-oct-07-15.jpg" alt="" width="40%" /><br />
+<em>Credit: <a href="https://portalproject.wordpress.com">The Portal Project</a></em></p>
+
+<p class="notes">The teaching dataset includes three tables: two contain summary information on the study plots and observed species, respectively, while the third and largest one (animals) lists all individual observations. We only need the animals table for this lesson.</p>
+
+<div class="language-r text-document highlighter-rouge" title="worksheet-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">animals</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">read.csv</span><span class="p">(</span><span class="s1">'data/animals.csv'</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="language-r input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">str</span><span class="p">(</span><span class="n">animals</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>'data.frame':	35549 obs. of  9 variables:
+ $ id             : int  2 3 4 5 6 7 8 9 10 11 ...
+ $ month          : int  7 7 7 7 7 7 7 7 7 7 ...
+ $ day            : int  16 16 16 16 16 16 16 16 16 16 ...
+ $ year           : int  1977 1977 1977 1977 1977 1977 1977 1977 1977 1977 ...
+ $ plot_id        : int  3 2 7 3 1 2 1 1 6 5 ...
+ $ species_id     : Factor w/ 49 levels "","AB","AH","AS",..: 17 13 13 13 24 23 13 13 24 15 ...
+ $ sex            : Factor w/ 3 levels "","F","M": 3 2 3 3 3 2 3 2 2 2 ...
+ $ hindfoot_length: int  33 37 36 35 14 NA 37 34 20 53 ...
+ $ weight         : int  NA NA NA NA NA NA NA NA NA NA ...
+</code></pre></div></div>
+
+<p>Modify the function to specify what string in the CSV file represents NAs, a.k.a. data that is not-available or missing.</p>
+
+<div class="language-r text-document highlighter-rouge" title="worksheet-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">animals</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">read.csv</span><span class="p">(</span><span class="w">
+  </span><span class="s1">'data/animals.csv'</span><span class="p">,</span><span class="w">
+  </span><span class="n">na.strings</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">''</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<dl>
+  <dt>Question</dt>
+  <dd>What changed?</dd>
+  <dt>Answer</dt>
+  <dd class="fragment">Using <code class="highlighter-rouge">str()</code> shows that the factors have one less level, and the empty string is no longer included.</dd>
+</dl>
+
+<p class="ToS"><a href="#/slides/data">Top of Section</a></p>
+
+<hr />
+
+<p><a name="/slides/dplyr"></a></p>
+
+<h2 id="key-dplyr-functions">Key dplyr functions</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Function</th>
+      <th>Returns</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="highlighter-rouge">filter</code></td>
+      <td>keep rows that staisfy conditions</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">select</code></td>
+      <td>keep columns with matching names</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">group_by</code></td>
+      <td>split data into groups by an existing factor</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">mutate</code></td>
+      <td>apply a transformation to existing [split] columns</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">summarize</code></td>
+      <td>summarize across rows [and combine split groups]</td>
+    </tr>
+  </tbody>
+</table>
+
+<p class="notes">The table above presents the most commonly used functions in <a href="" class="rlib">dplyr</a>, which we will demonstrate in turn, starting from the <code class="highlighter-rouge">animals</code> data frame.</p>
+
+<h2 id="subsetting">Subsetting</h2>
+
+<p>The animals table includes numeric <code class="highlighter-rouge">year</code> and <code class="highlighter-rouge">month</code> columns. Of the 35,549 observations, lets see how many observations are left when we keep only observations from the first three months of 1990.</p>
+
+<div class="language-r text-document highlighter-rouge" title="worksheet-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="n">dplyr</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="language-r text-document highlighter-rouge" title="worksheet-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">animals_1990_winter</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">filter</span><span class="p">(</span><span class="w">
+  </span><span class="n">animals</span><span class="p">,</span><span class="w">
+  </span><span class="n">year</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="m">1990</span><span class="p">,</span><span class="w">
+  </span><span class="n">month</span><span class="w"> </span><span class="o">%in%</span><span class="w"> </span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="language-r input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">str</span><span class="p">(</span><span class="n">animals_1990_winter</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>'data.frame':	491 obs. of  9 variables:
+ $ id             : int  16879 16880 16881 16882 16883 16884 16885 16886 16887 16888 ...
+ $ month          : int  1 1 1 1 1 1 1 1 1 1 ...
+ $ day            : int  6 6 6 6 6 6 6 6 6 6 ...
+ $ year           : int  1990 1990 1990 1990 1990 1990 1990 1990 1990 1990 ...
+ $ plot_id        : int  1 1 6 23 12 24 12 24 12 17 ...
+ $ species_id     : Factor w/ 48 levels "AB","AH","AS",..: 12 17 23 33 33 33 38 39 38 13 ...
+ $ sex            : Factor w/ 2 levels "F","M": 1 2 2 1 2 2 2 1 2 2 ...
+ $ hindfoot_length: int  37 21 16 17 17 17 25 30 28 36 ...
+ $ weight         : int  35 28 7 9 10 9 35 73 44 55 ...
+</code></pre></div></div>
+
+<p class="notes">Note that a logical “and” is implied when conditions are separated by commas. (This is perhaps the main way in which <code class="highlighter-rouge">filter</code> differs from the base R <code class="highlighter-rouge">subset</code> function.) Therefore, the example above is equivalent to <code class="highlighter-rouge">filter(animals, year == 1990 &amp; month %in% 1:3)</code>. A logical “or” must be specified explicitly with the <code class="highlighter-rouge">|</code> operator.</p>
+
+<p>To keep particular columns of a data frame (rather than choosing rows) , use the <code class="highlighter-rouge">select</code> with arguments that match the column names.</p>
+
+<div class="language-r input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">colnames</span><span class="p">(</span><span class="n">animals</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[1] "id"              "month"           "day"             "year"           
+[5] "plot_id"         "species_id"      "sex"             "hindfoot_length"
+[9] "weight"         
+</code></pre></div></div>
+
+<p>One way to “match” is by including complete names, each one you want to keep:</p>
+
+<div class="language-r input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">select</span><span class="p">(</span><span class="n">animals_1990_winter</span><span class="p">,</span><span class="w">
+  </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">month</span><span class="p">,</span><span class="w"> </span><span class="n">day</span><span class="p">,</span><span class="w"> </span><span class="n">plot_id</span><span class="p">,</span><span class="w">
+  </span><span class="n">species_id</span><span class="p">,</span><span class="w"> </span><span class="n">sex</span><span class="p">,</span><span class="w"> </span><span class="n">hindfoot_length</span><span class="p">,</span><span class="w"> </span><span class="n">weight</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Alternatively, we can use a negative “match”: keep columns that do not match the name preceded by minus sing.</p>
+
+<div class="language-r text-document highlighter-rouge" title="worksheet-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">animals_1990_winter</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">select</span><span class="p">(</span><span class="w">
+  </span><span class="n">animals_1990_winter</span><span class="p">,</span><span class="w">
+  </span><span class="o">-</span><span class="n">year</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<p class="notes">Use this option to remove a single column from a data frame.</p>
+
+<div class="language-r input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">str</span><span class="p">(</span><span class="n">animals_1990_winter</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>'data.frame':	491 obs. of  8 variables:
+ $ id             : int  16879 16880 16881 16882 16883 16884 16885 16886 16887 16888 ...
+ $ month          : int  1 1 1 1 1 1 1 1 1 1 ...
+ $ day            : int  6 6 6 6 6 6 6 6 6 6 ...
+ $ plot_id        : int  1 1 6 23 12 24 12 24 12 17 ...
+ $ species_id     : Factor w/ 48 levels "AB","AH","AS",..: 12 17 23 33 33 33 38 39 38 13 ...
+ $ sex            : Factor w/ 2 levels "F","M": 1 2 2 1 2 2 2 1 2 2 ...
+ $ hindfoot_length: int  37 21 16 17 17 17 25 30 28 36 ...
+ $ weight         : int  35 28 7 9 10 9 35 73 44 55 ...
+</code></pre></div></div>
+
+<!--
+===
+
+To complete this section, we sort the 1990 winter animals data by descending order of species name, then by ascending order of weight. Note that `arrange` assumes ascending order unless the variable name is enclosed by `desc()`.
+
+
+~~~r
+sorted <- arrange(animals_1990_winter,
+                  desc(species_id), weight)
+~~~
+{:.text-document title="worksheet-2.R"}
+
+
+~~~r
+head(sorted)
+~~~
+{:.input}
+~~~
+     id month day plot_id species_id sex hindfoot_length weight
+1 16929     1   7       3         SH   M              31     61
+2 17172     2  25       3         SH   F              29     67
+3 17327     3  30       2         SH   M              30     69
+4 16886     1   6      24         SH   F              30     73
+5 17359     3  30       3         SH   F              31     77
+6 17170     2  25       3         SH   M              30     80
+~~~
+{:.output}
+-->
+
+<p class="captioned"><img src="/data-manipulation-in-R-lesson/images/img_4185.jpg" alt="" width="40%" /><br />
+<em>Credit: <a href="https://portalproject.wordpress.com">The Portal Project</a></em></p>
+
+<h2 id="exercise-2">Exercise 2</h2>
+
+<p>Write code that returns the <code class="highlighter-rouge">id</code>, <code class="highlighter-rouge">sex</code> and <code class="highlighter-rouge">weight</code> of all surveyed individuals of <em>Reithrodontomys montanus</em> (RO).</p>
+
+<p class="notes"><a href="#solution-2">View solution</a></p>
+
+<p class="ToS"><a href="#/slides/dplyr">Top of Section</a></p>
+
+<hr />
+
+<p><a name="/slides/pipe"></a></p>
+
+<h2 id="chaining-functions">Chaining functions</h2>
+
+<p>All those functions from the dplyr package take a data frame as their first argument, and they return a data frame. This consistent syntax is on purpose. It is designed for easily chaining data transformations together: processing data frames in easy-to-read steps.</p>
+
+<p>The “pipe” operator (<code class="highlighter-rouge">%&gt;%</code>) from the <a href="" class="rpkg">magrittr</a> package is loaded by dplyr. The pipe takes the expression on its left-hand side and hands it over as the first argument to the function on its right-hand side.</p>
+
+<p>Equivalent to <code class="highlighter-rouge">sum(c(1,3,5))</code>, for example, we have:</p>
+
+<div class="language-r input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="m">3</span><span class="p">,</span><span class="w"> </span><span class="m">5</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">sum</span><span class="p">()</span><span class="w">
+</span></code></pre></div></div>
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[1] 9
+</code></pre></div></div>
+
+<p>Additional arguments are accepted, a pipe only handles the first.</p>
+
+<div class="language-r input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="m">3</span><span class="p">,</span><span class="w"> </span><span class="m">5</span><span class="p">,</span><span class="w"> </span><span class="kc">NA</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">sum</span><span class="p">(</span><span class="n">na.rm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[1] 9
+</code></pre></div></div>
+
+<p>The pipe operator’s main utility is to condense a chain of operations applied to the same piece of data, when you don’t need to save the intermediate results. We can do both the filter and select operations from above with one assignment.</p>
+
+<div class="language-r text-document highlighter-rouge" title="worksheet-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">animals_1990_winter</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">animals</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
+    </span><span class="n">filter</span><span class="p">(</span><span class="n">year</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="m">1990</span><span class="p">,</span><span class="w"> </span><span class="n">month</span><span class="w"> </span><span class="o">%in%</span><span class="w"> </span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
+    </span><span class="n">select</span><span class="p">(</span><span class="o">-</span><span class="n">year</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="language-r input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">str</span><span class="p">(</span><span class="n">animals_1990_winter</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>'data.frame':	491 obs. of  8 variables:
+ $ id             : int  16879 16880 16881 16882 16883 16884 16885 16886 16887 16888 ...
+ $ month          : int  1 1 1 1 1 1 1 1 1 1 ...
+ $ day            : int  6 6 6 6 6 6 6 6 6 6 ...
+ $ plot_id        : int  1 1 6 23 12 24 12 24 12 17 ...
+ $ species_id     : Factor w/ 48 levels "AB","AH","AS",..: 12 17 23 33 33 33 38 39 38 13 ...
+ $ sex            : Factor w/ 2 levels "F","M": 1 2 2 1 2 2 2 1 2 2 ...
+ $ hindfoot_length: int  37 21 16 17 17 17 25 30 28 36 ...
+ $ weight         : int  35 28 7 9 10 9 35 73 44 55 ...
+</code></pre></div></div>
+
+<p class="ToS"><a href="#/slides/pipe">Top of Section</a></p>
+
+<hr />
+
+<p><a name="/slides/group"></a></p>
+
+<h2 id="split-apply-combine">Split-apply-combine</h2>
+
+<p>A very common data manipulation procedure is doing some “group-wise” operations on a dataset and combing the results for each group into a single table. For example, say you need to count the number of individuals <em>of each species</em> observed in the winter of 1990.</p>
+
+<h2 id="grouping">Grouping</h2>
+
+<p>The dplyr function <code class="highlighter-rouge">group_by</code> begins the process by indicating how the data frame should be split into subsets.</p>
+
+<div class="language-r text-document highlighter-rouge" title="worksheet-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">counts_1990_winter</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">animals_1990_winter</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
+    </span><span class="n">group_by</span><span class="p">(</span><span class="n">species_id</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<p>At this point, nothing has really changed:</p>
+
+<div class="language-r input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">str</span><span class="p">(</span><span class="n">counts_1990_winter</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Classes 'grouped_df', 'tbl_df', 'tbl' and 'data.frame':	491 obs. of  8 variables:
+ $ id             : int  16879 16880 16881 16882 16883 16884 16885 16886 16887 16888 ...
+ $ month          : int  1 1 1 1 1 1 1 1 1 1 ...
+ $ day            : int  6 6 6 6 6 6 6 6 6 6 ...
+ $ plot_id        : int  1 1 6 23 12 24 12 24 12 17 ...
+ $ species_id     : Factor w/ 48 levels "AB","AH","AS",..: 12 17 23 33 33 33 38 39 38 13 ...
+ $ sex            : Factor w/ 2 levels "F","M": 1 2 2 1 2 2 2 1 2 2 ...
+ $ hindfoot_length: int  37 21 16 17 17 17 25 30 28 36 ...
+ $ weight         : int  35 28 7 9 10 9 35 73 44 55 ...
+ - attr(*, "vars")= chr "species_id"
+ - attr(*, "drop")= logi TRUE
+ - attr(*, "indices")=List of 20
+  ..$ : int  13 46 88 102 103 108 113 114 121 127 ...
+  ..$ : int  22 141 147 325
+  ..$ : int  72 295 311
+  ..$ : int  0 33 35 51 56 60 63 64 66 67 ...
+  ..$ : int  9 12 20 27 41 42 44 49 53 54 ...
+  ..$ : int  79 99 228 352 409 474
+  ..$ : int  37 116 254 258 267 285 351 396 402 438
+  ..$ : int  1 24 157 164 273 278 420
+  ..$ : int  11 14 15 48 62 82 137 152 185 194 ...
+  ..$ : int  243 283 296 302 320 332 340
+  ..$ : int  32 47 58 76 109 110 112 118 142 165 ...
+  ..$ : int  2 36 45 105 120 123 144 174 237 246 ...
+  ..$ : int  136 140 146 148
+  ..$ : int  145 276 393
+  ..$ : int 80
+  ..$ : int  52 59 124 135 225 233 312 373 425 433
+  ..$ : int  3 4 5 17 19 21 23 25 26 28 ...
+  ..$ : int  6 8 10 16 18 111 119 138 248 252 ...
+  ..$ : int  7 50 291 293 421 448 480
+  ..$ : int 104
+ - attr(*, "group_sizes")= int  25 4 3 132 65 6 10 7 22 7 ...
+ - attr(*, "biggest_group_size")= int 132
+ - attr(*, "labels")='data.frame':	20 obs. of  1 variable:
+  ..$ species_id: Factor w/ 48 levels "AB","AH","AS",..: 1 2 4 12 13 14 16 17 18 21 ...
+  ..- attr(*, "vars")= chr "species_id"
+  ..- attr(*, "drop")= logi TRUE
+</code></pre></div></div>
+
+<p class="notes">The <code class="highlighter-rouge">group_by</code> statement does not change any values in the data frame; it only adds attributes to the the original data frame. You can add multiple variables (separated by commas) in <code class="highlighter-rouge">group_by</code>; each distinct combination of values across these columns defines a different group.</p>
+
+<h2 id="summarize">Summarize</h2>
+
+<p>The operation to perform on each species is counting: we need to count how many records are in each group.</p>
+
+<div class="language-r text-document highlighter-rouge" title="worksheet-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">counts_1990_winter</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">animals_1990_winter</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
+    </span><span class="n">group_by</span><span class="p">(</span><span class="n">species_id</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
+    </span><span class="n">summarize</span><span class="p">(</span><span class="n">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n</span><span class="p">())</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="language-r input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">str</span><span class="p">(</span><span class="n">counts_1990_winter</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Classes 'tbl_df', 'tbl' and 'data.frame':	20 obs. of  2 variables:
+ $ species_id: Factor w/ 48 levels "AB","AH","AS",..: 1 2 4 12 13 14 16 17 18 21 ...
+ $ count     : int  25 4 3 132 65 6 10 7 22 7 ...
+</code></pre></div></div>
+
+<p>The “combine” part of “split-apply-combine” occurs automatically, when the attributes introduced by <code class="highlighter-rouge">group_by</code> are dropped. You can see attributes either by running the <code class="highlighter-rouge">str()</code> function on the data frame or by inspecting it in the RStudio <em>Environment</em> pane.</p>
+
+<p>The function <code class="highlighter-rouge">n()</code> takes no arguments and returns the number of records in a group. Any function that collapses a vector input to a single output is a suitable function to use within <code class="highlighter-rouge">summarize</code>.</p>
+
+<div class="language-r text-document highlighter-rouge" title="worksheet-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">weight_1990_winter</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">animals_1990_winter</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
+    </span><span class="n">group_by</span><span class="p">(</span><span class="n">species_id</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
+    </span><span class="n">summarize</span><span class="p">(</span><span class="n">avg_weight</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mean</span><span class="p">(</span><span class="n">weight</span><span class="p">,</span><span class="w"> </span><span class="n">na.rm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">))</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="language-r input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">head</span><span class="p">(</span><span class="n">weight_1990_winter</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code># A tibble: 6 x 2
+  species_id avg_weight
+      &lt;fctr&gt;      &lt;dbl&gt;
+1         AB        NaN
+2         AH        NaN
+3         BA   7.666667
+4         DM  43.372093
+5         DO  48.222222
+6         DS 130.000000
+</code></pre></div></div>
+
+<h2 id="exercise-3">Exercise 3</h2>
+
+<p>Write code that returns the average hindfoot length of <em>Dipodomys merriami</em> (DM) individuals observed in each month (irrespective of the year). Make sure to exclude <em>NA</em> values.</p>
+
+<p class="notes"><a href="#solution-3">View solution</a></p>
+
+<h2 id="transformation-of-variables">Transformation of variables</h2>
+
+<p>The <code class="highlighter-rouge">mutate</code> function creates new columns from existing ones. The data frame returned has an additional column for each argument to <code class="highlighter-rouge">mutate</code>, unless a name is reused. Overwriting an existing column does not generate a warning.</p>
+
+<p>The <code class="highlighter-rouge">count</code> variable just defined, for example, can be used to calculate the proportion of individuals represented by each species.</p>
+
+<div class="language-r text-document highlighter-rouge" title="worksheet-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">prop_1990_winter</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">counts_1990_winter</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
+    </span><span class="n">mutate</span><span class="p">(</span><span class="n">prop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">count</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="nf">sum</span><span class="p">(</span><span class="n">count</span><span class="p">))</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="language-r input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">head</span><span class="p">(</span><span class="n">prop_1990_winter</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code># A tibble: 6 x 3
+  species_id count       prop
+      &lt;fctr&gt; &lt;int&gt;      &lt;dbl&gt;
+1         AB    25 0.05091650
+2         AH     4 0.00814664
+3         BA     3 0.00610998
+4         DM   132 0.26883910
+5         DO    65 0.13238289
+6         DS     6 0.01221996
+</code></pre></div></div>
+<p class="notes">For a concise way to apply the same transformation to multiple columns, check the <code class="highlighter-rouge">mutate_each</code> function. There is also a <code class="highlighter-rouge">summarize_each</code> function to perform the same aggregation operation on multiple columns.</p>
+
+<p>Both <code class="highlighter-rouge">mutate</code> and <code class="highlighter-rouge">summarize</code> can be used in the “apply” part of a “split-apply-combine” procedure. The difference is that the results are combine into data frames with differing numbers of rows.</p>
+
+<dl>
+  <dt>Question</dt>
+  <dd>How many rows do you expect in the result of a <code class="highlighter-rouge">mutate</code> operation?</dd>
+  <dt>Answer</dt>
+  <dd class="fragment">The same number you started with.</dd>
+</dl>
+
+<h2 id="exercise-4">Exercise 4</h2>
+
+<p>A “pivot table” is a transformation of tidy data into a wide summary table. First, data are summarized by <em>two</em> grouping factors, then one of these is “pivoted” into columns. Starting from the <code class="highlighter-rouge">animals</code> data frame, chain a <code class="highlighter-rouge">group_by</code> and <code class="highlighter-rouge">summarize</code> transformation into a <a href="" class="rlib">tidyr</a> <code class="highlighter-rouge">spread</code> function to get the number of individuals counted in each month (as three columns) by species (as rows).</p>
+
+<p class="ToS"><a href="#/slides/group">Top of Section</a></p>
+
+<hr />
+
+<p><a name="/slides/conclude"></a></p>
+
+<h2 id="additional-information">Additional information</h2>
+
+<p>Data wrangling with dplyr and tidyr <a href="http://www.rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf">RStudio cheat sheet</a>.</p>
+
+<p class="notes">One of several cheat sheets available on the RStudio website, it provides a brief, visual summary of all the key functions discussed in this lesson. It also lists some of the auxiliary functions that can be used within each type of expression, e.g. aggregation functions for summarize, “moving window” functions for mutate, etc.</p>
+
+<p class="ToS"><a href="#/slides/conclude">Top of Section</a></p>
+
+<hr />
+
+<p><a name="/slides/solutions"></a></p>
+
+<h2 id="exercise-solutions">Exercise solutions</h2>
+
+<h2 id="solution-1">Solution 1</h2>
+
+<div class="language-r input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">gather</span><span class="p">(</span><span class="n">wide_counts</span><span class="p">,</span><span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"species"</span><span class="p">,</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"n"</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="n">site</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  site   species   n
+1    1  hare     341
+2    2  hare      42
+3    3  hare     289
+4    1  lynx       2
+5    2  lynx       7
+6    3  lynx       0
+</code></pre></div></div>
+
+<p class="notes"><a href="#exercise-1">Return</a></p>
+
+<h2 id="solution-2">Solution 2</h2>
+
+<div class="language-r input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">animals_RO</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">filter</span><span class="p">(</span><span class="n">animals</span><span class="p">,</span><span class="w"> </span><span class="n">species_id</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">"RO"</span><span class="p">)</span><span class="w">
+</span><span class="n">select</span><span class="p">(</span><span class="n">animals_RO</span><span class="p">,</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">sex</span><span class="p">,</span><span class="w"> </span><span class="n">weight</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>     id sex weight
+1 18871   F     11
+2 33397   M      8
+3 33556   M      9
+4 33565   F      8
+5 34517   M     11
+6 35402   F     12
+7 35420   M     10
+8 35487   F     13
+</code></pre></div></div>
+
+<p class="notes"><a href="#exercise-2">Return</a></p>
+
+<h2 id="solution-3">Solution 3</h2>
+
+<div class="language-r input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">filter</span><span class="p">(</span><span class="n">animals</span><span class="p">,</span><span class="w"> </span><span class="n">species_id</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">"DM"</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
+  </span><span class="n">group_by</span><span class="p">(</span><span class="n">month</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
+  </span><span class="n">summarize</span><span class="p">(</span><span class="w">
+    </span><span class="n">avg_wgt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mean</span><span class="p">(</span><span class="n">weight</span><span class="p">,</span><span class="w"> </span><span class="n">na.rm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">),</span><span class="w">
+    </span><span class="n">avg_hfl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mean</span><span class="p">(</span><span class="n">hindfoot_length</span><span class="p">,</span><span class="w"> </span><span class="n">na.rm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">))</span><span class="w">
+</span></code></pre></div></div>
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code># A tibble: 12 x 3
+   month  avg_wgt  avg_hfl
+   &lt;int&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+ 1     1 42.93697 36.09476
+ 2     2 43.95270 36.18777
+ 3     3 45.19864 36.11765
+ 4     4 44.75411 36.18793
+ 5     5 43.16449 35.82848
+ 6     6 41.52889 35.97699
+ 7     7 41.93692 35.71283
+ 8     8 41.84119 35.79850
+ 9     9 43.32794 35.83817
+10    10 42.50980 35.95254
+11    11 42.35932 35.94831
+12    12 42.98561 36.04545
+</code></pre></div></div>
+
+<p class="notes"><a href="#exercise-3">Return</a></p>
+
+<h2 id="solution-4">Solution 4</h2>
+
+<div class="language-r input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">group_by</span><span class="p">(</span><span class="n">animals</span><span class="p">,</span><span class="w"> </span><span class="n">species_id</span><span class="p">,</span><span class="w"> </span><span class="n">month</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
+  </span><span class="n">summarize</span><span class="p">(</span><span class="n">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n</span><span class="p">())</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
+  </span><span class="n">spread</span><span class="p">(</span><span class="n">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">month</span><span class="p">,</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">count</span><span class="p">,</span><span class="w"> </span><span class="n">fill</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code># A tibble: 49 x 13
+# Groups:   species_id [49]
+   species_id   `1`   `2`   `3`   `4`   `5`   `6`   `7`   `8`   `9`  `10`
+ *     &lt;fctr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1         AB    75    52    38    18    12     5    12    11    12     9
+ 2         AH    27    38    24    29    58    54    33    29    44    38
+ 3         AS     1     0     0     0     0     0     0     1     0     0
+ 4         BA     5     4     3     4     3     3     2     2     1     4
+ 5         CB     1     1     0     1     2     5     8     6    16     5
+ 6         CM     0     0     0     0     0     0     0     3     9     1
+ 7         CQ     3     0     0     0     0     1     5     6     0     1
+ 8         CS     0     0     0     1     0     0     0     0     0     0
+ 9         CT     0     0     0     0     0     0     0     0     0     0
+10         CU     0     0     0     0     0     0     0     0     0     0
+# ... with 39 more rows, and 2 more variables: `11` &lt;dbl&gt;, `12` &lt;dbl&gt;
+</code></pre></div></div>
+
+<p class="notes"><a href="#exercise-3">Return</a></p>
+
+<p class="ToS"><a href="#/slides/solutions">Top of Section</a></p>
+
+<hr />
+
+
+
+      </div>
+    </div>
+  <script>
+ var collection = document.getElementsByClassName('rlib');
+ for (var i = 0; i < collection.length; i++) {
+     var a = collection[i];
+     a.href = 'https://cran.r-project.org/package=' + a.innerText;
+ };
+ var collection = document.getElementsByClassName('pylib');
+ for (var i = 0; i < collection.length; i++) {
+     var a = collection[i];
+     a.href = 'https://pypi.python.org/pypi/' + a.innerText;
+ };
+</script>
+
+  </body>
+</html>
