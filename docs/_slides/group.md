@@ -126,13 +126,13 @@ head(weight_1990_winter)
 ~~~
 # A tibble: 6 x 2
   species_id avg_weight
-      <fctr>      <dbl>
-1         AB        NaN
-2         AH        NaN
-3         BA   7.666667
-4         DM  43.372093
-5         DO  48.222222
-6         DS 130.000000
+  <fct>           <dbl>
+1 AB             NaN   
+2 AH             NaN   
+3 BA               7.67
+4 DM              43.4 
+5 DO              48.2 
+6 DS             130.  
 ~~~
 {:.output}
 
@@ -171,14 +171,14 @@ head(prop_1990_winter)
 {:.input}
 ~~~
 # A tibble: 6 x 3
-  species_id count       prop
-      <fctr> <int>      <dbl>
-1         AB    25 0.05091650
-2         AH     4 0.00814664
-3         BA     3 0.00610998
-4         DM   132 0.26883910
-5         DO    65 0.13238289
-6         DS     6 0.01221996
+  species_id count    prop
+  <fct>      <int>   <dbl>
+1 AB            25 0.0509 
+2 AH             4 0.00815
+3 BA             3 0.00611
+4 DM           132 0.269  
+5 DO            65 0.132  
+6 DS             6 0.0122 
 ~~~
 {:.output}
 For a concise way to apply the same transformation to multiple columns, check the `mutate_each` function. There is also a `summarize_each` function to perform the same aggregation operation on multiple columns.
@@ -200,4 +200,4 @@ Answer
 
 ## Exercise 4
 
-A "pivot table" is a transformation of tidy data into a wide summary table. First, data are summarized by *two* grouping factors, then one of these is "pivoted" into columns. Starting from the `animals` data frame, chain a `group_by` and `summarize` transformation into a [tidyr](){:.rlib} `spread` function to get the number of individuals counted in each month (as three columns) by species (as rows).
+A "pivot table" is a transformation of tidy data into a wide summary table. First, data are summarized by *two* grouping factors, then one of these is "pivoted" into columns. Starting from the `animals` data frame, chain a `group_by` and `summarize` transformation into a [tidyr](){:.rlib} `spread` function to get the number of individuals counted in each month (across 12 columns) by species (across rows).
