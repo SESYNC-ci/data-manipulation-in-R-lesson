@@ -132,7 +132,7 @@ head(weight_1990_winter)
 3 BA               7.67
 4 DM              43.4 
 5 DO              48.2 
-6 DS             130.  
+6 DS             130   
 ~~~
 {:.output}
 
