@@ -14,7 +14,7 @@ These guidelines may be familiar to some of you---they closely map to best pract
 
 ===
 
-Conser a data frame where the outcome of an experiment has been *recorded* in a perfectly appropriate way:
+Consider a data set where the outcome of an experiment has been *recorded* in a perfectly appropriate way:
 
 trial | drug_A | drug_B | placebo
     1 |   0.22 |   0.58 |    0.31
@@ -25,10 +25,13 @@ trial | drug_A | drug_B | placebo
 
 
 
+
 ~~~r
-response
+> response
 ~~~
-{:.input}
+{:.input title="Console"}
+
+
 ~~~
   trial drug_A drug_B placebo
 1     1   0.22   0.58    0.31
@@ -36,6 +39,7 @@ response
 3     3   0.42   0.19    0.40
 ~~~
 {:.output}
+
 
 ===
 

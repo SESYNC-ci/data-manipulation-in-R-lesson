@@ -8,10 +8,13 @@
 ## Solution 1
 
 
+
 ~~~r
-gather(wide_counts, key = "species", value = "n", -site)
+> gather(wide_counts, key = "species", value = "n", -site)
 ~~~
-{:.input}
+{:.input title="Console"}
+
+
 ~~~
   site   species   n
 1    1  hare     341
@@ -23,6 +26,7 @@ gather(wide_counts, key = "species", value = "n", -site)
 ~~~
 {:.output}
 
+
 [Return](#exercise-1)
 {:.notes}
 
@@ -31,11 +35,14 @@ gather(wide_counts, key = "species", value = "n", -site)
 ## Solution 2
 
 
+
 ~~~r
-animals_RO <- filter(animals, species_id == "RO")
-select(animals_RO, id, sex, weight)
+> animals_RO <- filter(animals, species_id == "RO")
+> select(animals_RO, id, sex, weight)
 ~~~
-{:.input}
+{:.input title="Console"}
+
+
 ~~~
      id sex weight
 1 18871   F     11
@@ -49,6 +56,7 @@ select(animals_RO, id, sex, weight)
 ~~~
 {:.output}
 
+
 [Return](#exercise-2)
 {:.notes}
 
@@ -57,14 +65,17 @@ select(animals_RO, id, sex, weight)
 ## Solution 3
 
 
+
 ~~~r
-filter(animals, species_id == "DM") %>%
-  group_by(month) %>%
-  summarize(
-    avg_wgt = mean(weight, na.rm = TRUE),
-    avg_hfl = mean(hindfoot_length, na.rm = TRUE))
+> filter(animals, species_id == "DM") %>%
++   group_by(month) %>%
++   summarize(
++     avg_wgt = mean(weight, na.rm = TRUE),
++     avg_hfl = mean(hindfoot_length, na.rm = TRUE))
 ~~~
-{:.input}
+{:.input title="Console"}
+
+
 ~~~
 # A tibble: 12 x 3
    month avg_wgt avg_hfl
@@ -84,6 +95,7 @@ filter(animals, species_id == "DM") %>%
 ~~~
 {:.output}
 
+
 [Return](#exercise-3)
 {:.notes}
 
@@ -92,12 +104,15 @@ filter(animals, species_id == "DM") %>%
 ## Solution 4
 
 
+
 ~~~r
-group_by(animals, species_id, month) %>%
-  summarize(count = n()) %>%
-  spread(key = month, value = count, fill = 0)
+> group_by(animals, species_id, month) %>%
++   summarize(count = n()) %>%
++   spread(key = month, value = count, fill = 0)
 ~~~
-{:.input}
+{:.input title="Console"}
+
+
 ~~~
 # A tibble: 49 x 13
 # Groups:   species_id [49]
@@ -116,6 +131,7 @@ group_by(animals, species_id, month) %>%
 # ... with 39 more rows, and 2 more variables: `11` <dbl>, `12` <dbl>
 ~~~
 {:.output}
+
 
 [Return](#exercise-3)
 {:.notes}

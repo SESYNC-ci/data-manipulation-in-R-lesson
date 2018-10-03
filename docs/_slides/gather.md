@@ -6,12 +6,14 @@
 The [tidyr](){:.rlib} package's `gather` function reshapes "wide" data frames into "long" ones.
 
 
+
 ~~~r
 library(tidyr)
 tidy_response <- gather(response, key = "treatment",
   value = "response", -trial)
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
+
 
 ===
 
@@ -20,10 +22,13 @@ All columns, accept for "trial", are stacked in two columns: a "key" and a "valu
 ===
 
 
+
 ~~~r
-tidy_response
+> tidy_response
 ~~~
-{:.input}
+{:.input title="Console"}
+
+
 ~~~
   trial treatment response
 1     1    drug_A     0.22
@@ -37,6 +42,7 @@ tidy_response
 9     3   placebo     0.40
 ~~~
 {:.output}
+
 
 Some notes on the syntax: a big advantage of [tidyr](){:.rlib} and [dplyr](){:.rlib} is that each function takes a data frame as its first argument and returns a new data frame. As we will see later, it makes it very easy to apply these functions in a chain. All functions also use column names as variables without subsetting them from a data frame (i.e. `trial` instead of `response$trial`).
 {:.notes}
@@ -63,6 +69,7 @@ site | species | n
 Transform the data with the `spread` function, which "reverses" a `gather`.
 
 
+
 ~~~r
 wide_counts <- spread(counts,
   key = species,
@@ -70,13 +77,17 @@ wide_counts <- spread(counts,
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
 
+
 ===
 
 
+
 ~~~r
-wide_counts
+> wide_counts
 ~~~
-{:.input}
+{:.input title="Console"}
+
+
 ~~~
   site  hare      lynx    
 1    1       341         2
@@ -84,6 +95,7 @@ wide_counts
 3    3       289        NA
 ~~~
 {:.output}
+
 
 ===
 
@@ -98,6 +110,7 @@ Answer
 Think about what "missing data" means in this table. Perhaps you can safely do:
 
 
+
 ~~~r
 wide_counts <- spread(counts,
   key = species,
@@ -106,13 +119,17 @@ wide_counts <- spread(counts,
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
 
+
 ===
 
 
+
 ~~~r
-wide_counts
+> wide_counts
 ~~~
-{:.input}
+{:.input title="Console"}
+
+
 ~~~
   site  hare      lynx    
 1    1       341         2
@@ -120,6 +137,7 @@ wide_counts
 3    3       289         0
 ~~~
 {:.output}
+
 ===
 
 ## Exercise 1

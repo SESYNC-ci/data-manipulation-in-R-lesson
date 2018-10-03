@@ -14,34 +14,43 @@ The "pipe" operator (`%>%`) from the [magrittr](){:.rpkg} package is loaded by d
 Equivalent to `sum(c(1,3,5))`, for example, we have:
 
 
+
 ~~~r
-c(1, 3, 5) %>% sum()
+> c(1, 3, 5) %>% sum()
 ~~~
-{:.input}
+{:.input title="Console"}
+
+
 ~~~
 [1] 9
 ~~~
 {:.output}
+
 
 ===
 
 Additional arguments are accepted, a pipe only handles the first.
 
 
+
 ~~~r
-c(1, 3, 5, NA) %>% sum(na.rm = TRUE)
+> c(1, 3, 5, NA) %>% sum(na.rm = TRUE)
 ~~~
-{:.input}
+{:.input title="Console"}
+
+
 ~~~
 [1] 9
 ~~~
 {:.output}
+
 
 ===
 
 The pipe operator's main utility is to condense a chain of operations applied to the same piece of data, when you don't need to save the intermediate results. We can do both the filter and select operations from above with one assignment.
 
 ===
+
 
 
 ~~~r
@@ -51,13 +60,17 @@ animals_1990_winter <- animals %>%
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
 
+
 ===
 
 
+
 ~~~r
-str(animals_1990_winter)
+> str(animals_1990_winter)
 ~~~
-{:.input}
+{:.input title="Console"}
+
+
 ~~~
 'data.frame':	491 obs. of  8 variables:
  $ id             : int  16879 16880 16881 16882 16883 16884 16885 16886 16887 16888 ...
@@ -70,3 +83,4 @@ str(animals_1990_winter)
  $ weight         : int  35 28 7 9 10 9 35 73 44 55 ...
 ~~~
 {:.output}
+

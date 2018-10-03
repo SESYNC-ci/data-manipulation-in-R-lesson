@@ -21,12 +21,15 @@ The table above presents the most commonly used functions in [dplyr](){:.rlib}, 
 The animals table includes numeric `year` and `month` columns. Of the 35,549 observations, lets see how many observations are left when we keep only observations from the first three months of 1990.
 
 
+
 ~~~r
 library(dplyr)
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
 
+
 ===
+
 
 
 ~~~r
@@ -37,13 +40,17 @@ animals_1990_winter <- filter(
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
 
+
 ===
 
 
+
 ~~~r
-str(animals_1990_winter)
+> str(animals_1990_winter)
 ~~~
-{:.input}
+{:.input title="Console"}
+
+
 ~~~
 'data.frame':	491 obs. of  9 variables:
  $ id             : int  16879 16880 16881 16882 16883 16884 16885 16886 16887 16888 ...
@@ -58,6 +65,7 @@ str(animals_1990_winter)
 ~~~
 {:.output}
 
+
 Note that a logical "and" is implied when conditions are separated by commas. (This is perhaps the main way in which `filter` differs from the base R `subset` function.) Therefore, the example above is equivalent to `filter(animals, year == 1990 & month %in% 1:3)`. A logical "or" must be specified explicitly with the `|` operator.
 {:.notes}
 
@@ -66,10 +74,13 @@ Note that a logical "and" is implied when conditions are separated by commas. (T
 To keep particular columns of a data frame (rather than choosing rows) , use the `select` with arguments that match the column names.
 
 
+
 ~~~r
-colnames(animals)
+> colnames(animals)
 ~~~
-{:.input}
+{:.input title="Console"}
+
+
 ~~~
 [1] "id"              "month"           "day"             "year"           
 [5] "plot_id"         "species_id"      "sex"             "hindfoot_length"
@@ -77,21 +88,25 @@ colnames(animals)
 ~~~
 {:.output}
 
+
 ===
 
 One way to "match" is by including complete names, each one you want to keep:
 
 
+
 ~~~r
-select(animals_1990_winter,
-  id, month, day, plot_id,
-  species_id, sex, hindfoot_length, weight)
+> select(animals_1990_winter,
++   id, month, day, plot_id,
++   species_id, sex, hindfoot_length, weight)
 ~~~
-{:.input}
+{:.input title="Console"}
+
 
 ===
 
 Alternatively, we can use a negative "match": keep columns that do not match the name preceded by minus sing.
+
 
 
 ~~~r
@@ -101,16 +116,20 @@ animals_1990_winter <- select(
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
 
+
 Use this option to remove a single column from a data frame.
 {:.notes}
 
 ===
 
 
+
 ~~~r
-str(animals_1990_winter)
+> str(animals_1990_winter)
 ~~~
-{:.input}
+{:.input title="Console"}
+
+
 ~~~
 'data.frame':	491 obs. of  8 variables:
  $ id             : int  16879 16880 16881 16882 16883 16884 16885 16886 16887 16888 ...
@@ -124,10 +143,12 @@ str(animals_1990_winter)
 ~~~
 {:.output}
 
+
 <!--
 ===
 
 To complete this section, we sort the 1990 winter animals data by descending order of species name, then by ascending order of weight. Note that `arrange` assumes ascending order unless the variable name is enclosed by `desc()`.
+
 
 
 ~~~r
@@ -137,10 +158,14 @@ sorted <- arrange(animals_1990_winter,
 {:.text-document title="{{ site.handouts[0] }}"}
 
 
+
+
 ~~~r
-head(sorted)
+> head(sorted)
 ~~~
-{:.input}
+{:.input title="Console"}
+
+
 ~~~
      id month day plot_id species_id sex hindfoot_length weight
 1 16929     1   7       3         SH   M              31     61
@@ -151,6 +176,7 @@ head(sorted)
 6 17170     2  25       3         SH   M              30     80
 ~~~
 {:.output}
+
 -->
 
 ===

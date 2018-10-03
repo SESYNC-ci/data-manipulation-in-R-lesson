@@ -12,21 +12,26 @@ A very common data manipulation procedure is doing some "group-wise" operations 
 The dplyr function `group_by` begins the process by indicating how the data frame should be split into subsets.
 
 
+
 ~~~r
 counts_1990_winter <- animals_1990_winter %>%
     group_by(species_id)
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
 
+
 ===
 
 At this point, nothing has really changed:
 
 
+
 ~~~r
-str(counts_1990_winter)
+> str(counts_1990_winter)
 ~~~
-{:.input}
+{:.input title="Console"}
+
+
 ~~~
 Classes 'grouped_df', 'tbl_df', 'tbl' and 'data.frame':	491 obs. of  8 variables:
  $ id             : int  16879 16880 16881 16882 16883 16884 16885 16886 16887 16888 ...
@@ -69,6 +74,7 @@ Classes 'grouped_df', 'tbl_df', 'tbl' and 'data.frame':	491 obs. of  8 variables
 ~~~
 {:.output}
 
+
 The `group_by` statement does not change any values in the data frame; it only adds attributes to the the original data frame. You can add multiple variables (separated by commas) in `group_by`; each distinct combination of values across these columns defines a different group.
 {:.notes}
 
@@ -79,6 +85,7 @@ The `group_by` statement does not change any values in the data frame; it only a
 The operation to perform on each species is counting: we need to count how many records are in each group.
 
 
+
 ~~~r
 counts_1990_winter <- animals_1990_winter %>%
     group_by(species_id) %>%
@@ -86,19 +93,24 @@ counts_1990_winter <- animals_1990_winter %>%
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
 
+
 ===
 
 
+
 ~~~r
-str(counts_1990_winter)
+> str(counts_1990_winter)
 ~~~
-{:.input}
+{:.input title="Console"}
+
+
 ~~~
 Classes 'tbl_df', 'tbl' and 'data.frame':	20 obs. of  2 variables:
  $ species_id: Factor w/ 48 levels "AB","AH","AS",..: 1 2 4 12 13 14 16 17 18 21 ...
  $ count     : int  25 4 3 132 65 6 10 7 22 7 ...
 ~~~
 {:.output}
+
 
 ===
 
@@ -109,6 +121,7 @@ The "combine" part of "split-apply-combine" occurs automatically, when the attri
 The function `n()` takes no arguments and returns the number of records in a group. Any function that collapses a vector input to a single output is a suitable function to use within `summarize`.
 
 
+
 ~~~r
 weight_1990_winter <- animals_1990_winter %>%
     group_by(species_id) %>%
@@ -116,13 +129,17 @@ weight_1990_winter <- animals_1990_winter %>%
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
 
+
 ===
 
 
+
 ~~~r
-head(weight_1990_winter)
+> head(weight_1990_winter)
 ~~~
-{:.input}
+{:.input title="Console"}
+
+
 ~~~
 # A tibble: 6 x 2
   species_id avg_weight
@@ -135,6 +152,7 @@ head(weight_1990_winter)
 6 DS             130   
 ~~~
 {:.output}
+
 
 ===
 
@@ -156,19 +174,24 @@ The `mutate` function creates new columns from existing ones. The data frame ret
 The `count` variable just defined, for example, can be used to calculate the proportion of individuals represented by each species.
 
 
+
 ~~~r
 prop_1990_winter <- counts_1990_winter %>%
     mutate(prop = count / sum(count))
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
 
+
 ===
 
 
+
 ~~~r
-head(prop_1990_winter)
+> head(prop_1990_winter)
 ~~~
-{:.input}
+{:.input title="Console"}
+
+
 ~~~
 # A tibble: 6 x 3
   species_id count    prop
@@ -181,6 +204,7 @@ head(prop_1990_winter)
 6 DS             6 0.0122 
 ~~~
 {:.output}
+
 For a concise way to apply the same transformation to multiple columns, check the `mutate_each` function. There is also a `summarize_each` function to perform the same aggregation operation on multiple columns.
 {:.notes}
 

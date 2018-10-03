@@ -17,15 +17,20 @@ The teaching dataset includes three tables: two contain summary information on t
 {:.notes}
 
 
+
 ~~~r
 animals <- read.csv('data/animals.csv')
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
 
+
+
 ~~~r
-str(animals)
+> str(animals)
 ~~~
-{:.input}
+{:.input title="Console"}
+
+
 ~~~
 'data.frame':	35549 obs. of  9 variables:
  $ id             : int  2 3 4 5 6 7 8 9 10 11 ...
@@ -40,9 +45,11 @@ str(animals)
 ~~~
 {:.output}
 
+
 ===
 
 Modify the function to specify what string in the CSV file represents NAs, a.k.a. data that is not-available or missing.
+
 
 
 ~~~r
@@ -51,6 +58,7 @@ animals <- read.csv(
   na.strings = '')
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
+
 
 ===
 
