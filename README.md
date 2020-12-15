@@ -1,4 +1,4 @@
-[![lifecycle](https://img.shields.io/badge/lifecycle-deprecated-blue.svg)](https://github.com/orgs/SESYNC-ci/projects/2)
+[![lifecycle](https://img.shields.io/badge/lifecycle-archived-lightgrey.svg)](https://github.com/orgs/SESYNC-ci/projects/2)
 
 ## Data Manipulation in R
 
@@ -6,7 +6,7 @@ Get your data in shape with dplyr
 
 ## Instructor Notes
 
-This lesson is deprecated and was replaced with the following lesson:
+This lesson is archived and was replaced with the following lesson:
 
 * [Tidy data](https://github.com/sesync-ci/census-data-manipulation-in-R-lesson)
 
